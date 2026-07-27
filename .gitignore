@@ -1,0 +1,7 @@
+node_modules/
+js/
+.phpunit.cache/
+vendor/
+*.log
+__pycache__/
+*.pyc
