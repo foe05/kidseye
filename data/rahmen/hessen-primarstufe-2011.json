@@ -1,0 +1,2457 @@
+{
+  "$schema": "kidseye-rahmen/1",
+  "rahmen": {
+    "kennung": "hessen-primarstufe",
+    "name": "Hessisches Kerncurriculum Primarstufe",
+    "herausgeber": "Hessisches Kultusministerium"
+  },
+  "version": {
+    "kennung": "2011",
+    "name": "Bildungsstandards und Inhaltsfelder (2011)",
+    "gueltigAb": "2011-08-01",
+    "quelle": "https://kultus.hessen.de/unterricht/kerncurricula-und-lehrplaene/kerncurricula/kerncurricula-primarstufe"
+  },
+  "faecher": [
+    {
+      "kennung": "deutsch",
+      "name": "Deutsch"
+    },
+    {
+      "kennung": "mathematik",
+      "name": "Mathematik"
+    },
+    {
+      "kennung": "sachunterricht",
+      "name": "Sachunterricht"
+    },
+    {
+      "kennung": "kunst",
+      "name": "Kunst"
+    },
+    {
+      "kennung": "ethik",
+      "name": "Ethik"
+    }
+  ],
+  "_hinweis_ueberfachlich": "Teil A, Kapitel 2 der Kerncurricula. In allen zwölf Fächern der Primarstufe wortgleich, deshalb fachneutral (fachKennung = null). Laut Kerncurriculum entziehen sich diese Kompetenzen 'weitgehend einer Normierung und empirischen Überprüfung' — kidseye führt für sie deshalb keine Skala und keine Einstufung.",
+  "knoten": [
+    {
+      "kennung": "uk.personal",
+      "art": "bereich",
+      "ebene": "ueberfachlich",
+      "sortierung": 1,
+      "bezeichnung": "Personale Kompetenz",
+      "beschreibung": "Umfasst jene Fähigkeiten, Einstellungen und Haltungen, die es Lernenden ermöglichen, selbstbestimmt und eigenverantwortlich zu handeln."
+    },
+    {
+      "kennung": "uk.personal.selbstwahrnehmung",
+      "eltern": "uk.personal",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 1,
+      "bezeichnung": "Selbstwahrnehmung",
+      "beschreibung": "Die Lernenden nehmen ihre Interessen und Gefühle wahr und schätzen ihre Stärken und Schwächen realistisch ein. Sie entdecken ihre Gestaltungs- und Ausdrucksmöglichkeiten und entwickeln sie im Vertrauen auf die eigenen Fähigkeiten weiter."
+    },
+    {
+      "kennung": "uk.personal.selbstkonzept",
+      "eltern": "uk.personal",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 2,
+      "bezeichnung": "Selbstkonzept",
+      "beschreibung": "Die Lernenden gehen mit Selbstvertrauen an die Lösung von Problemstellungen heran. Sie formulieren ihre Meinung und vertreten selbstbewusst ihre Interessen. Sie glauben daran, dass sie mit eigener Anstrengung ein Ziel erreichen können."
+    },
+    {
+      "kennung": "uk.personal.selbstregulierung",
+      "eltern": "uk.personal",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 3,
+      "bezeichnung": "Selbstregulierung",
+      "beschreibung": "Die Lernenden formulieren Wünsche und Bedürfnisse und respektieren dabei die Wünsche und Bedürfnisse anderer. Sie drücken ihre Gefühle angemessen aus. Mit Situationen, Themen und Personen setzen sie sich kritisch auseinander und nehmen auch Kritik an. Sie reflektieren ihre Lernprozesse und Ergebnisse und setzen sich selbst Ziele."
+    },
+    {
+      "kennung": "uk.sozial",
+      "art": "bereich",
+      "ebene": "ueberfachlich",
+      "sortierung": 2,
+      "bezeichnung": "Sozialkompetenz",
+      "beschreibung": "Die Fähigkeit und Bereitschaft, in sozialen Beziehungen zu leben und diese aktiv mitzugestalten."
+    },
+    {
+      "kennung": "uk.sozial.wahrnehmung",
+      "eltern": "uk.sozial",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 1,
+      "bezeichnung": "Soziale Wahrnehmungsfähigkeit",
+      "beschreibung": "Die Lernenden nehmen unterschiedliche Bedürfnisse in sozialen Beziehungen wahr und zeigen Einfühlungsvermögen. Sie achten Andersartigkeit und Anderssein. Sie setzen sich für andere ein."
+    },
+    {
+      "kennung": "uk.sozial.ruecksicht",
+      "eltern": "uk.sozial",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 2,
+      "bezeichnung": "Rücksichtnahme und Solidarität",
+      "beschreibung": "Die Lernenden respektieren die Meinungen und Verhaltensweisen anderer. Sie helfen und unterstützen sich gegenseitig, gehen achtsam und unvoreingenommen mit anderen um."
+    },
+    {
+      "kennung": "uk.sozial.kooperation",
+      "eltern": "uk.sozial",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 3,
+      "bezeichnung": "Kooperation und Teamfähigkeit",
+      "beschreibung": "Die Lernenden halten sich an Regeln und Absprachen. Sie gehen auf andere ein und stimmen ihr Verhalten mit anderen ab. Sie bringen sich konstruktiv in die Gemeinschaft ein und kooperieren."
+    },
+    {
+      "kennung": "uk.sozial.konflikte",
+      "eltern": "uk.sozial",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 4,
+      "bezeichnung": "Umgang mit Konflikten",
+      "beschreibung": "Die Lernenden tragen Kritik konstruktiv vor, nehmen Kritik von anderen entgegen und reflektieren darüber. Sie sind in der Lage, um Verzeihung zu bitten und können anderen verzeihen. Sie setzen sich für faire Konfliktlösungen ein."
+    },
+    {
+      "kennung": "uk.sozial.verantwortung",
+      "eltern": "uk.sozial",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 5,
+      "bezeichnung": "Gesellschaftliche Verantwortung",
+      "beschreibung": "Sie übernehmen Verantwortung für ihr eigenes Verhalten in der Gemeinschaft. Sie treten aktiv für ein gemeinschaftliches Ziel ein und treffen gemeinsam Entscheidungen. Sie nutzen ihre Möglichkeiten der Mitgestaltung und Mitsprache."
+    },
+    {
+      "kennung": "uk.sozial.interkulturell",
+      "eltern": "uk.sozial",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 6,
+      "bezeichnung": "Interkulturelle Verständigung",
+      "beschreibung": "Die Lernenden nehmen unterschiedliche Verhaltensweisen von Menschen aus anderen Ländern wahr und deuten sie als kulturtypische Gewohnheiten. Sie sind aufgeschlossen gegenüber anderen Kulturen und arbeiten mit Kindern verschiedener Herkunft zusammen."
+    },
+    {
+      "kennung": "uk.lern",
+      "art": "bereich",
+      "ebene": "ueberfachlich",
+      "sortierung": 3,
+      "bezeichnung": "Lernkompetenz",
+      "beschreibung": "Zeigt sich in der Fähigkeit, variable Anforderungssituationen und Aufgaben mithilfe geeigneter Strategien und Arbeitsmethoden zu erschließen sowie den Lern- und Arbeitsprozess wahrzunehmen und seine Ergebnisse zu reflektieren."
+    },
+    {
+      "kennung": "uk.lern.problemloesen",
+      "eltern": "uk.lern",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 1,
+      "bezeichnung": "Problemlösekompetenz",
+      "beschreibung": "Die Lernenden bearbeiten Fragestellungen und kommen dabei zu sachgerechten Lösungen. Sie setzen sich selbst Ziele und reflektieren über Arbeitsprozess und Arbeitsergebnis. Sie planen ihre Arbeit und setzen sie schrittweise um. Dazu nutzen sie verfügbare Informationen."
+    },
+    {
+      "kennung": "uk.lern.arbeit",
+      "eltern": "uk.lern",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 2,
+      "bezeichnung": "Arbeitskompetenz",
+      "beschreibung": "Die Lernenden nutzen Strategien zur Lösung von Aufgaben, wählen Arbeitsmethoden anforderungsbezogen aus und wenden sie sachgerecht an."
+    },
+    {
+      "kennung": "uk.lern.medien",
+      "eltern": "uk.lern",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 3,
+      "bezeichnung": "Medienkompetenz",
+      "beschreibung": "Die Lernenden nutzen anforderungsbezogen unterschiedliche Medien gestalterisch und technisch. Sie dokumentieren ihre Lern- und Arbeitsergebnisse auch prozessbezogen und präsentieren sie mithilfe geeigneter Medien. Sie nutzen Neue Medien verantwortungsvoll und kritisch."
+    },
+    {
+      "kennung": "uk.sprach",
+      "art": "bereich",
+      "ebene": "ueberfachlich",
+      "sortierung": 4,
+      "bezeichnung": "Sprachkompetenz",
+      "beschreibung": "Aufbau und Sicherung von Lese- und Schreibkompetenz im Hinblick auf eine adressatenbezogene und sachgerechte mündliche und schriftliche Sprachverwendung."
+    },
+    {
+      "kennung": "uk.sprach.lesen",
+      "eltern": "uk.sprach",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 1,
+      "bezeichnung": "Lesekompetenz",
+      "beschreibung": "Die Lernenden lesen und rezipieren Texte unterschiedlicher Text-/Medienformen und wenden dabei verschiedene Strategien an. Sie entnehmen Informationen und verstehen sie im jeweiligen Kontext. Sie denken über unterschiedliche Texte nach und nehmen dazu begründet Stellung."
+    },
+    {
+      "kennung": "uk.sprach.schreiben",
+      "eltern": "uk.sprach",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 2,
+      "bezeichnung": "Schreibkompetenz",
+      "beschreibung": "Die Lernenden verfassen eigene Texte sach- und adressatengerecht unter Berücksichtigung elementarer Schreibnormen."
+    },
+    {
+      "kennung": "uk.sprach.kommunikation",
+      "eltern": "uk.sprach",
+      "art": "dimension",
+      "ebene": "ueberfachlich",
+      "sortierung": 3,
+      "bezeichnung": "Kommunikationskompetenz",
+      "beschreibung": "Die Lernenden hören anderen aufmerksam zu, drücken sich in Kommunikationssituationen verständlich aus und beteiligen sich konstruktiv an Gesprächen. Sie nehmen Kommunikations- und Interaktionsprozesse wahr und reflektieren sie."
+    },
+    {
+      "kennung": "de.kb.sprechen_zuhoeren",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 1,
+      "bezeichnung": "Sprechen und Zuhören"
+    },
+    {
+      "kennung": "de.kb.schreiben",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 2,
+      "bezeichnung": "Schreiben"
+    },
+    {
+      "kennung": "de.kb.lesen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 3,
+      "bezeichnung": "Lesen und Rezipieren – mit literarischen und nichtliterarischen Texten/Medien umgehen"
+    },
+    {
+      "kennung": "de.kb.sprache_untersuchen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 4,
+      "bezeichnung": "Sprache und Sprachgebrauch untersuchen und reflektieren"
+    },
+    {
+      "kennung": "ma.kb.darstellen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 1,
+      "bezeichnung": "Darstellen"
+    },
+    {
+      "kennung": "ma.kb.kommunizieren",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 2,
+      "bezeichnung": "Kommunizieren"
+    },
+    {
+      "kennung": "ma.kb.argumentieren",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 3,
+      "bezeichnung": "Argumentieren"
+    },
+    {
+      "kennung": "ma.kb.symbolisch",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 4,
+      "bezeichnung": "Umgehen mit symbolischen, formalen und technischen Elementen"
+    },
+    {
+      "kennung": "ma.kb.problemloesen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 5,
+      "bezeichnung": "Problemlösen"
+    },
+    {
+      "kennung": "ma.kb.modellieren",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 6,
+      "bezeichnung": "Modellieren"
+    },
+    {
+      "kennung": "ma.if.muster",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 1,
+      "bezeichnung": "Muster und Strukturen",
+      "strukturName": "Leitideen"
+    },
+    {
+      "kennung": "ma.if.zahl_operation",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 2,
+      "bezeichnung": "Zahl und Operation",
+      "strukturName": "Leitideen"
+    },
+    {
+      "kennung": "ma.if.raum_form",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 3,
+      "bezeichnung": "Raum und Form",
+      "strukturName": "Leitideen"
+    },
+    {
+      "kennung": "ma.if.groessen_messen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 4,
+      "bezeichnung": "Größen und Messen",
+      "strukturName": "Leitideen"
+    },
+    {
+      "kennung": "ma.if.daten_zufall",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "sortierung": 5,
+      "bezeichnung": "Daten und Zufall",
+      "strukturName": "Leitideen"
+    },
+    {
+      "kennung": "su.kb.erkenntnisgewinnung",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 1,
+      "bezeichnung": "Erkenntnisgewinnung"
+    },
+    {
+      "kennung": "su.kb.kommunikation",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 2,
+      "bezeichnung": "Kommunikation"
+    },
+    {
+      "kennung": "su.kb.bewertung",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 3,
+      "bezeichnung": "Bewertung"
+    },
+    {
+      "kennung": "su.if.gesellschaft_politik",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 1,
+      "bezeichnung": "Gesellschaft und Politik"
+    },
+    {
+      "kennung": "su.if.natur",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 2,
+      "bezeichnung": "Natur"
+    },
+    {
+      "kennung": "su.if.raum",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 3,
+      "bezeichnung": "Raum"
+    },
+    {
+      "kennung": "su.if.technik",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 4,
+      "bezeichnung": "Technik"
+    },
+    {
+      "kennung": "su.if.geschichte_zeit",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "sortierung": 5,
+      "bezeichnung": "Geschichte und Zeit"
+    },
+    {
+      "kennung": "ku.kb.sehen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 1,
+      "bezeichnung": "Sehen, Wahrnehmen und Erfahren"
+    },
+    {
+      "kennung": "ku.kb.planen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 2,
+      "bezeichnung": "Planen, Gestalten und Handeln"
+    },
+    {
+      "kennung": "ku.kb.verstehen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 3,
+      "bezeichnung": "Verstehen, Begreifen und Erklären"
+    },
+    {
+      "kennung": "ku.ls.begegnung",
+      "art": "leitstruktur",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 1,
+      "waehlbar": false,
+      "strukturName": "Kernbereiche",
+      "bezeichnung": "Begegnung mit Bildern"
+    },
+    {
+      "kennung": "ku.ls.einordnung",
+      "art": "leitstruktur",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 2,
+      "waehlbar": false,
+      "strukturName": "Kernbereiche",
+      "bezeichnung": "Einordnung von Bildern"
+    },
+    {
+      "kennung": "ku.ls.gestaltung",
+      "art": "leitstruktur",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 3,
+      "waehlbar": false,
+      "strukturName": "Kernbereiche",
+      "bezeichnung": "Gestaltung von Bildern"
+    },
+    {
+      "kennung": "ku.if.malerei",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 1,
+      "bezeichnung": "Malerei"
+    },
+    {
+      "kennung": "ku.if.zeichnung_grafik",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 2,
+      "bezeichnung": "Zeichnung und Grafik"
+    },
+    {
+      "kennung": "ku.if.plastik",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 3,
+      "bezeichnung": "Plastik"
+    },
+    {
+      "kennung": "ku.if.szenisch",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 4,
+      "bezeichnung": "Szenische Gestaltung"
+    },
+    {
+      "kennung": "ku.if.produktdesign",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 5,
+      "bezeichnung": "Umwelt und Produktdesign"
+    },
+    {
+      "kennung": "ku.if.digital",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "sortierung": 6,
+      "bezeichnung": "Digitale Gestaltung"
+    },
+    {
+      "kennung": "et.kb.wahrnehmen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 1,
+      "bezeichnung": "Wahrnehmen und beschreiben"
+    },
+    {
+      "kennung": "et.kb.verstehen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 2,
+      "bezeichnung": "Verstehen und deuten"
+    },
+    {
+      "kennung": "et.kb.erkennen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 3,
+      "bezeichnung": "Erkennen und beurteilen"
+    },
+    {
+      "kennung": "et.kb.anteilnehmen",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 4,
+      "bezeichnung": "Anteil nehmen und ausdrücken"
+    },
+    {
+      "kennung": "et.kb.verantwortung",
+      "art": "kompetenzbereich",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 5,
+      "bezeichnung": "Verantwortung übernehmen und handeln"
+    },
+    {
+      "kennung": "et.if.ich_andere",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 1,
+      "bezeichnung": "Ich und die Anderen"
+    },
+    {
+      "kennung": "et.if.gemeinschaft",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 2,
+      "bezeichnung": "Ich in der Gemeinschaft"
+    },
+    {
+      "kennung": "et.if.zeit",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 3,
+      "bezeichnung": "Ich und meine Zeit"
+    },
+    {
+      "kennung": "et.if.natur_umwelt",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 4,
+      "bezeichnung": "Natur und Umwelt"
+    },
+    {
+      "kennung": "et.if.kultur_religion",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "sortierung": 5,
+      "bezeichnung": "Kultur und Religion"
+    },
+    {
+      "kennung": "ma.bs.01.01_geeignete_darstellungen_fu_r_das",
+      "eltern": "ma.kb.darstellen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "geeignete Darstellungen für das Bearbeiten mathematischer Probleme auswählen und nutzen"
+    },
+    {
+      "kennung": "ma.bs.01.02_darstellungen_entwickeln",
+      "eltern": "ma.kb.darstellen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Darstellungen entwickeln"
+    },
+    {
+      "kennung": "ma.bs.01.03_eine_darstellung_in_eine_andere",
+      "eltern": "ma.kb.darstellen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "eine Darstellung in eine andere übertragen"
+    },
+    {
+      "kennung": "ma.bs.01.04_darstellungen_miteinander_vergle",
+      "eltern": "ma.kb.darstellen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Darstellungen miteinander vergleichen und bewerten"
+    },
+    {
+      "kennung": "ma.bs.02.01_vorgehensweisen_beschreiben",
+      "eltern": "ma.kb.kommunizieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "Vorgehensweisen beschreiben"
+    },
+    {
+      "kennung": "ma.bs.02.02_lo_sungswege_anderer_nachvollzie",
+      "eltern": "ma.kb.kommunizieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Lösungswege anderer nachvollziehen"
+    },
+    {
+      "kennung": "ma.bs.02.03_lo_sungswege_gemeinsam_reflektie",
+      "eltern": "ma.kb.kommunizieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Lösungswege gemeinsam reflektieren"
+    },
+    {
+      "kennung": "ma.bs.02.04_eingefu_hrte_mathematische_fachb",
+      "eltern": "ma.kb.kommunizieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "eingeführte mathematische Fachbegriffe und Zeichen sachgerecht verwenden"
+    },
+    {
+      "kennung": "ma.bs.03.01_mathematische_aussagen_hinterfra",
+      "eltern": "ma.kb.argumentieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "mathematische Aussagen hinterfragen und auf Korrektheit prüfen"
+    },
+    {
+      "kennung": "ma.bs.03.02_vermutungen_u_ber_mathematische",
+      "eltern": "ma.kb.argumentieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Vermutungen über mathematische Zusammenhänge äußern"
+    },
+    {
+      "kennung": "ma.bs.03.03_begru_ndungen_formulieren",
+      "eltern": "ma.kb.argumentieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Begründungen formulieren"
+    },
+    {
+      "kennung": "ma.bs.03.04_lo_sungswege_vergleichen_und_bew",
+      "eltern": "ma.kb.argumentieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Lösungswege vergleichen und bewerten"
+    },
+    {
+      "kennung": "ma.bs.04.01_neben_der_umgangssprache_auch_fa",
+      "eltern": "ma.kb.symbolisch",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "neben der Umgangssprache auch Fachsprache nutzen"
+    },
+    {
+      "kennung": "ma.bs.04.02_in_sachzusammenha_ngen_fachsprac",
+      "eltern": "ma.kb.symbolisch",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "in Sachzusammenhängen Fachsprache in Umgangssprache übersetzen und umgekehrt sowie geeignete Symbole verwenden"
+    },
+    {
+      "kennung": "ma.bs.04.03_kontrollverfahren_zur_u_berpru_f",
+      "eltern": "ma.kb.symbolisch",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Kontrollverfahren zur Überprüfung von Ergebnissen ausführen"
+    },
+    {
+      "kennung": "ma.bs.04.04_mess_und_zeichengera_te_sachgere",
+      "eltern": "ma.kb.symbolisch",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Mess- und Zeichengeräte sachgerecht und anforderungsbezogen einsetzen"
+    },
+    {
+      "kennung": "ma.bs.05.01_in_problemsituationen_mo_gliche",
+      "eltern": "ma.kb.problemloesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "in Problemsituationen mögliche mathematische Fragestellungen und Zusammenhänge erfassen und diese in eigenen Worten formulieren"
+    },
+    {
+      "kennung": "ma.bs.05.02_lo_sungsstrategien_entwickeln_un",
+      "eltern": "ma.kb.problemloesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Lösungsstrategien entwickeln und auf ähnliche Sachverhalte übertragen"
+    },
+    {
+      "kennung": "ma.bs.05.03_ergebnisse_reflektieren",
+      "eltern": "ma.kb.problemloesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Ergebnisse reflektieren"
+    },
+    {
+      "kennung": "ma.bs.05.04_lo_sungswege_reflektieren",
+      "eltern": "ma.kb.problemloesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Lösungswege reflektieren"
+    },
+    {
+      "kennung": "ma.bs.06.01_kurzen_sachtexten_und_einfachen",
+      "eltern": "ma.kb.modellieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "kurzen Sachtexten und einfachen Darstellungen aus der Lebenswirklichkeit Informationen entnehmen"
+    },
+    {
+      "kennung": "ma.bs.06.02_sachprobleme_in_die_sprache_der",
+      "eltern": "ma.kb.modellieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Sachprobleme in die Sprache der Mathematik übersetzen"
+    },
+    {
+      "kennung": "ma.bs.06.03_innermathematische_aspekte_der_p",
+      "eltern": "ma.kb.modellieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "innermathematische Aspekte der Problemstellung sachgerecht bearbeiten"
+    },
+    {
+      "kennung": "ma.bs.06.04_probleme_mathematisch_lo_sen_und",
+      "eltern": "ma.kb.modellieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Probleme mathematisch lösen und diese Lösungen wieder auf die Ausgangssituation beziehen"
+    },
+    {
+      "kennung": "ma.bs.06.05_das_gewa_hlte_modell_bewerten",
+      "eltern": "ma.kb.modellieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "das gewählte Modell bewerten"
+    },
+    {
+      "kennung": "ma.bs.06.06_zu_termen_gleichungen_und_bildli",
+      "eltern": "ma.kb.modellieren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "mathematik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "zu Termen, Gleichungen und bildlichen Darstellungen Sachaufgaben formulieren"
+    },
+    {
+      "kennung": "de.bs.01.01_gespra_chsregeln_fu_r_partner_un",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "Gesprächsregeln für Partner- und Gruppengespräche entwickeln und beachten"
+    },
+    {
+      "kennung": "de.bs.01.02_auf_gespra_chsbeitra_ge_unter_be",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "auf Gesprächsbeiträge unter Berücksichtigung der Meinungen und Gefühle anderer eingehen"
+    },
+    {
+      "kennung": "de.bs.01.03_eigene_gespra_chsbeitra_ge_mithi",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "eigene Gesprächsbeiträge mithilfe elementarer sprac hlicher Gestaltungsmittel themen- und hörerorientiert gestalten"
+    },
+    {
+      "kennung": "de.bs.01.04_unter_beru_cksichtigung_von_gesp",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "unter Berücksichtigung von Gesprächsstrategien Gesprächsbeiträge für Gesprächssequenzen planen"
+    },
+    {
+      "kennung": "de.bs.01.05_erlebtes_erfundenes_gedanken_und",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "Erlebtes, Erfundenes, Gedanken und Gefühle sowie die persönliche Bedeutung dessen für andere nachvollziehbar in Worte fassen"
+    },
+    {
+      "kennung": "de.bs.01.06_eigene_standpunkte_in_verschiede",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "eigene Standpunkte in verschiedenen Gesprächssituationen einnehmen und vertreten"
+    },
+    {
+      "kennung": "de.bs.01.07_anliegen_und_konflikte_lo_sungso",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 7,
+      "bezeichnung": "Anliegen und Konflikte lösungsorientiert besprechen"
+    },
+    {
+      "kennung": "de.bs.01.08_wirkungen_verbaler_und_nonverbal",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 8,
+      "bezeichnung": "Wirkungen verbaler und nonverbaler Ausdrucksmöglichkeiten anhand von Gesprächssituationen erproben"
+    },
+    {
+      "kennung": "de.bs.01.09_im_gespra_ch_fragen_zu_themen_un",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 9,
+      "bezeichnung": "im Gespräch Fragen zu Themen und Sachverhalten klären"
+    },
+    {
+      "kennung": "de.bs.01.10_sich_mit_anderen_u_ber_die_organ",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 10,
+      "bezeichnung": "sich mit anderen über die Organisation von Partner- und Gruppenarbeiten kriterienorientiert verständigen"
+    },
+    {
+      "kennung": "de.bs.01.11_strukturierte_gespra_chssequenze",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 11,
+      "bezeichnung": "strukturierte Gesprächssequenzen zu vertrauten Themen und Sachverhalten verfolgen"
+    },
+    {
+      "kennung": "de.bs.01.12_durch_gezieltes_nachfragen_verst",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 12,
+      "bezeichnung": "durch gezieltes Nachfragen Verstehen und Nichtverstehen zum Ausdruck bringen"
+    },
+    {
+      "kennung": "de.bs.01.13_wesentliche_aussagen_einfach_ver",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 13,
+      "bezeichnung": "wesentliche Aussagen einfach verständlicher Gesprächsbeiträge wiedergeben"
+    },
+    {
+      "kennung": "de.bs.01.14_an_der_standardsprache_orientier",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 14,
+      "bezeichnung": "an der Standardsprache orientiert verständlich sprechen"
+    },
+    {
+      "kennung": "de.bs.01.15_folgerichtig_und_lebendig_sprech",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 15,
+      "bezeichnung": "folgerichtig und lebendig sprechen"
+    },
+    {
+      "kennung": "de.bs.01.16_bekannte_texte_zu_gig_und_gestal",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 16,
+      "bezeichnung": "bekannte Texte zügig und gestaltend vorlesen und vortragen"
+    },
+    {
+      "kennung": "de.bs.01.17_texte_und_arbeitsergebnisse_zu_v",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 17,
+      "bezeichnung": "Texte und Arbeitsergebnisse zu vertrauten Themen und Sachverhalten mediengestützt präsentieren"
+    },
+    {
+      "kennung": "de.bs.01.18_vortra_ge_und_pra_sentationen_kr",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 18,
+      "bezeichnung": "Vorträge und Präsentationen kriterienorientiert beobachten und besprechen"
+    },
+    {
+      "kennung": "de.bs.01.19_kriterienorientiert_das_rede_und",
+      "eltern": "de.kb.sprechen_zuhoeren",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 19,
+      "bezeichnung": "kriterienorientiert das Rede- und Gesprächsverhalten anderer beobachten und besprechen"
+    },
+    {
+      "kennung": "de.bs.02.01_fu_r_andere_in_gut_lesbarer_hand",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "für andere in gut lesbarer Handschrift schreiben"
+    },
+    {
+      "kennung": "de.bs.02.02_flu_ssig_schreiben",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "flüssig schreiben"
+    },
+    {
+      "kennung": "de.bs.02.03_texte_zweckma_ssig_und_u_bersich",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Texte zweckmäßig und übersichtlich gestalten"
+    },
+    {
+      "kennung": "de.bs.02.04_die_schreibabsicht_und_den_adres",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "die Schreibabsicht und den Adressaten klären und daran orientiert die Schreibidee umsetzen"
+    },
+    {
+      "kennung": "de.bs.02.05_den_eigenen_schreibprozess_mithi",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "den eigenen Schreibprozess mithilfe von Schreibstrategien organisieren und strukturieren"
+    },
+    {
+      "kennung": "de.bs.02.06_unter_anleitung_texte_zu_realen",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "unter Anleitung Texte zu realen und fiktiven Ereign issen aus Schreibhandlungen aufbauen und dabei Tex tsortenmerkmale beachten"
+    },
+    {
+      "kennung": "de.bs.02.07_unter_anleitung_informationen_au",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 7,
+      "bezeichnung": "unter Anleitung Informationen aus einem oder mehrer en Texten zusammenführen und zu einem eigenen Text verarbeiten"
+    },
+    {
+      "kennung": "de.bs.02.08_unter_anleitung_schreibwerkzeuge",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 8,
+      "bezeichnung": "unter Anleitung Schreibwerkzeuge und Textverarbeitungsprogramme aufgabenbezogen einsetzen"
+    },
+    {
+      "kennung": "de.bs.02.09_texte_mithilfe_elementarer_sprac",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 9,
+      "bezeichnung": "Texte mithilfe elementarer sprachlicher Mittel gestalten"
+    },
+    {
+      "kennung": "de.bs.02.10_geu_bte_rechtschreibwichtige_wo",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 10,
+      "bezeichnung": "geübte rechtschreibwichtige Wörter normgerecht schreiben"
+    },
+    {
+      "kennung": "de.bs.02.11_rechtschreibstrategien_reflektie",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 11,
+      "bezeichnung": "Rechtschreibstrategien reflektieren und nutzen"
+    },
+    {
+      "kennung": "de.bs.02.12_rechtschreibhilfen_nutzen",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 12,
+      "bezeichnung": "Rechtschreibhilfen nutzen"
+    },
+    {
+      "kennung": "de.bs.02.13_satzzeichen_in_einfachen_sa_tzen",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 13,
+      "bezeichnung": "Satzzeichen in einfachen Sätzen begründet setzen"
+    },
+    {
+      "kennung": "de.bs.02.14_texte_kriterienorientiert_u_berp",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 14,
+      "bezeichnung": "Texte kriterienorientiert überprüfen und verändern"
+    },
+    {
+      "kennung": "de.bs.02.15_texte_fu_r_andere_mittels_darste",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 15,
+      "bezeichnung": "Texte für andere mittels Darstellungs- und Präsentationsformen aufbereiten, Das Schreiben für Lernprozesse nutzen"
+    },
+    {
+      "kennung": "de.bs.02.16_notizen_zu_themen_texten_und_sac",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 16,
+      "bezeichnung": "Notizen zu Themen, Texten und Sachverhalten verfassen"
+    },
+    {
+      "kennung": "de.bs.02.17_eigene_lern_und_arbeitsprozesse",
+      "eltern": "de.kb.schreiben",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 17,
+      "bezeichnung": "eigene Lern- und Arbeitsprozesse dokumentieren und besprechen"
+    },
+    {
+      "kennung": "de.bs.03.01_texte_medien_anlassbezogen_und_i",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "Texte/Medien anlassbezogen und interessengeleitet auswählen"
+    },
+    {
+      "kennung": "de.bs.03.02_aus_kontextuellen_gegebenheiten",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "aus kontextuellen Gegebenheiten des Textes/Mediums Erwartungen ableiten"
+    },
+    {
+      "kennung": "de.bs.03.03_grundlegende_textsorten_untersch",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "grundlegende Textsorten unterscheiden, Texte/Medien rezipieren"
+    },
+    {
+      "kennung": "de.bs.03.04_texte_sinnverstehend_lesen",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Texte sinnverstehend lesen"
+    },
+    {
+      "kennung": "de.bs.03.05_strategien_zur_text_medienaufnah",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "Strategien zur Text-/Medienaufnahme für die Erschließung zentraler Inhalte, Aussagen und Gedanken anwenden"
+    },
+    {
+      "kennung": "de.bs.03.06_individuelle_vorstellungen_und_e",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "individuelle Vorstellungen und Empfindungen, die beim Lesen/Rezipieren entstehen, zum Ausdruck bringen"
+    },
+    {
+      "kennung": "de.bs.03.07_zentrale_aussagen_eines_textes_w",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 7,
+      "bezeichnung": "zentrale Aussagen eines Textes wiedergeben"
+    },
+    {
+      "kennung": "de.bs.03.08_aussagen_mit_textstellen_belegen",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 8,
+      "bezeichnung": "Aussagen mit Textstellen belegen"
+    },
+    {
+      "kennung": "de.bs.03.09_sich_mithilfe_verschiedener_quel",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 9,
+      "bezeichnung": "sich mithilfe verschiedener Quellen sachorientiert informieren"
+    },
+    {
+      "kennung": "de.bs.03.10_unterschiede_und_gemeinsamkeiten",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 10,
+      "bezeichnung": "Unterschiede und Gemeinsamkeiten von Texten beschreiben"
+    },
+    {
+      "kennung": "de.bs.03.11_zu_texten_lebendige_vorstellunge",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 11,
+      "bezeichnung": "zu Texten lebendige Vorstellungen und eigene Gedanken formulieren"
+    },
+    {
+      "kennung": "de.bs.03.12_empfindungen_von_figuren_persone",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 12,
+      "bezeichnung": "Empfindungen von Figuren/Personen in Texten/Medien wahrnehmen und ausdrücken"
+    },
+    {
+      "kennung": "de.bs.03.13_verhalten_und_eigenschaften_von",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 13,
+      "bezeichnung": "Verhalten und Eigenschaften von Figuren/Personen in Texten/Medien beschreiben"
+    },
+    {
+      "kennung": "de.bs.03.14_handlungszusammenha_nge_in_texte",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 14,
+      "bezeichnung": "Handlungszusammenhänge in Texten beschreiben und hinterfragen"
+    },
+    {
+      "kennung": "de.bs.03.15_konflikte_und_deren_ausgestaltun",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 15,
+      "bezeichnung": "Konflikte und deren Ausgestaltung in literarischen Texten aufzeigen und in Bezug zu ihrer eigenen Lebe nswelt setzen"
+    },
+    {
+      "kennung": "de.bs.03.16_zwischen_wirklichkeit_und_fiktio",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 16,
+      "bezeichnung": "zwischen Wirklichkeit und fiktionalen Welten literarischer Texte unterscheiden"
+    },
+    {
+      "kennung": "de.bs.03.17_zu_aussagen_eines_textes_mediena",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 17,
+      "bezeichnung": "zu Aussagen eines Textes/Medienangebots Stellung beziehen, Mit Texten/Medien produktiv umgehen"
+    },
+    {
+      "kennung": "de.bs.03.18_aus_vorgegebenen_oder_eigenen_id",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 18,
+      "bezeichnung": "aus vorgegebenen oder eigenen Ideen Szenen verfassen"
+    },
+    {
+      "kennung": "de.bs.03.19_eine_vorgegebene_oder_erfundene",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 19,
+      "bezeichnung": "eine vorgegebene oder erfundene Rolle einnehmen und szenisch umsetzen"
+    },
+    {
+      "kennung": "de.bs.03.20_texte_in_andere_darstellungsform",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 20,
+      "bezeichnung": "Texte in andere Darstellungsformen übertragen"
+    },
+    {
+      "kennung": "de.bs.03.21_verschiedene_mediale_darstellung",
+      "eltern": "de.kb.lesen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 21,
+      "bezeichnung": "verschiedene mediale Darstellungen eines Textes oder Themas vergleichen und beurteilen"
+    },
+    {
+      "kennung": "de.bs.04.01_gesprochene_und_geschriebene_spr",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "gesprochene und geschriebene Sprache anhand von Merkmalen unterscheiden"
+    },
+    {
+      "kennung": "de.bs.04.02_den_vorhandenen_wortschatz_erwei",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "den vorhandenen Wortschatz erweitern und gebrauchen"
+    },
+    {
+      "kennung": "de.bs.04.03_fremdwo_rter_erkennen_und_die_au",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Fremdwörter erkennen und die Aussprache und Schreibung daran ausrichten"
+    },
+    {
+      "kennung": "de.bs.04.04_elementare_grammatische_lexikali",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "elementare grammatische, lexikalische und textuelle Gestaltungsmittel funktional einsetzen"
+    },
+    {
+      "kennung": "de.bs.04.05_mit_wo_rtern_sa_tzen_und_texten",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "mit Wörtern, Sätzen und Texten spielerisch umgehen, Grundlegende sprachliche Strukturen und Prinzipien reflektieren und verwenden"
+    },
+    {
+      "kennung": "de.bs.04.06_grundlegende_fachbegriffe_verwen",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "grundlegende Fachbegriffe verwenden"
+    },
+    {
+      "kennung": "de.bs.04.07_die_regelgerechte_anwendung_gram",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 7,
+      "bezeichnung": "die regelgerechte Anwendung grammatischer Strukture n im mündlichen und schriftlichen Sprachgebrauch üb erprüfen"
+    },
+    {
+      "kennung": "de.bs.04.08_sprache_mithilfe_geeigneter_prob",
+      "eltern": "de.kb.sprache_untersuchen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 8,
+      "bezeichnung": "Sprache mithilfe geeigneter Proben und Verfahren untersuchen"
+    },
+    {
+      "kennung": "su.bs.01.01_betrachten_und_gezielt_beobachte",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "betrachten und gezielt beobachten"
+    },
+    {
+      "kennung": "su.bs.01.02_vermutungen_anstellen_und_fragen",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Vermutungen anstellen und Fragen formulieren"
+    },
+    {
+      "kennung": "su.bs.01.03_informationen_sammeln_und_ordnen",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Informationen sammeln und ordnen"
+    },
+    {
+      "kennung": "su.bs.01.04_problemstellungen_benennen",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Problemstellungen benennen"
+    },
+    {
+      "kennung": "su.bs.01.05_einen_versuch_sachgerecht_und_un",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "einen Versuch sachgerecht und unter Berücksichtigung der Sicherheitsaspekte aufbauen, durchführen und auswerten"
+    },
+    {
+      "kennung": "su.bs.01.06_versuche_unter_einer_fragestellu",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "Versuche unter einer Fragestellung planen, durchführen und auswerten, auch unter Veränderung von Parametern"
+    },
+    {
+      "kennung": "su.bs.01.07_messgera_te_sachgerecht_nutzen",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 7,
+      "bezeichnung": "Messgeräte sachgerecht nutzen"
+    },
+    {
+      "kennung": "su.bs.01.08_merkmale_vergleichen_strukturier",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 8,
+      "bezeichnung": "Merkmale vergleichen, strukturieren und einordnen"
+    },
+    {
+      "kennung": "su.bs.01.09_daten_erheben_darstellen_und_aus",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 9,
+      "bezeichnung": "Daten erheben, darstellen und auswerten"
+    },
+    {
+      "kennung": "su.bs.01.10_darstellungsformen_deuten_und_sa",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 10,
+      "bezeichnung": "Darstellungsformen deuten und sachbezogen nutzen"
+    },
+    {
+      "kennung": "su.bs.01.11_text_und_bildquellen_in_den_jewe",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 11,
+      "bezeichnung": "Text- und Bildquellen in den jeweiligen Kontext einordnen und auswerten"
+    },
+    {
+      "kennung": "su.bs.01.12_lo_sungsansa_tze_finden_umsetzen",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 12,
+      "bezeichnung": "Lösungsansätze finden, umsetzen und auswerten"
+    },
+    {
+      "kennung": "su.bs.01.13_erkenntnisse_pru_fen_bewerten_un",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 13,
+      "bezeichnung": "Erkenntnisse prüfen, bewerten und Konsequenzen für das eigene Handeln ableiten und beschreiben"
+    },
+    {
+      "kennung": "su.bs.01.14_pla_ne_lesen_und_nutzen_planen_u",
+      "eltern": "su.kb.erkenntnisgewinnung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 14,
+      "bezeichnung": "Pläne lesen und nutzen, planen und konstruieren"
+    },
+    {
+      "kennung": "su.bs.02.01_treffende_begriffe_und_symbole_v",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "treffende Begriffe und Symbole verwenden"
+    },
+    {
+      "kennung": "su.bs.02.02_zu_planungs_und_auswertungsgespr",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "zu Planungs- und Auswertungsgesprächen sachbezogen einen Beitrag leisten"
+    },
+    {
+      "kennung": "su.bs.02.03_beobachtungen_vermutungen_erkenn",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Beobachtungen, Vermutungen, Erkenntnisse und Empfindungen als solche versprachlichen"
+    },
+    {
+      "kennung": "su.bs.02.04_interessen_wahrnehmen_und_artiku",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Interessen wahrnehmen und artikulieren"
+    },
+    {
+      "kennung": "su.bs.02.05_argumente_pru_fen_akzeptieren_mo",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "Argumente prüfen, akzeptieren, modifizieren oder verwerfen"
+    },
+    {
+      "kennung": "su.bs.02.06_vereinbarungen_aushandeln_und_da",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "Vereinbarungen aushandeln und darlegen"
+    },
+    {
+      "kennung": "su.bs.02.07_sachverhalte_beschreiben_und_sac",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 7,
+      "bezeichnung": "Sachverhalte beschreiben und sachgerecht darstellen"
+    },
+    {
+      "kennung": "su.bs.02.08_ergebnisse_in_geeigneter_form_fe",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 8,
+      "bezeichnung": "Ergebnisse in geeigneter Form festhalten"
+    },
+    {
+      "kennung": "su.bs.02.09_geeignete_pra_sentations_und_dar",
+      "eltern": "su.kb.kommunikation",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 9,
+      "bezeichnung": "geeignete Präsentations- und Darstellungsformen auswählen und einsetzen"
+    },
+    {
+      "kennung": "su.bs.03.01_reales_fiktives_und_virtuelles_u",
+      "eltern": "su.kb.bewertung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "Reales, Fiktives und Virtuelles unterscheiden und einordnen"
+    },
+    {
+      "kennung": "su.bs.03.02_die_eigene_meinung_unter_beru_ck",
+      "eltern": "su.kb.bewertung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "die eigene Meinung unter Berücksichtigung verschiedener Sichtweisen begründen und vertreten"
+    },
+    {
+      "kennung": "su.bs.03.03_vergangenes_gegenwa_rtiges_und_z",
+      "eltern": "su.kb.bewertung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Vergangenes, Gegenwärtiges und Zukünftiges einordnen und in Bezug setzen"
+    },
+    {
+      "kennung": "su.bs.03.04_gesellschaftliche_und_naturwisse",
+      "eltern": "su.kb.bewertung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "gesellschaftliche und naturwissenschaftlich-technis che Sachverhalte und Zusammenhänge benennen und hin terfragen"
+    },
+    {
+      "kennung": "su.bs.03.05_massnahmen_zur_erhaltung_der_eig",
+      "eltern": "su.kb.bewertung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "sachunterricht",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "Maßnahmen zur Erhaltung der eigenen Gesundheit und der anderer Lebewesen benennen"
+    },
+    {
+      "kennung": "ku.bs.01.01_in_der_betrachtung_sinnliche_erf",
+      "eltern": "ku.kb.sehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "in der Betrachtung sinnliche Erfahrungen und Eindrücke sammeln und festhalten"
+    },
+    {
+      "kennung": "ku.bs.01.02_eindru_cke_schildern",
+      "eltern": "ku.kb.sehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Eindrücke schildern"
+    },
+    {
+      "kennung": "ku.bs.01.03_wahrgenommenes_und_empfundenes_z",
+      "eltern": "ku.kb.sehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Wahrgenommenes und Empfundenes zum Ausdruck bringen"
+    },
+    {
+      "kennung": "ku.bs.01.04_einzelne_fachbegriffe_sachangeme",
+      "eltern": "ku.kb.sehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "einzelne Fachbegriffe sachangemessen verwenden"
+    },
+    {
+      "kennung": "ku.bs.02.01_ideen_und_darstellungsmo_glichke",
+      "eltern": "ku.kb.planen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "Ideen und Darstellungsmöglichkeiten zu bildnerischen Aufgabenstellungen finden und umsetzen"
+    },
+    {
+      "kennung": "ku.bs.02.02_bildnerische_lo_sungen_fu_r_offe",
+      "eltern": "ku.kb.planen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "bildnerische Lösungen für offen gestellte Aufgaben erfinden und umsetzen"
+    },
+    {
+      "kennung": "ku.bs.02.03_kreativ_und_zielorientiert_gesta",
+      "eltern": "ku.kb.planen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "kreativ und zielorientiert gestalten, inhaltsbezogen und experimentell nutzen"
+    },
+    {
+      "kennung": "ku.bs.02.04_bildnerische_verfahren_techniken",
+      "eltern": "ku.kb.planen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "bildnerische Verfahren, Techniken, Materialien, Medien und Werkzeuge erproben, vergleichen und sinnvol l verwenden"
+    },
+    {
+      "kennung": "ku.bs.03.01_farbwirkung_und_in_ansa_tzen_asp",
+      "eltern": "ku.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "Farbwirkung und in Ansätzen Aspekte der Bildordnung erkennen und benennen"
+    },
+    {
+      "kennung": "ku.bs.03.02_u_ber_bilder_erza_hlen",
+      "eltern": "ku.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "über Bilder erzählen"
+    },
+    {
+      "kennung": "ku.bs.03.03_bildsorten_bildmedien_und_bildge",
+      "eltern": "ku.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Bildsorten, Bildmedien und Bildgenres unterscheiden"
+    },
+    {
+      "kennung": "ku.bs.03.04_die_wirkung_von_bildern_benennen",
+      "eltern": "ku.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "die Wirkung von Bildern benennen"
+    },
+    {
+      "kennung": "ku.bs.03.05_eigene_bilder_an_gegebenen_oder",
+      "eltern": "ku.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "eigene Bilder an gegebenen oder selbst gesetzten Kriterien und Zielsetzungen messen"
+    },
+    {
+      "kennung": "ku.bs.03.06_eigene_bilder_angemessen_pra_sen",
+      "eltern": "ku.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "eigene Bilder angemessen präsentieren"
+    },
+    {
+      "kennung": "ku.bs.03.07_anregungen_anderer_aufnehmen_und",
+      "eltern": "ku.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "kunst",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 7,
+      "bezeichnung": "Anregungen anderer aufnehmen und für die eigene Arbeit sinnvoll nutzen"
+    },
+    {
+      "kennung": "et.bs.01.01_die_eigene_person_als_einzigarti",
+      "eltern": "et.kb.wahrnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "die eigene Person als einzigartig wahrnehmen und beschreiben"
+    },
+    {
+      "kennung": "et.bs.01.02_gefu_hle_und_wu_nsche_wahrnehmen",
+      "eltern": "et.kb.wahrnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Gefühle und Wünsche wahrnehmen und ausdrücken"
+    },
+    {
+      "kennung": "et.bs.01.03_die_eigene_person_als_teil_der_u",
+      "eltern": "et.kb.wahrnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "die eigene Person als Teil der Umwelt wahrnehmen"
+    },
+    {
+      "kennung": "et.bs.01.04_die_eigene_zeit_wahrnehmen_und_d",
+      "eltern": "et.kb.wahrnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "die eigene Zeit wahrnehmen und den Umgang damit beschreiben"
+    },
+    {
+      "kennung": "et.bs.01.05_entdecken_dass_der_mensch_ein_fr",
+      "eltern": "et.kb.wahrnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "entdecken, dass der Mensch ein Fragender ist und nach Antworten sucht"
+    },
+    {
+      "kennung": "et.bs.01.06_unterschiedliche_formen_des_zusa",
+      "eltern": "et.kb.wahrnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 6,
+      "bezeichnung": "unterschiedliche Formen des Zusammenlebens wahrnehmen und beschreiben"
+    },
+    {
+      "kennung": "et.bs.02.01_erfahrungen_menschlichen_lebens",
+      "eltern": "et.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "Erfahrungen menschlichen Lebens benennen und mit eigenen Erfahrungen verknüpfen"
+    },
+    {
+      "kennung": "et.bs.02.02_fragen_nach_herkunft_und_zukunft",
+      "eltern": "et.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Fragen nach Herkunft und Zukunft und nach dem Sinn des Lebens stellen und feststellen, dass es verschiedene Antworten gibt"
+    },
+    {
+      "kennung": "et.bs.02.03_grundlegende_erfahrungen_als_zum",
+      "eltern": "et.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "grundlegende Erfahrungen als zum Leben dazugehörig anerkennen"
+    },
+    {
+      "kennung": "et.bs.02.04_religio_se_und_kulturelle_lebens",
+      "eltern": "et.kb.verstehen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "religiöse und kulturelle Lebenspraxis als Weltdeutung verstehen"
+    },
+    {
+      "kennung": "et.bs.03.01_den_menschen_als_teil_der_natur",
+      "eltern": "et.kb.erkennen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "den Menschen als Teil der Natur sehen"
+    },
+    {
+      "kennung": "et.bs.03.02_verhaltensweisen_von_menschen_un",
+      "eltern": "et.kb.erkennen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "Verhaltensweisen von Menschen unterscheiden und deren Folgen begründet einschätzen"
+    },
+    {
+      "kennung": "et.bs.03.03_zu_eigenen_meinungen_finden_und",
+      "eltern": "et.kb.erkennen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "zu eigenen Meinungen finden und diese begründen"
+    },
+    {
+      "kennung": "et.bs.03.04_freiheit_und_verantwortung_bei_e",
+      "eltern": "et.kb.erkennen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 4,
+      "bezeichnung": "Freiheit und Verantwortung bei Entscheidungen einschätzen und begründen"
+    },
+    {
+      "kennung": "et.bs.03.05_ergebnisse_von_handlungen_aufgru",
+      "eltern": "et.kb.erkennen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 5,
+      "bezeichnung": "Ergebnisse von Handlungen aufgrund der Absichten, Umstände und möglicher Folgen beurteilen"
+    },
+    {
+      "kennung": "et.bs.04.01_einander_zuho_ren_und_aufeinande",
+      "eltern": "et.kb.anteilnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "einander zuhören und aufeinander eingehen"
+    },
+    {
+      "kennung": "et.bs.04.02_an_gefu_hlen_und_bedu_rfnissen_a",
+      "eltern": "et.kb.anteilnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "an Gefühlen und Bedürfnissen anderer Anteil nehmen und dies zeigen"
+    },
+    {
+      "kennung": "et.bs.04.03_achtung_und_toleranz_gegenu_ber",
+      "eltern": "et.kb.anteilnehmen",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Achtung und Toleranz gegenüber Anderen und Anderem ausdrücken"
+    },
+    {
+      "kennung": "et.bs.05.01_auf_sich_selbst_und_auf_ihre_bed",
+      "eltern": "et.kb.verantwortung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 1,
+      "bezeichnung": "auf sich selbst und auf ihre Bedürfnisse achten"
+    },
+    {
+      "kennung": "et.bs.05.02_das_eigene_lebensumfeld_verantwo",
+      "eltern": "et.kb.verantwortung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 2,
+      "bezeichnung": "das eigene Lebensumfeld verantwortungsbewusst mitgestalten"
+    },
+    {
+      "kennung": "et.bs.05.03_regeln_eines_gelingenden_miteina",
+      "eltern": "et.kb.verantwortung",
+      "art": "bildungsstandard",
+      "ebene": "fachlich",
+      "fach": "ethik",
+      "bezugsstufe": "jgst_4",
+      "sortierung": 3,
+      "bezeichnung": "Regeln eines gelingenden miteinander Lebens anerkennen und einhalten"
+    },
+    {
+      "kennung": "de.if.gespraechsformen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 1,
+      "bezeichnung": "Rede- und Gesprächsformen"
+    },
+    {
+      "kennung": "de.if.gespraechsstrategien",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 2,
+      "bezeichnung": "Rede- und Gesprächsstrategien"
+    },
+    {
+      "kennung": "de.if.gespraechskonventionen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 3,
+      "bezeichnung": "Rede- und Gesprächskonventionen"
+    },
+    {
+      "kennung": "de.if.schreibformen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 4,
+      "bezeichnung": "Schreibformen"
+    },
+    {
+      "kennung": "de.if.schreibstrategien",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 5,
+      "bezeichnung": "Schreibstrategien"
+    },
+    {
+      "kennung": "de.if.schreibnormen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 6,
+      "bezeichnung": "Schreibnormen"
+    },
+    {
+      "kennung": "de.if.textformen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 7,
+      "bezeichnung": "Text-/Medienformen"
+    },
+    {
+      "kennung": "de.if.lesestrategien",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 8,
+      "bezeichnung": "Lese- und Rezeptionsstrategien"
+    },
+    {
+      "kennung": "de.if.lesarten",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 9,
+      "bezeichnung": "Lesarten und Rezeptionskonventionen"
+    },
+    {
+      "kennung": "de.if.sprachformen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 10,
+      "bezeichnung": "Sprachformen und -strukturen: Wörter – Sätze – Texte"
+    },
+    {
+      "kennung": "de.if.analyseverfahren",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 11,
+      "bezeichnung": "Analyseverfahren: Wörter – Sätze – Texte"
+    },
+    {
+      "kennung": "de.if.sprachnormen",
+      "art": "inhaltsfeld",
+      "ebene": "fachlich",
+      "fach": "deutsch",
+      "sortierung": 12,
+      "bezeichnung": "Sprachnormen: Wörter – Sätze – Texte"
+    }
+  ],
+  "_offen": [
+    "Korrespondenzen für Kunst und Ethik fehlen: die Inhaltsfelder-Tabellen dieser beiden Kerncurricula nennen keine pauschale Verknüpfung.",
+    "Leitstrukturen fuer Mathematik (Leitideen), Sachunterricht (Basiskonzepte) und Ethik (Leitperspektiven) sind nur als strukturName gefuehrt, nicht als eigene Knoten."
+  ],
+  "korrespondenzen": [
+    {
+      "von": "ma.kb.darstellen",
+      "nach": "ma.if.muster"
+    },
+    {
+      "von": "ma.kb.darstellen",
+      "nach": "ma.if.zahl_operation"
+    },
+    {
+      "von": "ma.kb.darstellen",
+      "nach": "ma.if.raum_form"
+    },
+    {
+      "von": "ma.kb.darstellen",
+      "nach": "ma.if.groessen_messen"
+    },
+    {
+      "von": "ma.kb.darstellen",
+      "nach": "ma.if.daten_zufall"
+    },
+    {
+      "von": "ma.kb.kommunizieren",
+      "nach": "ma.if.muster"
+    },
+    {
+      "von": "ma.kb.kommunizieren",
+      "nach": "ma.if.zahl_operation"
+    },
+    {
+      "von": "ma.kb.kommunizieren",
+      "nach": "ma.if.raum_form"
+    },
+    {
+      "von": "ma.kb.kommunizieren",
+      "nach": "ma.if.groessen_messen"
+    },
+    {
+      "von": "ma.kb.kommunizieren",
+      "nach": "ma.if.daten_zufall"
+    },
+    {
+      "von": "ma.kb.argumentieren",
+      "nach": "ma.if.muster"
+    },
+    {
+      "von": "ma.kb.argumentieren",
+      "nach": "ma.if.zahl_operation"
+    },
+    {
+      "von": "ma.kb.argumentieren",
+      "nach": "ma.if.raum_form"
+    },
+    {
+      "von": "ma.kb.argumentieren",
+      "nach": "ma.if.groessen_messen"
+    },
+    {
+      "von": "ma.kb.argumentieren",
+      "nach": "ma.if.daten_zufall"
+    },
+    {
+      "von": "ma.kb.symbolisch",
+      "nach": "ma.if.muster"
+    },
+    {
+      "von": "ma.kb.symbolisch",
+      "nach": "ma.if.zahl_operation"
+    },
+    {
+      "von": "ma.kb.symbolisch",
+      "nach": "ma.if.raum_form"
+    },
+    {
+      "von": "ma.kb.symbolisch",
+      "nach": "ma.if.groessen_messen"
+    },
+    {
+      "von": "ma.kb.symbolisch",
+      "nach": "ma.if.daten_zufall"
+    },
+    {
+      "von": "ma.kb.problemloesen",
+      "nach": "ma.if.muster"
+    },
+    {
+      "von": "ma.kb.problemloesen",
+      "nach": "ma.if.zahl_operation"
+    },
+    {
+      "von": "ma.kb.problemloesen",
+      "nach": "ma.if.raum_form"
+    },
+    {
+      "von": "ma.kb.problemloesen",
+      "nach": "ma.if.groessen_messen"
+    },
+    {
+      "von": "ma.kb.problemloesen",
+      "nach": "ma.if.daten_zufall"
+    },
+    {
+      "von": "ma.kb.modellieren",
+      "nach": "ma.if.muster"
+    },
+    {
+      "von": "ma.kb.modellieren",
+      "nach": "ma.if.zahl_operation"
+    },
+    {
+      "von": "ma.kb.modellieren",
+      "nach": "ma.if.raum_form"
+    },
+    {
+      "von": "ma.kb.modellieren",
+      "nach": "ma.if.groessen_messen"
+    },
+    {
+      "von": "ma.kb.modellieren",
+      "nach": "ma.if.daten_zufall"
+    },
+    {
+      "von": "su.kb.erkenntnisgewinnung",
+      "nach": "su.if.gesellschaft_politik"
+    },
+    {
+      "von": "su.kb.erkenntnisgewinnung",
+      "nach": "su.if.natur"
+    },
+    {
+      "von": "su.kb.erkenntnisgewinnung",
+      "nach": "su.if.raum"
+    },
+    {
+      "von": "su.kb.erkenntnisgewinnung",
+      "nach": "su.if.technik"
+    },
+    {
+      "von": "su.kb.erkenntnisgewinnung",
+      "nach": "su.if.geschichte_zeit"
+    },
+    {
+      "von": "su.kb.kommunikation",
+      "nach": "su.if.gesellschaft_politik"
+    },
+    {
+      "von": "su.kb.kommunikation",
+      "nach": "su.if.natur"
+    },
+    {
+      "von": "su.kb.kommunikation",
+      "nach": "su.if.raum"
+    },
+    {
+      "von": "su.kb.kommunikation",
+      "nach": "su.if.technik"
+    },
+    {
+      "von": "su.kb.kommunikation",
+      "nach": "su.if.geschichte_zeit"
+    },
+    {
+      "von": "su.kb.bewertung",
+      "nach": "su.if.gesellschaft_politik"
+    },
+    {
+      "von": "su.kb.bewertung",
+      "nach": "su.if.natur"
+    },
+    {
+      "von": "su.kb.bewertung",
+      "nach": "su.if.raum"
+    },
+    {
+      "von": "su.kb.bewertung",
+      "nach": "su.if.technik"
+    },
+    {
+      "von": "su.kb.bewertung",
+      "nach": "su.if.geschichte_zeit"
+    },
+    {
+      "von": "de.kb.sprechen_zuhoeren",
+      "nach": "de.if.gespraechsformen"
+    },
+    {
+      "von": "de.kb.sprechen_zuhoeren",
+      "nach": "de.if.gespraechsstrategien"
+    },
+    {
+      "von": "de.kb.sprechen_zuhoeren",
+      "nach": "de.if.gespraechskonventionen"
+    },
+    {
+      "von": "de.kb.schreiben",
+      "nach": "de.if.schreibformen"
+    },
+    {
+      "von": "de.kb.schreiben",
+      "nach": "de.if.schreibstrategien"
+    },
+    {
+      "von": "de.kb.schreiben",
+      "nach": "de.if.schreibnormen"
+    },
+    {
+      "von": "de.kb.lesen",
+      "nach": "de.if.textformen"
+    },
+    {
+      "von": "de.kb.lesen",
+      "nach": "de.if.lesestrategien"
+    },
+    {
+      "von": "de.kb.lesen",
+      "nach": "de.if.lesarten"
+    },
+    {
+      "von": "de.kb.sprache_untersuchen",
+      "nach": "de.if.sprachformen"
+    },
+    {
+      "von": "de.kb.sprache_untersuchen",
+      "nach": "de.if.analyseverfahren"
+    },
+    {
+      "von": "de.kb.sprache_untersuchen",
+      "nach": "de.if.sprachnormen"
+    }
+  ]
+}

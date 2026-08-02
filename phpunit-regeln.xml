@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Reine Regeltests ohne Nextcloud-Installation.
+  Vollständige Tests mit Datenbankzugriff: phpunit.xml
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="tests/php/bootstrap-regeln.php"
+         colors="true" cacheDirectory=".phpunit.cache">
+	<testsuites>
+		<testsuite name="regeln">
+			<file>tests/php/RegelnTest.php</file>
+			<file>tests/php/PdfTest.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>

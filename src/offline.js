@@ -1,0 +1,180 @@
+import { openDB } from 'idb'
+
+/**
+ * Offline-Warteschlange der Erfassung (Kapitel 5.11–5.14, D9).
+ *
+ * Grundsatz: Speichern wartet nie. Jede Beobachtung geht zuerst in die
+ * lokale Datenbank und wird danach im Hintergrund übertragen. Bei 20
+ * Erfassungen am Tag ist jede Wartesekunde zwanzigfach spürbar — hängt das
+ * Speichern ein einziges Mal, gilt die App im Kopf der Lehrkraft als kaputt.
+ *
+ * Auch eine abgelaufene Nextcloud-Sitzung darf die Erfassung nicht
+ * blockieren: die Warteschlange übersteht einen Authentifizierungsfehler und
+ * liefert nach erneuter Anmeldung nach.
+ */
+
+const DB_NAME = 'kidseye'
+const DB_VERSION = 1
+const SPEICHER = 'warteschlange'
+const ENTWURF = 'entwurf'
+
+let dbPromise = null
+
+function db() {
+	if (!dbPromise) {
+		dbPromise = openDB(DB_NAME, DB_VERSION, {
+			upgrade(datenbank) {
+				if (!datenbank.objectStoreNames.contains(SPEICHER)) {
+					const speicher = datenbank.createObjectStore(SPEICHER, { keyPath: 'clientUuid' })
+					speicher.createIndex('erstelltAm', 'erstelltAm')
+					speicher.createIndex('zustand', 'zustand')
+				}
+				if (!datenbank.objectStoreNames.contains(ENTWURF)) {
+					datenbank.createObjectStore(ENTWURF, { keyPath: 'schluessel' })
+				}
+			},
+		})
+	}
+	return dbPromise
+}
+
+/** Vom Client vergebene Kennung — Grundlage des Dublettenschutzes. */
+export function neueUuid() {
+	if (globalThis.crypto?.randomUUID) {
+		return globalThis.crypto.randomUUID()
+	}
+	return 'k-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
+}
+
+/**
+ * Nimmt eine Beobachtung entgegen. Kehrt sofort zurück — ohne Netzzugriff.
+ */
+export async function einreihen(beobachtung) {
+	const eintrag = {
+		...beobachtung,
+		clientUuid: beobachtung.clientUuid || neueUuid(),
+		// Echter Erfassungszeitpunkt vom Gerät, damit offline erfasste
+		// Einträge nicht auf den Zeitpunkt der Übertragung rutschen.
+		erfasstAm: beobachtung.erfasstAm || new Date().toISOString(),
+		erstelltAm: Date.now(),
+		zustand: 'offen',
+		versuche: 0,
+	}
+	const datenbank = await db()
+	await datenbank.put(SPEICHER, eintrag)
+	return eintrag
+}
+
+export async function offene() {
+	const datenbank = await db()
+	const alle = await datenbank.getAll(SPEICHER)
+	return alle
+		.filter((e) => e.zustand !== 'fertig')
+		.sort((a, b) => a.erstelltAm - b.erstelltAm)
+}
+
+export async function anzahlOffen() {
+	return (await offene()).length
+}
+
+export async function entfernen(clientUuid) {
+	const datenbank = await db()
+	await datenbank.delete(SPEICHER, clientUuid)
+}
+
+/** Rückgängig innerhalb des Undo-Fensters, solange noch nicht übertragen. */
+export async function zuruecknehmen(clientUuid) {
+	const datenbank = await db()
+	const eintrag = await datenbank.get(SPEICHER, clientUuid)
+	if (!eintrag) {
+		return false
+	}
+	await datenbank.delete(SPEICHER, clientUuid)
+	// Wurde bereits übertragen, muss der Server ihn löschen
+	return eintrag.serverId || null
+}
+
+async function markiere(clientUuid, aenderung) {
+	const datenbank = await db()
+	const eintrag = await datenbank.get(SPEICHER, clientUuid)
+	if (eintrag) {
+		await datenbank.put(SPEICHER, { ...eintrag, ...aenderung })
+	}
+}
+
+/**
+ * Überträgt die Warteschlange.
+ *
+ * @param {Function} senden  async (eintraege) => { uebernommen, fehler }
+ * @returns {Promise<{gesendet:number, offen:number, blockiert:boolean}>}
+ */
+export async function synchronisieren(senden) {
+	const wartend = await offene()
+	if (wartend.length === 0) {
+		return { gesendet: 0, offen: 0, blockiert: false }
+	}
+
+	let antwort
+	try {
+		antwort = await senden(wartend.map(zuNutzlast))
+	} catch (fehler) {
+		// Kein Netz oder abgelaufene Sitzung: nichts verwerfen, später erneut.
+		// Genau hier entscheidet sich, ob ein Sitzungsablauf mitten im
+		// Unterricht Daten kostet — er tut es nicht.
+		const blockiert = fehler?.response?.status === 401 || fehler?.response?.status === 403
+		for (const eintrag of wartend) {
+			await markiere(eintrag.clientUuid, { versuche: (eintrag.versuche || 0) + 1 })
+		}
+		return { gesendet: 0, offen: wartend.length, blockiert }
+	}
+
+	for (const treffer of antwort?.uebernommen || []) {
+		if (treffer.clientUuid) {
+			await entfernen(treffer.clientUuid)
+		}
+	}
+	for (const fehler of antwort?.fehler || []) {
+		if (fehler.clientUuid) {
+			await markiere(fehler.clientUuid, { zustand: 'fehler', meldung: fehler.meldung })
+		}
+	}
+
+	return {
+		gesendet: (antwort?.uebernommen || []).length,
+		offen: await anzahlOffen(),
+		blockiert: false,
+	}
+}
+
+function zuNutzlast(eintrag) {
+	const { erstelltAm, zustand, versuche, meldung, serverId, ...nutzlast } = eintrag
+	return nutzlast
+}
+
+// --------------------------------------------------------------- Entwurf
+
+/**
+ * Entwurfsspeicherung (5.14): geht das Gerät während der Texteingabe zu,
+ * ist der Text beim nächsten Öffnen unverändert da.
+ */
+export async function entwurfSpeichern(schluessel, inhalt) {
+	const datenbank = await db()
+	await datenbank.put(ENTWURF, { schluessel, inhalt, zeit: Date.now() })
+}
+
+export async function entwurfLesen(schluessel) {
+	const datenbank = await db()
+	const eintrag = await datenbank.get(ENTWURF, schluessel)
+	return eintrag?.inhalt ?? null
+}
+
+export async function entwurfLoeschen(schluessel) {
+	const datenbank = await db()
+	await datenbank.delete(ENTWURF, schluessel)
+}
+
+export async function alleslLoeschen() {
+	const datenbank = await db()
+	await datenbank.clear(SPEICHER)
+	await datenbank.clear(ENTWURF)
+}

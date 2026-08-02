@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>kidseye</id>
+	<name>kidseye</name>
+	<summary>Schülerbeobachtung für die Grundschule</summary>
+	<description><![CDATA[
+Beobachtungen zu einzelnen Kindern in Sekunden erfassen, automatisch an das
+hessische Kerncurriculum binden und daraus Belege für Elterngespräch,
+Zeugnis und Förderplan gewinnen.
+
+Erfassen und Einschätzen sind getrennt: im Unterricht wird nur festgehalten.
+Die pädagogische Einschätzung trifft die Lehrkraft — kidseye erzeugt keine
+Noten, keine Einstufungen und keine automatischen Bewertungen.
+	]]></description>
+	<version>0.1.0</version>
+	<licence>agpl</licence>
+	<author>Johannes Brötzens</author>
+	<namespace>KidsEye</namespace>
+
+	<category>tools</category>
+	<category>office</category>
+
+	<bugs>https://github.com/foe05/kidseye/issues</bugs>
+
+	<dependencies>
+		<php min-version="8.1" />
+		<nextcloud min-version="30" max-version="33" />
+	</dependencies>
+
+	<commands>
+		<command>OCA\KidsEye\Command\RahmenImportieren</command>
+		<command>OCA\KidsEye\Command\RahmenAuflisten</command>
+		<command>OCA\KidsEye\Command\Einrichten</command>
+	</commands>
+
+	<navigations>
+		<navigation>
+			<id>kidseye</id>
+			<name>kidseye</name>
+			<route>kidseye.page.index</route>
+			<icon>app.svg</icon>
+			<order>10</order>
+		</navigation>
+	</navigations>
+</info>
