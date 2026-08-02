@@ -9,7 +9,7 @@ use OCA\KidsEye\Service\MarkerService;
 use OCA\KidsEye\Service\RahmenImportService;
 use OCA\KidsEye\Service\StammdatenService;
 use OCA\KidsEye\Service\ZweckService;
-use OC\Core\Command\Base;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Mehrfach aufrufbar — es wird nur angelegt, was fehlt.
  */
-class Einrichten extends Base {
+class Einrichten extends Command {
 
 	public function __construct(
 		private RahmenImportService $rahmenImport,
@@ -48,10 +48,10 @@ class Einrichten extends Base {
 		// Reihenfolge ist nicht beliebig: Marker verweisen auf Knoten des
 		// Rahmens und auf Verwendungszwecke, Kontexte auf Fächer des Rahmens.
 		if (!$input->getOption('ohne-rahmen')) {
-			$datei = RahmenImportService::mitgelieferterPfad('hessen-primarstufe-2011.json');
+			$datei = $this->rahmenImport->mitgelieferterPfad('hessen-primarstufe-2011.json');
 			if (!is_readable($datei)) {
 				$output->writeln("<error>Rahmendatei nicht lesbar: $datei</error>");
-				return 1;
+				return Command::FAILURE;
 			}
 			$daten = json_decode((string)file_get_contents($datei), true);
 			$fehler = $this->rahmenImport->pruefe($daten);
@@ -60,7 +60,7 @@ class Einrichten extends Base {
 				foreach (array_slice($fehler, 0, 10) as $zeile) {
 					$output->writeln("  - $zeile");
 				}
-				return 1;
+				return Command::FAILURE;
 			}
 			$ergebnis = $this->rahmenImport->importiere($daten);
 			$output->writeln(sprintf(
@@ -101,6 +101,6 @@ class Einrichten extends Base {
 		$output->writeln('  - Gruppenordner "/Beobachtung" für die Arbeitsproben einrichten');
 		$output->writeln('  - Klassen, Kinder und Lehraufträge anlegen (oder per CSV importieren)');
 		$output->writeln('  - Aufbewahrungsfristen mit der Datenschutzbeauftragung abstimmen');
-		return 0;
+		return Command::SUCCESS;
 	}
 }

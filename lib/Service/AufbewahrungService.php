@@ -252,7 +252,7 @@ class AufbewahrungService {
 			->where($q->expr()->in('beobachtung_id',
 				$q->createNamedParameter($beobachtungIds, IQueryBuilder::PARAM_INT_ARRAY)));
 		$treffer = $q->executeQuery();
-		$kandidaten = array_map('intval', $treffer->fetchAll(\PDO::FETCH_COLUMN) ?: []);
+		$kandidaten = array_column($treffer->fetchAll(), 'file_id');
 		$treffer->closeCursor();
 
 		if ($kandidaten === []) {
@@ -266,7 +266,7 @@ class AufbewahrungService {
 			->andWhere($q->expr()->notIn('beobachtung_id',
 				$q->createNamedParameter($beobachtungIds, IQueryBuilder::PARAM_INT_ARRAY)));
 		$treffer = $q->executeQuery();
-		$nochBenutzt = array_map('intval', $treffer->fetchAll(\PDO::FETCH_COLUMN) ?: []);
+		$nochBenutzt = array_column($treffer->fetchAll(), 'file_id');
 		$treffer->closeCursor();
 
 		return array_values(array_diff($kandidaten, $nochBenutzt));

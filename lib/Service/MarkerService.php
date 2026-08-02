@@ -192,7 +192,7 @@ class MarkerService {
 			$q->select('id')->from('kidseye_marker')
 				->where($q->expr()->eq('kontext_id', $q->createNamedParameter($kontextId, IQueryBuilder::PARAM_INT)));
 			$treffer = $q->executeQuery();
-			$alt = array_map('intval', $treffer->fetchAll(\PDO::FETCH_COLUMN) ?: []);
+			$alt = array_column($treffer->fetchAll(), 'id');
 			$treffer->closeCursor();
 
 			if ($alt !== []) {

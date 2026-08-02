@@ -30,6 +30,7 @@ class RahmenImportService {
 
 	public function __construct(
 		private IDBConnection $db,
+		private IAppManager $appManager,
 	) {
 	}
 
@@ -268,10 +269,15 @@ class RahmenImportService {
 		])->executeStatement();
 	}
 
-	/** Pfad zum mitgelieferten Rahmen im App-Verzeichnis. */
-	public static function mitgelieferterPfad(string $datei): string {
-		$appPfad = \OCP\Server::get(IAppManager::class)->getAppPath(Application::APP_ID);
-
-		return $appPfad . '/data/rahmen/' . $datei;
+	/**
+	 * Pfad zum mitgelieferten Rahmen im App-Verzeichnis.
+	 *
+	 * Über IAppManager statt über \OC_App: Letzteres liegt im privaten
+	 * Namensraum, und Nextcloud 34 hat bereits Methoden aus der
+	 * Schwesterklasse \OC_Util entfernt.
+	 */
+	public function mitgelieferterPfad(string $datei): string {
+		return $this->appManager->getAppPath(Application::APP_ID)
+			. '/data/rahmen/' . $datei;
 	}
 }

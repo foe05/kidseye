@@ -16,7 +16,7 @@ Stunde, davon 20 Minuten Wartezeit beim Bauen des Frontends.
 
 | | |
 |---|---|
-| Nextcloud | 30 bis 33 |
+| Nextcloud | 30 bis 34 |
 | PHP | 8.1 oder neuer |
 | Node.js | 20 oder neuer, **nur zum Bauen** — auf dem Server nicht nötig |
 | Datenbank | MariaDB, MySQL oder PostgreSQL (SQLite geht, ist aber für den Dauerbetrieb nicht empfohlen) |
@@ -93,7 +93,7 @@ mysql -u nextcloud -p nextcloud -e "SHOW TABLES LIKE 'oc_kidseye%';" | wc -l
 
 | Fehler | Ursache | Abhilfe |
 |---|---|---|
-| `App is not compatible` | Nextcloud-Version außerhalb 30–33 | In `appinfo/info.xml` die `max-version` anpassen und erneut versuchen |
+| `App is not compatible` | Nextcloud-Version außerhalb 30–34 | In `appinfo/info.xml` die `max-version` anpassen und erneut versuchen |
 | `Class ... not found` | Autoloader kennt die App noch nicht | `occ app:disable kidseye && occ app:enable kidseye` |
 | Fehler beim Anlegen einer Tabelle | Namenskonflikt oder zu langer Index | Meldung notieren — das wäre ein Fehler in der Migration, bitte melden |
 | Weiße Seite beim Aufruf | `js/` fehlt | Schritt 1 wiederholen, `npm run build` |

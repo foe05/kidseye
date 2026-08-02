@@ -249,7 +249,7 @@ class InboxService {
 			->andWhere($q->expr()->neq('sichtbarkeit', $q->createNamedParameter(ZugriffService::SICHT_AKTE)))
 			->andWhere($q->expr()->isNull('geloescht_am'));
 		$treffer = $q->executeQuery();
-		$erlaubt = array_map('intval', $treffer->fetchAll(\PDO::FETCH_COLUMN) ?: []);
+		$erlaubt = array_column($treffer->fetchAll(), 'id');
 		$treffer->closeCursor();
 		return $erlaubt;
 	}

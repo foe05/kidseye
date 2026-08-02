@@ -25,7 +25,7 @@ Noten, keine Einstufungen und keine automatischen Bewertungen.
 
 	<dependencies>
 		<php min-version="8.1" />
-		<nextcloud min-version="30" max-version="33" />
+		<nextcloud min-version="30" max-version="34" />
 	</dependencies>
 
 	<commands>

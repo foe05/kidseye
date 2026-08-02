@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\KidsEye\Command;
 
-use OC\Core\Command\Base;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use OCP\IDBConnection;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Zeigt die eingespielten Rahmenversionen mit ihrer Knotenzahl.
  */
-class RahmenAuflisten extends Base {
+class RahmenAuflisten extends Command {
 
 	public function __construct(
 		private IDBConnection $db,
@@ -25,7 +26,6 @@ class RahmenAuflisten extends Base {
 	protected function configure(): void {
 		$this->setName('kidseye:rahmen:list')
 			->setDescription('Eingespielte Kompetenzrahmen und ihre Versionen anzeigen');
-		parent::configure();
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
@@ -55,11 +55,16 @@ class RahmenAuflisten extends Base {
 		if ($zeilen === []) {
 			$output->writeln('<comment>Kein Kompetenzrahmen eingespielt.</comment>');
 			$output->writeln('Einspielen mit: <info>occ kidseye:rahmen:import</info>');
-			return 0;
+			return Command::SUCCESS;
 		}
 
-		$this->writeTableInOutputFormat($input, $output, $zeilen);
-		return 0;
+		$tabelle = new Table($output);
+		$tabelle->setHeaders(['ID', 'Rahmen', 'Version', 'Name', 'Gültig ab', 'Knoten']);
+		foreach ($zeilen as $zeile) {
+			$tabelle->addRow(array_values($zeile));
+		}
+		$tabelle->render();
+		return Command::SUCCESS;
 	}
 
 	private function knotenZahl(int $versionId): int {
