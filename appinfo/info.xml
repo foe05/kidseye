@@ -23,9 +23,20 @@ Noten, keine Einstufungen und keine automatischen Bewertungen.
 
 	<bugs>https://github.com/foe05/kidseye/issues</bugs>
 
+	<!--
+		max-version ist im Schema Pflicht (info.xsd: use="required"), lässt sich
+		also nicht weglassen. Der Wert ist gegen die Critical Changes von
+		Nextcloud 34 und 35 geprüft: keine der dort entfernten Klassen, Methoden
+		oder Frontend-APIs wird hier benutzt. Für 36 liegen noch keine
+		Änderungslisten vor; bis dahin hilft die Option "force" beim
+		Aktivieren über occ.
+
+		Hinweis: Nextcloud 35 verlangt serverseitig PHP 8.3. Die App selbst
+		kommt mit 8.1 aus.
+	-->
 	<dependencies>
 		<php min-version="8.1" />
-		<nextcloud min-version="30" max-version="34" />
+		<nextcloud min-version="30" max-version="35" />
 	</dependencies>
 
 	<commands>

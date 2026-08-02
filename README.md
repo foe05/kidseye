@@ -84,7 +84,7 @@ sudo -u www-data php occ app:enable kidseye
 sudo -u www-data php occ kidseye:einrichten --schuljahr 2026/27
 ```
 
-**Voraussetzungen:** Nextcloud 30–34, PHP 8.1+, Node 20+ für den Bau des
+**Voraussetzungen:** Nextcloud 30–35, PHP 8.1+, Node 20+ für den Bau des
 Frontends.
 
 ## Entwicklung
