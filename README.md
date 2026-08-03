@@ -9,6 +9,9 @@ Schule — die Daten verlassen das Haus nicht.
 
 > **Stand: Vorabfassung.** Der Code ist vollständig und getestet, aber noch nie
 > auf einer laufenden Nextcloud installiert worden. Siehe [Projektstand](#projektstand).
+>
+> **Du steigst neu ein oder machst nach einer Pause weiter?**
+> → [WEITERMACHEN.md](WEITERMACHEN.md)
 
 ---
 
