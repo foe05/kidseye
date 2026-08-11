@@ -1,6 +1,6 @@
 # Weitermachen
 
-Übergabe für die nächste Sitzung. Stand: **3. August 2026**.
+Übergabe für die nächste Sitzung. Stand: **11. August 2026**.
 
 Wenn du hier neu einsteigst, lies zuerst die drei Abschnitte
 [Wo es klemmt](#wo-es-klemmt), [Was als Nächstes dran ist](#was-als-nächstes-dran-ist)
@@ -19,35 +19,26 @@ laufenden Nextcloud installiert worden.** Das ist der nächste Schritt.
 
 ## Wo es klemmt
 
-**Zwei Commits liegen noch nicht auf `main`.** Das ist die wichtigste
+**Die App ist noch nie auf einer laufenden Nextcloud installiert worden.**
+Das ist die einzige verbliebene offene Flanke — und die wichtigste
 Information dieses Dokuments.
 
-```
-origin/main                  003cc6b  Merge pull request #1
-                             c8e7566  Beobachtungs-Workflow umsetzen        ✔ auf main
-                             ca6fbfb  Initial commit
+Der Codestand ist seit dem 11. August vollständig auf `main`. Der frühere
+Hinweis „zwei Commits fehlen auf `main`" ist erledigt: der Zweig
+`add-beobachtungs-workflow` wurde auf `main` rebasiert und gemerged.
 
-add-beobachtungs-workflow    21d3d6d  Versionsbereich bis Nextcloud 35      ✘ fehlt auf main
-                             3c6b57a  Nextcloud 34, private APIs abgelöst   ✘ fehlt auf main
-                             c8e7566  ← ab hier gemeinsam
-```
+Dabei war eine Doppelarbeit aufzulösen — auf zwei Rechnern war unabhängig
+derselbe Fehler repariert worden:
 
-Der Pull Request #1 wurde am 2. August gemerged, danach kamen noch zwei
-Commits auf dem Branch dazu.
+| | |
+|---|---|
+| `\OC_App::getAppPath()` | Behalten wurde die Variante über **Dependency Injection** (`IAppManager` im Konstruktor, `mitgelieferterPfad()` als Instanzmethode), nicht die über `\OCP\Server::get()`. Die beiden Aufrufer in `lib/Command/` sind entsprechend umgestellt. |
+| `package-lock.json` | Kam mit dem Build-Setup und listete noch `@nextcloud/vue` und `vue-router`, die zwischenzeitlich aus `package.json` geflogen waren. Neu erzeugt; beide stehen jetzt korrekt als Peer-Abhängigkeit von `@nextcloud/dialogs` im Baum. |
 
-**Praktische Folge:** Wer die App jetzt von `main` installiert, bekommt
-`max-version="33"` in der `info.xml` und vier Aufrufe in Nextclouds privatem
-Namensraum. Auf einer Nextcloud 34 bricht `occ app:enable` mit
-„App is not compatible" ab.
-
-Zusammenführen geht nicht mehr per Fast-Forward, weil `main` durch den
-Merge-Commit einen eigenen Kopf hat. Zwei Wege:
-
-- Pull Request: https://github.com/foe05/kidseye/pull/new/add-beobachtungs-workflow
-- oder lokal: `git checkout main && git pull && git merge add-beobachtungs-workflow && git push`
-
-Inhaltlich konfliktfrei — der Merge-Commit hat nichts geändert, was danach
-angefasst wurde.
+Verifiziert nach dem Zusammenführen: `npm ci` (Exit 0), `npm test`
+(65 grün), `npm run build` (erzeugt `kidseye-main.js` und
+`kidseye-unterricht.js`). PHP-Tests nicht erneut gelaufen — kein PHP in der
+Umgebung, siehe unten.
 
 ---
 
@@ -55,23 +46,22 @@ angefasst wurde.
 
 In dieser Reihenfolge:
 
-1. **Die beiden Commits nach `main` bringen** (siehe oben)
-2. **Auf der Nextcloud installieren** — Anleitung: [`docs/INSTALLATION.md`](docs/INSTALLATION.md).
+1. **Auf der Nextcloud installieren** — Anleitung: [`docs/INSTALLATION.md`](docs/INSTALLATION.md).
    Zehn Schritte, rund eine Stunde. Vorher Datenbank sichern, die App legt
    21 Tabellen an.
-3. **Geräteprüfung auf dem iPad** — [`tests/protokolle/geraetepruefung.md`](tests/protokolle/geraetepruefung.md).
+2. **Geräteprüfung auf dem iPad** — [`tests/protokolle/geraetepruefung.md`](tests/protokolle/geraetepruefung.md).
    Rund 30 Minuten. Das ist der Test, der über den gesamten
    Erfassungs-Workflow entscheidet: startet das Symbol im Vollbild, übersteht
    die Warteschlange einen Sitzungsablauf, bleibt die Erfassung unter zehn
    Sekunden?
-4. **Marker-Wortlisten von der Lehrkraft holen** — die 42 mitgelieferten sind
+3. **Marker-Wortlisten von der Lehrkraft holen** — die 42 mitgelieferten sind
    ausdrücklich nur Vorschläge. Erfassungsbogen in
    [`tests/protokolle/praxistest.md`](tests/protokolle/praxistest.md).
-5. **Datenschutz klären** — ausfüllfertige Vorlage in
+4. **Datenschutz klären** — ausfüllfertige Vorlage in
    [`tests/protokolle/datenschutz-vorlage.md`](tests/protokolle/datenschutz-vorlage.md),
    fünf Entscheidungsfragen mit Ankreuzfeldern.
 
-Schritt 2 und 3 sind der eigentliche Lackmustest. Alles davor ist Theorie.
+Schritt 1 und 2 sind der eigentliche Lackmustest. Alles davor ist Theorie.
 
 ---
 
@@ -114,8 +104,9 @@ bis D17.
 
 - XML-Kommentare dürfen kein `--` enthalten. Ein `occ app:enable --force` im
   Kommentar der `info.xml` macht die Datei ungültig.
-- `npm ci` scheitert an Peer-Dependencies; `npm install --legacy-peer-deps`
-  funktioniert.
+- `npm ci` scheiterte früher an Peer-Dependencies. Seit die `package-lock.json`
+  im Repo liegt und mit `package.json` abgeglichen ist, läuft es durch —
+  `--legacy-peer-deps` ist nicht mehr nötig.
 - `max-version` in der `info.xml` lässt sich **nicht weglassen** — das
   offizielle Schema führt sie als `use="required"`. Aktuell steht sie auf 35,
   geprüft gegen die Critical Changes von 34 und 35.
