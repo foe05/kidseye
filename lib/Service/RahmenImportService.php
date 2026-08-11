@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\KidsEye\Service;
 
 use OCA\KidsEye\AppInfo\Application;
+use OCP\App\IAppManager;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
@@ -269,6 +270,8 @@ class RahmenImportService {
 
 	/** Pfad zum mitgelieferten Rahmen im App-Verzeichnis. */
 	public static function mitgelieferterPfad(string $datei): string {
-		return \OC_App::getAppPath(Application::APP_ID) . '/data/rahmen/' . $datei;
+		$appPfad = \OCP\Server::get(IAppManager::class)->getAppPath(Application::APP_ID);
+
+		return $appPfad . '/data/rahmen/' . $datei;
 	}
 }

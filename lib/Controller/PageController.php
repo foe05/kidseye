@@ -26,6 +26,7 @@ class PageController extends Controller {
 	 * Verwaltung, Inbox und Auswertung: normale Nextcloud-Oberfläche.
 	 */
 	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function index(): TemplateResponse {
 		Util::addScript(Application::APP_ID, 'kidseye-main');
 		return new TemplateResponse(Application::APP_ID, 'index');
