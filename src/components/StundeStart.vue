@@ -10,14 +10,14 @@
 	<form class="start" @submit.prevent="absenden">
 		<h2>Stunde starten</h2>
 
-		<label class="feld">
+		<label class="ke-feld">
 			<span>Klasse</span>
 			<select v-model.number="klasseId" @change="kontextId = null">
 				<option v-for="k in klassen" :key="k.id" :value="k.id">{{ k.name }}</option>
 			</select>
 		</label>
 
-		<label class="feld">
+		<label class="ke-feld">
 			<span>Kontext</span>
 			<select v-model.number="kontextId" :disabled="!klasseId" @change="inhaltsfeldId = null">
 				<option :value="null" disabled>bitte wählen</option>
@@ -25,7 +25,7 @@
 			</select>
 		</label>
 
-		<label v-if="inhaltsfelder.length" class="feld">
+		<label v-if="inhaltsfelder.length" class="ke-feld">
 			<span>Schwerpunkt <em>optional</em></span>
 			<select v-model.number="inhaltsfeldId">
 				<option :value="null">— kein Schwerpunkt —</option>
@@ -145,11 +145,8 @@ export default {
 	margin-inline: auto;
 }
 h2 { margin: 0; }
-.feld { display: flex; flex-direction: column; gap: .3rem; }
-.feld > span { font-size: .8rem; opacity: .8; }
-.feld em { font-style: normal; opacity: .6; }
-.feld select { min-height: 44px; width: 100%; }
-.feld small { font-size: .72rem; opacity: .65; line-height: 1.4; }
+/* Anordnung, Beschriftungsgröße, Feldhöhe und -breite kommen aus
+   css/kidseye.css (.ke-feld) — hier stand dieselbe Regel einmal von neun. */
 .hinweis {
 	margin: 0;
 	font-size: .8rem;
@@ -158,5 +155,5 @@ h2 { margin: 0; }
 	border-left: 2px solid var(--color-border);
 	padding-left: .6rem;
 }
-.primary { min-height: 48px; }
+/* .primary trägt seine 48 px aus css/kidseye.css. */
 </style>

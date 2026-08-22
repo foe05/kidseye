@@ -8,14 +8,14 @@
 	<div class="aw">
 		<h2>Auswertung</h2>
 
-		<div class="aw-filter">
-			<label>
+		<div class="ke-filterzeile">
+			<label class="ke-feld">
 				<span>Klasse</span>
 				<select v-model.number="klasseId" @change="klasseGewechselt">
 					<option v-for="k in klassen" :key="k.id" :value="k.id">{{ k.name }}</option>
 				</select>
 			</label>
-			<label>
+			<label class="ke-feld">
 				<span>Ansicht</span>
 				<select v-model="modus" @change="laden">
 					<option value="luecken">Lücken-Radar</option>
@@ -23,13 +23,13 @@
 					<option value="kind">Einzelnes Kind</option>
 				</select>
 			</label>
-			<label v-if="modus === 'kind'">
+			<label v-if="modus === 'kind'" class="ke-feld">
 				<span>Kind</span>
 				<select v-model.number="schuelerId" @change="laden">
 					<option v-for="k in kinder" :key="k.id" :value="k.id">{{ k.anzeige }}</option>
 				</select>
 			</label>
-			<label v-if="modus === 'kind'">
+			<label v-if="modus === 'kind'" class="ke-feld">
 				<span>Mappe</span>
 				<select v-model="zweck" @change="laden">
 					<option :value="null">— alle Beobachtungen —</option>
@@ -200,10 +200,9 @@ export default {
 <style scoped>
 .aw { padding: 1rem; max-width: 60rem; }
 .aw h2 { margin-top: 0; }
-.aw-filter { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
-.aw-filter label { display: flex; flex-direction: column; gap: .2rem; }
-.aw-filter span { font-size: .75rem; opacity: .75; }
-.aw-filter select { min-height: 40px; min-width: 10rem; }
+/* Filterzeile und Felder kommen aus css/kidseye.css (.ke-filterzeile,
+   .ke-feld). Das frühere `min-width: 10rem` ließ ein Feld mit langem
+   Eintragstext mitwachsen und die Zeile ungleichmäßig umbrechen (E7). */
 .aw-hinweis {
 	font-size: .82rem; line-height: 1.6; opacity: .8;
 	border-left: 2px solid var(--color-border); padding-left: .75rem; margin: 0 0 1rem;

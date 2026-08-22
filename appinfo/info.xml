@@ -43,6 +43,7 @@ Noten, keine Einstufungen und keine automatischen Bewertungen.
 		<command>OCA\KidsEye\Command\RahmenImportieren</command>
 		<command>OCA\KidsEye\Command\RahmenAuflisten</command>
 		<command>OCA\KidsEye\Command\Einrichten</command>
+		<command>OCA\KidsEye\Command\Pruefen</command>
 	</commands>
 
 	<navigations>

@@ -8,8 +8,8 @@ async function holen(pfad, params = {}) {
 	return data
 }
 
-async function senden(pfad, nutzlast = {}, methode = 'post') {
-	const { data } = await axios[methode](basis(pfad), nutzlast)
+async function senden(pfad, nutzlast = {}, methode = 'post', einstellungen = undefined) {
+	const { data } = await axios[methode](basis(pfad), nutzlast, einstellungen)
 	return data
 }
 
@@ -23,7 +23,13 @@ export default {
 	bildschirm: () => holen('/bildschirm'),
 	erfassen: (beobachtung) => senden('/beobachtung', beobachtung),
 	erfassenMehrere: (nutzlast) => senden('/beobachtung/mehrere', nutzlast),
-	synchronisieren: (eintraege) => senden('/beobachtung/sync', { eintraege }),
+	// X-Requested-With beantwortet Nextcloud eine abgelaufene Sitzung mit 401,
+	// statt auf die Anmeldeseite umzuleiten. Ohne das Feld käme die Umleitung
+	// als HTML mit Status 200 zurück und sähe wie eine geglückte Übertragung
+	// von null Einträgen aus (offline.js, istAbgemeldet).
+	synchronisieren: (eintraege) => senden('/beobachtung/sync', { eintraege }, 'post', {
+		headers: { 'X-Requested-With': 'XMLHttpRequest' },
+	}),
 	zuruecknehmen: (id) => senden(`/beobachtung/${id}`, {}, 'delete'),
 	heute: (schuelerId) => holen(`/kind/${schuelerId}/heute`),
 	kinderSuche: (q) => holen('/kinder/suche', { q }),

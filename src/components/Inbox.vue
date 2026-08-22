@@ -220,7 +220,6 @@ export default {
 	border-bottom: 1px solid var(--color-border);
 	font-size: .85rem;
 }
-.inbox-leiste button { min-height: 36px; }
 .inbox-woche { margin-top: 1.5rem; }
 .inbox-woche h3 {
 	font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
@@ -247,9 +246,11 @@ export default {
 	margin: .6rem 0 .3rem; font-size: .7rem;
 	letter-spacing: .08em; text-transform: uppercase; opacity: .6;
 }
+/* Vorschlagsknopf zum Zuordnen. Stand auf 34 px; die Höhe kommt jetzt aus
+   css/kidseye.css, inline-flex zentriert den Text darin senkrecht. */
 .inbox-knopf {
-	display: inline-block; margin: 0 .25rem .25rem 0;
-	padding: .3rem .55rem; min-height: 34px;
+	display: inline-flex; align-items: center; margin: 0 .25rem .25rem 0;
+	padding: .3rem .55rem;
 	border: 1px solid var(--color-border); border-radius: var(--border-radius);
 	background: none; color: inherit; font-size: .78rem; cursor: pointer;
 	text-align: left;
@@ -264,5 +265,4 @@ export default {
 	border-left: 2px solid var(--color-border); padding-left: .6rem;
 }
 .inbox-aktionen { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }
-.inbox-aktionen button { min-height: 40px; }
 </style>

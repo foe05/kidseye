@@ -20,12 +20,23 @@ namespace OCP\DB\QueryBuilder {
 }
 
 namespace OCP {
-	interface IDBConnection {}
+	interface IDBConnection {
+		public function tableExists(string $table): bool;
+		public function getQueryBuilder(): \OCP\DB\QueryBuilder\IQueryBuilder;
+	}
 	interface IAppConfig {}
-	interface IConfig {}
+	interface IConfig {
+		public function getSystemValueBool(string $key, bool $default = false): bool;
+	}
 	interface IGroupManager {}
 	interface IUserSession {}
 	interface IRequest {}
+}
+
+namespace OCP\App {
+	interface IAppManager {
+		public function getAppPath(string $appId): string;
+	}
 }
 
 namespace OCP\Files {
@@ -33,6 +44,77 @@ namespace OCP\Files {
 	interface Folder {}
 }
 
+namespace OCP\AppFramework {
+	/**
+	 * OCA\KidsEye\AppInfo\Application erbt hiervon. Gebraucht wird die Klasse
+	 * in den Tests nur wegen ihrer Konstanten — allen voran APP_ID, gegen die
+	 * jeder Controller konstruiert wird.
+	 */
+	class App {
+		public function __construct(string $appName, array $urlParams = []) {
+		}
+	}
+
+	/**
+	 * Die Basis, gegen die alle kidseye-Controller konstruiert werden.
+	 * Mehr als appName und request braucht ApiController nicht.
+	 */
+	abstract class Controller {
+		public function __construct(
+			protected string $appName,
+			protected \OCP\IRequest $request,
+		) {
+		}
+	}
+
+	class Http {
+		public const STATUS_OK = 200;
+		public const STATUS_BAD_REQUEST = 400;
+		public const STATUS_FORBIDDEN = 403;
+		public const STATUS_UNPROCESSABLE_ENTITY = 422;
+		public const STATUS_INTERNAL_SERVER_ERROR = 500;
+	}
+}
+
+namespace OCP\AppFramework\Bootstrap {
+	interface IBootstrap {}
+	interface IBootContext {}
+	interface IRegistrationContext {}
+}
+
+namespace OCP\AppFramework\Http {
+	class DataResponse {
+		public function __construct(
+			private mixed $daten = null,
+			private int $status = 200,
+		) {
+		}
+
+		public function getData(): mixed {
+			return $this->daten;
+		}
+
+		public function getStatus(): int {
+			return $this->status;
+		}
+	}
+}
+
 namespace Psr\Log {
-	interface LoggerInterface {}
+	/**
+	 * Mit den Methoden von PSR-3, damit ein Mock sie kennt: die Controller
+	 * protokollieren im Fehlerfall, und ein Mock ohne diese Methoden ließe
+	 * jeden Test am Protokollaufruf scheitern statt an der Sache.
+	 */
+	interface LoggerInterface {
+		public function emergency(string|\Stringable $message, array $context = []): void;
+		public function alert(string|\Stringable $message, array $context = []): void;
+		public function critical(string|\Stringable $message, array $context = []): void;
+		public function error(string|\Stringable $message, array $context = []): void;
+		public function warning(string|\Stringable $message, array $context = []): void;
+		public function notice(string|\Stringable $message, array $context = []): void;
+		public function info(string|\Stringable $message, array $context = []): void;
+		public function debug(string|\Stringable $message, array $context = []): void;
+		public function log($level, string|\Stringable $message, array $context = []): void;
+	}
 }

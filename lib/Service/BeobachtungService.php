@@ -53,10 +53,17 @@ class BeobachtungService {
 		$clientUuid = $eingabe['clientUuid'] ?? null;
 
 		// Ein doppelt gesendeter Eintrag legt nichts neu an (D9).
+		//
+		// Das Merkmal bereitsVorhanden macht den Unterschied nach außen
+		// sichtbar. Beide Fälle sind ein Erfolg — die Warteschlange räumt den
+		// Eintrag so oder so weg. Der Unterschied ist für die Prüfung da:
+		// Prüfschritt C6 der Geräteprüfung kann damit belegen, dass der
+		// Dublettenschutz gegriffen hat, statt nur festzustellen, dass nichts
+		// doppelt zu sehen ist.
 		if ($clientUuid !== null) {
 			$vorhanden = $this->nachClientUuid($nutzerId, $clientUuid);
 			if ($vorhanden !== null) {
-				return $vorhanden;
+				return ['bereitsVorhanden' => true] + $vorhanden;
 			}
 		}
 
@@ -144,7 +151,7 @@ class BeobachtungService {
 			throw $e;
 		}
 
-		return $this->nachId($beobachtungId) ?? [];
+		return ['bereitsVorhanden' => false] + ($this->nachId($beobachtungId) ?? []);
 	}
 
 	/**

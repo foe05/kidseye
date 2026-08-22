@@ -10,7 +10,7 @@
 	<div class="kb">
 		<h2>Klassenbild</h2>
 
-		<label class="kb-feld">
+		<label class="ke-feld kb-feld">
 			<span>Klasse</span>
 			<select v-model.number="klasseId" @change="laden">
 				<option v-for="k in klassen" :key="k.id" :value="k.id">{{ k.name }}</option>
@@ -110,9 +110,8 @@ export default {
 <style scoped>
 .kb { padding: 1rem; max-width: 44rem; }
 .kb h2 { margin-top: 0; }
-.kb-feld { display: flex; flex-direction: column; gap: .3rem; max-width: 16rem; }
-.kb-feld > span { font-size: .8rem; opacity: .8; }
-.kb-feld select { min-height: 40px; }
+/* .ke-feld ordnet Beschriftung und Feld an; hier bleibt nur die Breite. */
+.kb-feld { max-width: 16rem; }
 .kb-hinweis {
 	margin: 1rem 0; font-size: .82rem; line-height: 1.6; opacity: .8;
 	border-left: 2px solid var(--color-border); padding-left: .75rem;
@@ -127,8 +126,18 @@ export default {
 	cursor: grab; background: var(--color-main-background);
 }
 .kb-name { font-size: .8rem; }
+/*
+ * Ausnahme vom Mindestmaß 44 px, namentlich geführt in
+ * tests/js/formular.spec.js.
+ *
+ * .kb-gruppe ist ein Eingabefeld, keine Anzeige — aber ein nachrangiges:
+ * es sitzt zu viert nebeneinander in einer Kachel des Klassenbilds, wird
+ * einmal beim Einrichten gefüllt und danach nicht mehr angefasst. Auf 44 px
+ * gebracht verdoppelte es die Kachelhöhe und drängte den Namen aus dem Bild,
+ * um den es dort geht. Die Gruppe lässt sich auch unter „Klassen & Kinder"
+ * pflegen, wo das Feld die volle Höhe hat.
+ */
 .kb-gruppe { font-size: .68rem; min-height: 28px; width: 100%; }
 .kb-aktionen { display: flex; gap: .5rem; align-items: center; margin-top: 1rem; }
-.kb-aktionen button { min-height: 40px; }
 .kb-ok { font-size: .8rem; color: var(--color-success, #2f6b4f); }
 </style>

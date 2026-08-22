@@ -9,7 +9,7 @@
 	<div class="mv">
 		<h2>Schnellmarker</h2>
 
-		<label class="mv-feld">
+		<label class="ke-feld mv-feld">
 			<span>Unterrichtskontext</span>
 			<select v-model.number="kontextId" @change="laden">
 				<option v-for="k in kontexte" :key="k.id" :value="k.id">
@@ -28,15 +28,15 @@
 		<p v-if="fehler" class="mv-fehler" role="alert">{{ fehler }}</p>
 
 		<div v-for="(m, i) in marker" :key="i" class="mv-zeile">
-			<input v-model="m.text" type="text" class="mv-text" placeholder="Markertext">
+			<input v-model="m.text" type="text" class="mv-text" placeholder="Markertext" aria-label="Markertext">
 
-			<select v-model="m.knoten" multiple class="mv-knoten" size="4">
+			<select v-model="m.knoten" multiple class="mv-knoten" size="4" aria-label="Kompetenzzuordnung">
 				<option v-for="d in dimensionen" :key="d.kennung" :value="d.kennung">
 					{{ d.bezeichnung }}
 				</option>
 			</select>
 
-			<select v-model="m.zwecke" multiple class="mv-zwecke" size="2">
+			<select v-model="m.zwecke" multiple class="mv-zwecke" size="2" aria-label="Verwendungszwecke">
 				<option v-for="z in zwecke" :key="z.kennung" :value="z.kennung">
 					{{ z.name }}
 				</option>
@@ -127,9 +127,8 @@ export default {
 <style scoped>
 .mv { padding: 1rem; max-width: 54rem; }
 .mv h2 { margin-top: 0; }
-.mv-feld { display: flex; flex-direction: column; gap: .3rem; max-width: 22rem; }
-.mv-feld > span { font-size: .8rem; opacity: .8; }
-.mv-feld select { min-height: 40px; }
+/* .ke-feld ordnet Beschriftung und Feld an; hier bleibt nur die Breite. */
+.mv-feld { max-width: 22rem; }
 .mv-hinweis {
 	margin: 1rem 0; font-size: .82rem; line-height: 1.6; opacity: .8;
 	border-left: 2px solid var(--color-border); padding-left: .75rem;
@@ -141,21 +140,24 @@ export default {
 }
 .mv-zeile {
 	display: grid;
-	grid-template-columns: 1fr 1fr 12rem auto auto;
+	/* Die letzte Spalte auf das Maß des Entfernen-Knopfes festgelegt: mit
+	   44 px statt 40 px sprengte sie als `auto` die Zeile beim Umbruch. */
+	grid-template-columns: 1fr 1fr 12rem auto 44px;
 	gap: .5rem; align-items: start;
 	padding: .5rem 0; border-bottom: 1px solid var(--color-border);
 }
 @media (max-width: 46rem) {
 	.mv-zeile { grid-template-columns: 1fr; }
 }
-.mv-text { min-height: 40px; width: 100%; }
+.mv-text { width: 100%; }
 .mv-knoten, .mv-zwecke { width: 100%; font-size: .78rem; }
 .mv-sichtbar { font-size: .78rem; display: flex; align-items: center; gap: .3rem; }
 .mv-weg {
 	background: none; border: 0; cursor: pointer;
-	font-size: 1rem; min-height: 40px; min-width: 40px;
+	/* Höhe aus css/kidseye.css; die Breite muss hier stehen, weil ein
+	   einzelnes ✕ sonst schmaler bleibt als das Antippmaß. */
+	font-size: 1rem; min-width: 44px;
 }
 .mv-aktionen { display: flex; gap: .5rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
-.mv-aktionen button { min-height: 40px; }
 .mv-warnung { font-size: .8rem; color: var(--color-error, #8b2a2a); }
 </style>

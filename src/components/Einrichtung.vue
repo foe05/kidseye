@@ -11,37 +11,23 @@
 		<h2>Einrichtung</h2>
 
 		<template v-if="stand">
+			<!--
+				Die Punkte kommen aus dem DiagnoseService — derselben Quelle, aus
+				der auch `occ kidseye:pruefen` liest. Deshalb steht hier keine
+				Liste von Hand: ein neuer Prüfpunkt erscheint ohne Änderung an
+				dieser Stelle (design.md E2).
+			-->
 			<ul class="ein-liste">
-				<li :class="ok(stand.rahmen.vorhanden)">
-					Kompetenzrahmen
-					<small v-if="!stand.rahmen.vorhanden">
-						fehlt — einspielen mit <code>occ kidseye:einrichten</code>
-					</small>
-				</li>
-				<li :class="ok(stand.schuljahr !== null)">
-					Schuljahr
-					<small v-if="stand.schuljahr">{{ stand.schuljahr.kennung }}</small>
-					<small v-else>keines aktiv</small>
+				<li v-for="punkt in stand.punkte" :key="punkt.kennung" :class="zustand(punkt)">
+					{{ punkt.titel }}
+					<small>{{ punkt.meldung }}</small>
+					<small v-if="punkt.abhilfe" class="ein-abhilfe">{{ punkt.abhilfe }}</small>
 				</li>
 				<li :class="ok(stand.kontexte > 0)">
 					Unterrichtskontexte <small>{{ stand.kontexte }}</small>
 				</li>
 				<li :class="ok(stand.zwecke > 0)">
 					Verwendungszwecke <small>{{ stand.zwecke }}</small>
-				</li>
-				<li :class="ok(stand.gruppen.lehrkraft.existiert)">
-					Gruppe „{{ stand.gruppen.lehrkraft.name }}"
-					<small v-if="!stand.gruppen.lehrkraft.existiert">existiert nicht</small>
-				</li>
-				<li :class="ok(stand.ablage.ok)">
-					Ablage für Arbeitsproben
-					<small>{{ stand.ablage.grund || stand.ablage.pfad }}</small>
-				</li>
-				<li :class="ok(stand.standaloneFenster.aktiv)">
-					Vollbild auf dem Home-Bildschirm
-					<small v-if="stand.standaloneFenster.hinweis">
-						{{ stand.standaloneFenster.hinweis }}
-					</small>
 				</li>
 			</ul>
 
@@ -136,6 +122,16 @@ export default {
 			return bedingung ? 'ein-ja' : 'ein-nein'
 		},
 
+		// „nicht prüfbar" ist kein Mangel: die Ablage lässt sich ohne
+		// angemeldeten Nutzer nicht öffnen, und das steht dem Betrieb nicht
+		// entgegen.
+		zustand(punkt) {
+			if (punkt.zustand === 'nicht_pruefbar') {
+				return 'ein-offen'
+			}
+			return this.ok(punkt.zustand === 'erfuellt')
+		},
+
 		async vorschau() {
 			this.importErgebnis = null
 			this.vorschauDaten = await api.importVorschau(this.csv)
@@ -153,6 +149,8 @@ export default {
 
 <style scoped>
 .ein { padding: 1rem; max-width: 46rem; }
+.ein-abhilfe { display: block; font-family: monospace; opacity: .75; }
+.ein-offen { opacity: .75; }
 .ein h2 { margin-top: 0; }
 .ein h3 { font-size: 1rem; margin: 0 0 .5rem; }
 .ein-liste { list-style: none; padding: 0; margin: 0 0 1.5rem; }
@@ -180,7 +178,6 @@ export default {
 .ein-klein { font-size: .78rem; opacity: .7; line-height: 1.5; }
 .ein-csv { width: 100%; font-family: monospace; font-size: .8rem; margin: .5rem 0; }
 .ein-aktionen { display: flex; gap: .5rem; }
-.ein-aktionen button { min-height: 40px; }
 .ein-tabelle { width: 100%; border-collapse: collapse; font-size: .78rem; margin-top: .75rem; }
 .ein-tabelle td { border-bottom: 1px solid var(--color-border); padding: .25rem .4rem; }
 .ein-dublette { opacity: .6; }

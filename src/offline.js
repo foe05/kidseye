@@ -103,15 +103,75 @@ async function markiere(clientUuid, aenderung) {
 }
 
 /**
+ * Erkennt eine fehlende Anmeldung.
+ *
+ * Der Status allein reicht nicht. Nextcloud beantwortet eine abgelaufene
+ * Sitzung je nach Instanz und Aufrufform unterschiedlich: mit 401, mit einer
+ * Umleitung auf die Anmeldeseite (der axios folgt und die mit 200 endet), oder
+ * mit der Anmeldeseite selbst. Wird nur der Status geprüft, gilt der zweite
+ * und dritte Fall als „keine Verbindung" — und die Lehrkraft sucht mitten im
+ * Unterricht das WLAN, statt sich neu anzumelden.
+ *
+ * Geprüft wird deshalb an drei Merkmalen. Vorgebeugt wird dem Fall zusätzlich
+ * in api.js mit dem Kopfzeilenfeld X-Requested-With; die drei Merkmale sind
+ * die Absicherung für den Fall, dass es nicht greift.
+ */
+export function istAbgemeldet(antwortOderFehler) {
+	const antwort = antwortOderFehler?.response ?? antwortOderFehler
+
+	if (!antwort) {
+		return false
+	}
+
+	// 1. Der geradlinige Fall.
+	if (antwort.status === 401 || antwort.status === 403) {
+		return true
+	}
+
+	// 2. HTML, wo JSON erwartet wurde — die Anmeldeseite kam durch.
+	//
+	// Der Rumpf kann hier in zwei Formen ankommen: als vollständige
+	// axios-Antwort, oder als das, was api.js daraus zurückgibt — nämlich nur
+	// die Nutzlast. Im zweiten Fall ist die Anmeldeseite eine blanke
+	// Zeichenkette, und genau so kommt sie aus der Erfassung her an.
+	const istHtml = (wert) => typeof wert === 'string' && /^\s*<(!doctype|html)/i.test(wert)
+	if (istHtml(antwort) || istHtml(antwort.data)) {
+		return true
+	}
+
+	const typ = antwort.headers?.['content-type'] ?? antwort.headers?.get?.('content-type') ?? ''
+	if (typeof typ === 'string' && typ.includes('text/html')) {
+		return true
+	}
+
+	// 3. Die Endadresse trägt den Anmeldepfad — axios ist einer Umleitung gefolgt.
+	const ziel = antwort.request?.responseURL ?? antwort.request?.res?.responseUrl ?? ''
+	return typeof ziel === 'string' && /\/login(\?|$|\/)/.test(ziel)
+}
+
+/**
  * Überträgt die Warteschlange.
  *
  * @param {Function} senden  async (eintraege) => { uebernommen, fehler }
- * @returns {Promise<{gesendet:number, offen:number, blockiert:boolean}>}
+ * @returns {Promise<{gesendet:number, offen:number, blockiert:boolean, grund:?string}>}
+ *          grund ist 'abgemeldet', 'keine-verbindung' oder null
  */
 export async function synchronisieren(senden) {
 	const wartend = await offene()
 	if (wartend.length === 0) {
-		return { gesendet: 0, offen: 0, blockiert: false }
+		return { gesendet: 0, offen: 0, blockiert: false, grund: null }
+	}
+
+	const zurueckstellen = async (grund) => {
+		for (const eintrag of wartend) {
+			await markiere(eintrag.clientUuid, { versuche: (eintrag.versuche || 0) + 1 })
+		}
+		return {
+			gesendet: 0,
+			offen: wartend.length,
+			blockiert: grund === 'abgemeldet',
+			grund,
+		}
 	}
 
 	let antwort
@@ -121,11 +181,18 @@ export async function synchronisieren(senden) {
 		// Kein Netz oder abgelaufene Sitzung: nichts verwerfen, später erneut.
 		// Genau hier entscheidet sich, ob ein Sitzungsablauf mitten im
 		// Unterricht Daten kostet — er tut es nicht.
-		const blockiert = fehler?.response?.status === 401 || fehler?.response?.status === 403
-		for (const eintrag of wartend) {
-			await markiere(eintrag.clientUuid, { versuche: (eintrag.versuche || 0) + 1 })
-		}
-		return { gesendet: 0, offen: wartend.length, blockiert }
+		return zurueckstellen(istAbgemeldet(fehler) ? 'abgemeldet' : 'keine-verbindung')
+	}
+
+	// Die Übertragung kam zurück, aber nicht als auswertbare Antwort: Das ist
+	// die Umleitung auf die Anmeldeseite, die mit 200 endet. Ohne diese Prüfung
+	// gälte sie als erfolgreiche Übertragung von null Einträgen — die
+	// Warteschlange bliebe stehen, ohne dass jemand den Grund erführe.
+	if (istAbgemeldet(antwort)) {
+		return zurueckstellen('abgemeldet')
+	}
+	if (!antwort || typeof antwort !== 'object' || !Array.isArray(antwort.uebernommen)) {
+		return zurueckstellen('keine-verbindung')
 	}
 
 	for (const treffer of antwort?.uebernommen || []) {
@@ -143,6 +210,7 @@ export async function synchronisieren(senden) {
 		gesendet: (antwort?.uebernommen || []).length,
 		offen: await anzahlOffen(),
 		blockiert: false,
+		grund: null,
 	}
 }
 

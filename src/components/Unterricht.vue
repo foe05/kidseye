@@ -1,5 +1,5 @@
 <template>
-	<div class="ke" :class="{ 'ke--breit': breit }">
+	<div id="kidseye-unterricht" class="ke" :class="{ 'ke--breit': breit }">
 		<!-- Kopfleiste: laufende Stunde und Synchronisationszähler (5.13) -->
 		<header class="ke-kopf">
 			<button v-if="stunde" class="ke-kontext" @click="stundeBeenden">
@@ -456,13 +456,25 @@ export default {
 			window.addEventListener('online', () => this.synchronisieren())
 		},
 
+		syncHinweis(ergebnis) {
+			if (ergebnis.grund === 'abgemeldet') {
+				return 'Nicht angemeldet — die Beobachtungen bleiben auf dem Gerät und werden '
+					+ 'nach der nächsten Anmeldung übertragen.'
+			}
+			if (ergebnis.grund === 'keine-verbindung') {
+				return 'Keine Verbindung — die Beobachtungen bleiben auf dem Gerät und werden '
+					+ 'übertragen, sobald das Netz wieder da ist.'
+			}
+			return ergebnis.offen + ' noch nicht übertragen'
+		},
+
 		async synchronisieren() {
 			const ergebnis = await synchronisieren((eintraege) => api.synchronisieren(eintraege))
 			this.offenZahl = ergebnis.offen
-			this.syncTitel = ergebnis.blockiert
-				? 'Nicht angemeldet — die Beobachtungen bleiben auf dem Gerät und werden '
-					+ 'nach der nächsten Anmeldung übertragen.'
-				: ergebnis.offen + ' noch nicht übertragen'
+			// Der Grund entscheidet, was die Lehrkraft tut: sich neu anmelden
+			// oder auf Netz warten. Beides sieht ohne diese Unterscheidung
+			// gleich aus (offline.js, istAbgemeldet).
+			this.syncTitel = this.syncHinweis(ergebnis)
 			if (ergebnis.gesendet > 0) {
 				await this.bildschirmLaden()
 			}
@@ -687,7 +699,9 @@ export default {
 .ke-zwecke { display: flex; flex-wrap: wrap; gap: .25rem; }
 .ke-zweck {
 	padding: .3rem .5rem;
-	min-height: 32px;
+	/* Umschaltknopf, keine Anzeige: 44 px wie jede andere Antippfläche
+	   dieses Bildschirms. Stand als einzige Regel hier auf 32 px. */
+	min-height: 44px;
 	font-size: .72rem;
 	border: 1px solid var(--color-border);
 	border-radius: var(--border-radius);
