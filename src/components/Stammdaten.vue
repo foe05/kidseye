@@ -19,7 +19,7 @@
 				überleben den Wechsel.
 			</p>
 			<div class="sd-zeile">
-				<input v-model="neuesSchuljahr" placeholder="2026/27" class="sd-eingabe">
+				<input v-model="neuesSchuljahr" placeholder="2026/27" class="sd-eingabe" aria-label="Schuljahr">
 				<button class="primary" @click="schuljahrAnlegen">Anlegen und aktivieren</button>
 			</div>
 		</section>
@@ -30,7 +30,7 @@
 			<section class="sd-block">
 				<h3>Klassen</h3>
 				<div class="sd-zeile">
-					<input v-model="neueKlasse" placeholder="3a" class="sd-eingabe">
+					<input v-model="neueKlasse" placeholder="3a" class="sd-eingabe" aria-label="Name der Klasse">
 					<button @click="klasseAnlegen">Klasse anlegen</button>
 				</div>
 				<div class="sd-chips">
@@ -48,12 +48,13 @@
 			<section v-if="klasseId" class="sd-block">
 				<h3>Kinder in {{ klasseName }}</h3>
 				<div class="sd-zeile">
-					<input v-model="neuKind.vorname" placeholder="Vorname" class="sd-eingabe">
-					<input v-model="neuKind.nachname" placeholder="Nachname" class="sd-eingabe">
+					<input v-model="neuKind.vorname" placeholder="Vorname" class="sd-eingabe" aria-label="Vorname">
+					<input v-model="neuKind.nachname" placeholder="Nachname" class="sd-eingabe" aria-label="Nachname">
 					<input
 						v-model.number="neuKind.geburtsjahr"
 						type="number"
 						placeholder="Geburtsjahr"
+						aria-label="Geburtsjahr"
 						class="sd-eingabe sd-eingabe--kurz">
 					<button @click="kindAnlegen">Hinzufügen</button>
 				</div>
@@ -76,8 +77,8 @@
 					dafür lässt sich später eine Stunde starten.
 				</p>
 				<div class="sd-zeile">
-					<input v-model="neuAuftrag.nutzerId" placeholder="Nextcloud-Kennung" class="sd-eingabe">
-					<select v-model.number="neuAuftrag.kontextId" class="sd-eingabe">
+					<input v-model="neuAuftrag.nutzerId" placeholder="Nextcloud-Kennung" class="sd-eingabe" aria-label="Nextcloud-Kennung der Lehrkraft">
+					<select v-model.number="neuAuftrag.kontextId" class="sd-eingabe" aria-label="Unterrichtskontext">
 						<option :value="null" disabled>Kontext wählen</option>
 						<option v-for="c in kontexte" :key="c.id" :value="c.id">{{ c.name }}</option>
 					</select>
@@ -226,14 +227,17 @@ export default {
 	border-top: 1px solid var(--color-border);
 }
 .sd-zeile { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
-.sd-zeile button { min-height: 40px; }
-.sd-eingabe { min-height: 40px; min-width: 9rem; }
+/* Höhe für Felder und Knöpfe kommt aus css/kidseye.css; hier bleibt nur,
+   wie breit ein Feld in der Zeile mindestens sein soll. */
+.sd-eingabe { min-width: 9rem; }
 .sd-eingabe--kurz { min-width: 7rem; }
 .sd-kl { display: flex; align-items: center; gap: .3rem; font-size: .8rem; }
 .sd-klein { font-size: .8rem; opacity: .72; line-height: 1.55; margin: .5rem 0; }
 .sd-chips { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .75rem; }
+/* Klassenwahl: ein Knopf, kein Etikett — Höhe aus css/kidseye.css.
+   Stand zuvor auf 36 px und damit unter dem Antippmaß. */
 .sd-chip {
-	min-height: 36px; padding: .3rem .7rem;
+	padding: .3rem .7rem;
 	border: 1px solid var(--color-border); border-radius: var(--border-radius);
 	background: none; color: inherit; cursor: pointer;
 }

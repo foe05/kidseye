@@ -151,10 +151,24 @@ class ErfassungController extends ApiController {
 			$ergebnis = ['uebernommen' => [], 'fehler' => []];
 			foreach ($eintraege as $eintrag) {
 				try {
+					// Ohne Kennung greift der Dublettenschutz nicht: der Eintrag
+					// würde bei jeder Übertragung neu angelegt. Lieber hier
+					// zurückweisen — die übrigen Einträge derselben Übertragung
+					// bleiben davon unberührt.
+					if (empty($eintrag['clientUuid'])) {
+						throw new \InvalidArgumentException(
+							'Ein Eintrag der Warteschlange braucht eine clientUuid.'
+						);
+					}
+
 					$beobachtung = $this->beobachtungen->erfassen($nutzerId, $eintrag);
 					$ergebnis['uebernommen'][] = [
 						'clientUuid' => $eintrag['clientUuid'] ?? null,
 						'id' => $beobachtung['id'] ?? null,
+						// 'neu' oder 'bereits_vorhanden' — beides ein Erfolg.
+						'zustand' => !empty($beobachtung['bereitsVorhanden'])
+							? 'bereits_vorhanden'
+							: 'neu',
 					];
 				} catch (\Throwable $e) {
 					// Ein einzelner kaputter Eintrag darf die Warteschlange

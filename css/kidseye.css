@@ -1,0 +1,228 @@
+/*
+ * kidseye — Formularelemente
+ *
+ * Warum eine ausgelieferte Stildatei und nicht `<style scoped>`:
+ *
+ * 1. Scoped Stile hängen jedem Selektor ein Attribut-Suffix an und wirken
+ *    nicht auf Kindelemente. Ein Selektor wie `select` wird dort zu
+ *    `select[data-v-…]` und greift nur, wo die Komponente das Element selbst
+ *    schreibt — nie einheitlich über alle neun Komponenten.
+ * 2. Beide Einstiegspunkte brauchen dieselbe Grundlage. `/apps/kidseye/`
+ *    läuft im vollen Nextcloud-Layout, `/apps/kidseye/unterricht` über
+ *    RENDER_AS_BASE im Basis-Layout mit deutlich weniger Nextcloud-CSS.
+ *    Nur eine über `Util::addStyle` eingebundene Datei erreicht beide.
+ *
+ * Eingebunden in PageController::index() und PageController::unterricht().
+ *
+ * ---------------------------------------------------------------------------
+ * Zur Spezifität — der Punkt, an dem diese Datei leicht zu viel täte:
+ *
+ * Alle Regeln stehen unter `:where(#kidseye-main, #kidseye-unterricht)`.
+ * Das begrenzt sie auf die App, ohne die umgebende Nextcloud-Oberfläche zu
+ * berühren. `:where()` steuert dabei **null** Spezifität bei, und das ist
+ * Absicht: ein Wurzelselektor mit ID (1,0,1) schlüge jeden scoped
+ * Komponentenstil (0,2,0) und würde damit ausgerechnet den einen Bildschirm
+ * überschreiben, der durchgestaltet ist — den Erfassungsbildschirm. So bleibt
+ * die Reihenfolge richtig herum: diese Datei setzt die Grundlage, die
+ * Komponente behält das letzte Wort.
+ *
+ * Die IDs sitzen auf den Wurzelelementen von App.vue und Unterricht.vue, nicht
+ * auf denen aus templates/: Vue 2 ersetzt das Mount-Element beim Einhängen
+ * samt seiner ID durch das gerenderte Wurzelelement.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Grundlage
+ * ------------------------------------------------------------------------ */
+
+:where(#kidseye-main, #kidseye-unterricht) {
+	/* 44 px ist das Mindestmaß aus D10 und den Apple-Gestaltungsrichtlinien,
+	   48 px hebt die bestätigende Handlung heraus. */
+	--ke-hoehe: 44px;
+	--ke-hoehe-primaer: 48px;
+
+	--ke-radius: var(--border-radius, 4px);
+	--ke-rand: var(--color-border, #d8d8d8);
+	--ke-grund: var(--color-main-background, #ffffff);
+	--ke-schrift: var(--color-main-text, #222222);
+	--ke-betont: var(--color-primary-element, #0b5cad);
+
+	/* Damit das native Auswahlmenü — die aufklappende Liste, die sich nicht
+	   gestalten lässt — im dunklen Thema dunkel aufklappt. Es folgt damit dem
+	   Betriebssystem; ein Signal für „Nextcloud steht auf dunkel" gibt es im
+	   CSS nicht. Das Feld selbst folgt über die Variablen oben dem Thema. */
+	color-scheme: light dark;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Die vier Elementarten teilen sich Maß, Rahmen, Radius und Fokus
+ * ------------------------------------------------------------------------ */
+
+:where(#kidseye-main, #kidseye-unterricht) select,
+:where(#kidseye-main, #kidseye-unterricht) textarea,
+:where(#kidseye-main, #kidseye-unterricht) button,
+/* Ankreuzfelder und Auswahlknöpfe bleiben außen vor — sie sind keine Felder,
+   und 44 px Rahmen um ein Kästchen wäre keine Verbesserung. Die Aufzählung
+   in einem einzigen :not() zu führen ist kein Stil, sondern Rechnung: zwei
+   getrennte :not() ergäben (0,2,1) und schlügen die Komponentenstile. */
+:where(#kidseye-main, #kidseye-unterricht) input:not([type="checkbox"], [type="radio"]) {
+	min-height: var(--ke-hoehe);
+	padding: .4rem .6rem;
+	border: 1px solid var(--ke-rand);
+	border-radius: var(--ke-radius);
+	background-color: var(--ke-grund);
+	color: var(--ke-schrift);
+	font: inherit;
+}
+
+:where(#kidseye-main, #kidseye-unterricht) button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: .35rem;
+	cursor: pointer;
+}
+
+/* Die bestätigende Handlung eines Bildschirms. Im Basis-Layout des
+   Erfassungsbildschirms gibt Nextcloud .primary nichts mit — dort ist das
+   hier die einzige Quelle. */
+:where(#kidseye-main, #kidseye-unterricht) .primary {
+	min-height: var(--ke-hoehe-primaer);
+	border-color: var(--ke-betont);
+	background-color: var(--ke-betont);
+	color: var(--color-primary-element-text, #ffffff);
+	font-weight: 600;
+}
+
+/* 2.3 — Eigener Pfeil.
+   appearance: none ist die Voraussetzung dafür, dass ein Auswahlfeld dem
+   Thema folgt statt dem Betriebssystem; damit entfällt der native Pfeil und
+   muss ersetzt werden. Als data:-URI, damit keine zweite Datei beim
+   Ausliefern fehlen kann.
+
+   Der Pfeil trägt ein neutrales Grau statt currentColor — ein
+   background-image kennt keine Vererbung. #808080 hält auf hellem wie auf
+   dunklem Grund über 3:1 und bleibt damit in beiden Themen erkennbar. Ein
+   Umschalten über prefers-color-scheme hülfe hier nicht: es folgte dem
+   Betriebssystem, nicht dem Nextcloud-Thema. */
+:where(#kidseye-main, #kidseye-unterricht) select {
+	appearance: none;
+	-webkit-appearance: none;
+	padding-right: 2rem;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.6 6 6.4 11 1.6' fill='none' stroke='%23808080' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right .65rem center;
+	background-size: 12px 8px;
+}
+
+/* 2.7 — Die beiden Mehrfachauswahlen der Markerverwaltung.
+   Sie bekommen Rahmen und Radius wie die übrigen Felder, behalten aber ihre
+   native Darstellung: eine Listbox ist kein aufklappendes Menü, ein Pfeil
+   wäre dort schlicht falsch. Ersetzt werden sie ausdrücklich nicht — das
+   gehört in einen eigenen Change. */
+:where(#kidseye-main, #kidseye-unterricht) select[multiple] {
+	appearance: auto;
+	-webkit-appearance: auto;
+	padding-right: .6rem;
+	background-image: none;
+	height: auto;
+}
+
+/* 2.5 — Fokus.
+   :focus-visible statt :focus, damit nach einer Berührung kein Ring stehen
+   bleibt. Der Unterschied zum Ruhezustand ist mehr als ein Farbton: ein
+   zusätzlicher Ring außerhalb des Rahmens, dazu der Rahmen selbst. */
+:where(#kidseye-main, #kidseye-unterricht) select:focus-visible,
+:where(#kidseye-main, #kidseye-unterricht) textarea:focus-visible,
+:where(#kidseye-main, #kidseye-unterricht) button:focus-visible,
+:where(#kidseye-main, #kidseye-unterricht) input:focus-visible {
+	outline: 2px solid var(--ke-betont);
+	outline-offset: 2px;
+	border-color: var(--ke-betont);
+}
+
+:where(#kidseye-main, #kidseye-unterricht) :focus:not(:focus-visible) {
+	outline: none;
+}
+
+/* 2.6 — Zustände.
+   Gesperrt wird nicht allein über Farbe angezeigt: der Rahmen wechselt auf
+   gestrichelt und der Zeiger meldet es mit. */
+:where(#kidseye-main, #kidseye-unterricht) select:disabled,
+:where(#kidseye-main, #kidseye-unterricht) textarea:disabled,
+:where(#kidseye-main, #kidseye-unterricht) button:disabled,
+:where(#kidseye-main, #kidseye-unterricht) input:disabled {
+	border-style: dashed;
+	opacity: .55;
+	cursor: not-allowed;
+}
+
+/* Der Platzhaltereintrag — „bitte wählen" ist als <option disabled>
+   ausgezeichnet, solange nichts gewählt ist. Fehlt :has(), bleibt das Feld
+   normal dargestellt; verloren geht dabei nichts als eine Abstufung. */
+:where(#kidseye-main, #kidseye-unterricht) select:has(option:disabled:checked) {
+	color: var(--color-text-maxcontrast, #6b6b6b);
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Beschriftung und Feld
+ * ------------------------------------------------------------------------ */
+
+/* 3.1 — Eine Anordnung für alle Bildschirme: Beschriftung über dem Feld.
+   Das Feld liegt im <label>; das ordnet beide einander ohne for/id zu und
+   wird von Vorlesewerkzeugen mitgelesen. */
+:where(#kidseye-main, #kidseye-unterricht) .ke-feld {
+	display: flex;
+	flex-direction: column;
+	gap: .3rem;
+}
+
+:where(#kidseye-main, #kidseye-unterricht) .ke-feld > span {
+	font-size: .8rem;
+	opacity: .8;
+}
+
+/* „optional" neben der Beschriftung: leiser, aber nicht kursiv */
+:where(#kidseye-main, #kidseye-unterricht) .ke-feld em {
+	font-style: normal;
+	opacity: .6;
+}
+
+:where(#kidseye-main, #kidseye-unterricht) .ke-feld small {
+	font-size: .72rem;
+	opacity: .65;
+	line-height: 1.4;
+}
+
+:where(#kidseye-main, #kidseye-unterricht) .ke-feld select,
+:where(#kidseye-main, #kidseye-unterricht) .ke-feld textarea,
+:where(#kidseye-main, #kidseye-unterricht) .ke-feld input {
+	width: 100%;
+}
+
+/* 3.2 — Filterzeilen.
+   `min-width: 10rem` allein ließ ein Feld mit einem langen Kindernamen oder
+   „Kompetenz-Übersicht" darin mitwachsen; die umbrechende Zeile brach dann
+   ungleichmäßig um. Eine Breitenspanne hält die Felder gleich breit, der
+   überzählige Text wird abgeschnitten. Ohne Daten in der Datenbank fällt
+   dieser Fall nicht auf — bei der ersten Installation gab es sie. */
+:where(#kidseye-main, #kidseye-unterricht) .ke-filterzeile {
+	display: flex;
+	gap: .75rem;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+
+:where(#kidseye-main, #kidseye-unterricht) .ke-filterzeile .ke-feld {
+	flex: 1 1 10rem;
+	min-width: 10rem;
+	max-width: 16rem;
+}
+
+:where(#kidseye-main, #kidseye-unterricht) .ke-filterzeile select,
+:where(#kidseye-main, #kidseye-unterricht) .ke-filterzeile input {
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

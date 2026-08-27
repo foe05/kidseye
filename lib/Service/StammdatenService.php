@@ -294,6 +294,22 @@ class StammdatenService {
 		return $zeilen;
 	}
 
+	/**
+	 * Liegt überhaupt ein Lehrauftrag vor?
+	 *
+	 * Der Schritt, den man bei der Einrichtung am leichtesten vergisst: ohne
+	 * Lehrauftrag lässt sich keine Stunde starten, und der Startdialog zeigt
+	 * keine Klassen. Für den Einrichtungsstand (DiagnoseService).
+	 */
+	public function lehrauftraegeVorhanden(): bool {
+		$q = $this->db->getQueryBuilder();
+		$q->select('id')->from('kidseye_lehrauftrag')->setMaxResults(1);
+		$treffer = $q->executeQuery();
+		$da = $treffer->fetchOne();
+		$treffer->closeCursor();
+		return $da !== false;
+	}
+
 	public function hatLehrauftrag(string $nutzerId, int $klasseId, ?int $kontextId = null): bool {
 		$q = $this->db->getQueryBuilder();
 		$q->select('id')->from('kidseye_lehrauftrag')

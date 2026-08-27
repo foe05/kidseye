@@ -52,12 +52,6 @@ Danach muss ein Verzeichnis `js/` mit `kidseye-main.js` und
 ls -la js/
 ```
 
-**Wenn `npm ci` scheitert:** meist wegen `--legacy-peer-deps`. Dann:
-
-```bash
-npm install --legacy-peer-deps && npm run build
-```
-
 **Wenn du auf deinem Rechner baust:** danach den gesamten Ordner auf den
 Server kopieren, inklusive `js/`, aber **ohne** `node_modules/`:
 
@@ -80,14 +74,8 @@ cd /var/www/nextcloud
 sudo -u www-data php occ app:enable kidseye
 ```
 
-Dabei laufen die beiden Migrationen und legen 21 Tabellen mit dem Präfix
-`oc_kidseye_` an. Kontrolle:
-
-```bash
-sudo -u www-data php occ db:convert-type --help >/dev/null   # nur ein Testaufruf
-mysql -u nextcloud -p nextcloud -e "SHOW TABLES LIKE 'oc_kidseye%';" | wc -l
-# erwartet: 22 Zeilen (21 Tabellen + Kopfzeile)
-```
+Dabei laufen die beiden Migrationen und legen 25 Tabellen mit dem Präfix
+`oc_kidseye_` an.
 
 ### Wenn es hier hakt
 
@@ -97,6 +85,45 @@ mysql -u nextcloud -p nextcloud -e "SHOW TABLES LIKE 'oc_kidseye%';" | wc -l
 | `Class ... not found` | Autoloader kennt die App noch nicht | `occ app:disable kidseye && occ app:enable kidseye` |
 | Fehler beim Anlegen einer Tabelle | Namenskonflikt oder zu langer Index | Meldung notieren — das wäre ein Fehler in der Migration, bitte melden |
 | Weiße Seite beim Aufruf | `js/` fehlt | Schritt 1 wiederholen, `npm run build` |
+| `Command "kidseye:pruefen" is not defined` | Autoloader kennt den neuen Befehl noch nicht | `occ app:disable kidseye && occ app:enable kidseye` |
+
+---
+
+## Schritt 2b · Nachsehen, was noch fehlt
+
+```bash
+sudo -u www-data php occ kidseye:pruefen
+```
+
+Der Befehl verändert nichts. Er geht jede Voraussetzung durch und nennt zu
+jedem offenen Punkt den Befehl oder Schritt, der ihn erfüllt:
+
+```
+[ok]   Tabellen
+       Alle 25 Tabellen vorhanden.
+[offen] Kompetenzrahmen
+       Es ist keine Rahmenversion aktiv.
+       → occ kidseye:einrichten --schuljahr <jahr>
+[offen] Zugriffsgruppen
+       Nicht angelegt: kidseye-lehrkraft, kidseye-leitung
+       → occ group:add <name> — danach die Lehrkräfte hinzufügen.
+```
+
+Nach einer frischen Installation sind die Tabellen erfüllt und alles Weitere
+offen — das ist der erwartete Stand. Die nächsten Schritte arbeiten diese
+Liste ab.
+
+Der Befehl endet mit Rückgabewert 0, sobald alle Pflichtpunkte erfüllt sind,
+sonst mit 1. Damit lässt er sich in ein Installationsskript einbauen.
+
+Die Ablage der Arbeitsproben wird im Namen einer Lehrkraft geöffnet und ist
+ohne Nutzer nicht prüfbar. Mit Nutzer:
+
+```bash
+sudo -u www-data php occ kidseye:pruefen --nutzer anna
+```
+
+Maschinenlesbar mit `--output=json`.
 
 ---
 
@@ -246,6 +273,20 @@ die Beobachtung ohne Zusatzschritt für den Förderplan vor.
 
 ---
 
+## Schritt 8b · Abschlusskontrolle
+
+Vor dem Gang aufs iPad noch einmal:
+
+```bash
+sudo -u www-data php occ kidseye:pruefen --nutzer <lehrkraft>
+```
+
+Jetzt muss jeder Punkt erfüllt sein und der Befehl mit 0 enden. Ist er es
+nicht, steht die Abhilfe daneben — auf dem Gerät wäre dieselbe Ursache
+deutlich schwerer zu finden.
+
+---
+
 ## Schritt 9 · Aufs iPad
 
 1. In Safari `https://deine-cloud/apps/kidseye/unterricht` öffnen
@@ -303,6 +344,7 @@ Fünf Sekunden lang steht unten **rückgängig** — falls es das falsche Kind w
 | Startdialog zeigt keine Klassen | Ebenfalls fehlender Lehrauftrag |
 | Kein Foto-Knopf | Gruppenordner fehlt oder nicht beschreibbar → Reiter „Einrichtung" |
 | Symbol startet mit Browserleiste | Schritt 6 |
+| Symbol zeigt einen Bildschirmabzug statt des kidseye-Zeichens | Das im Manifest genannte Symbol wird nicht ausgeliefert. `occ kidseye:pruefen` meldet es unter „Symbol für den Home-Bildschirm" |
 | Zähler `⟳` geht nicht auf 0 | Keine Verbindung oder Sitzung abgelaufen. Die Beobachtungen sind **nicht verloren** — sie liegen auf dem Gerät und gehen nach der nächsten Anmeldung raus |
 
 Ausführliches Protokoll im Nextcloud-Log:

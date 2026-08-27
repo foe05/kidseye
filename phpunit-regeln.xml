@@ -10,6 +10,9 @@
 		<testsuite name="regeln">
 			<file>tests/php/RegelnTest.php</file>
 			<file>tests/php/PdfTest.php</file>
+			<file>tests/php/SyncTest.php</file>
+			<file>tests/php/DiagnoseTest.php</file>
+			<file>tests/php/PruefenTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

@@ -2,9 +2,10 @@
   "name": "kidseye – Beobachtung",
   "short_name": "kidseye",
   "description": "Schülerbeobachtung im Unterricht",
-  "start_url": "../apps/kidseye/unterricht",
-  "scope": "../apps/kidseye/",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#2E4FA3",

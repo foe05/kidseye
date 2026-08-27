@@ -1,6 +1,6 @@
 # Weitermachen
 
-Übergabe für die nächste Sitzung. Stand: **11. August 2026**.
+Übergabe für die nächste Sitzung. Stand: **21. August 2026**.
 
 Wenn du hier neu einsteigst, lies zuerst die drei Abschnitte
 [Wo es klemmt](#wo-es-klemmt), [Was als Nächstes dran ist](#was-als-nächstes-dran-ist)
@@ -22,6 +22,26 @@ laufenden Nextcloud installiert worden.** Das ist der nächste Schritt.
 **Die App ist noch nie auf einer laufenden Nextcloud installiert worden.**
 Das ist die einzige verbliebene offene Flanke — und die wichtigste
 Information dieses Dokuments.
+
+Am 21. August ist der Change `installations-und-geraetehaertung` umgesetzt
+worden. Er hat drei Fehler behoben, die im Repo nachweisbar waren und die
+Erstinstallation gekostet hätten:
+
+| Befund | War | Ist |
+|---|---|---|
+| Symbol für den Home-Bildschirm | `img/manifest.json` verlangte `favicon-touch.png`, die Datei fehlte. iOS hätte einen Bildschirmabzug als Symbol vergeben | Symbol liegt bei, erzeugt mit `tools/symbol-erzeugen.mjs` |
+| `start_url` und `scope` | Standen als `../apps/kidseye/…` im Manifest und lösten gegen dessen Ort zu **`/apps/kidseye/apps/kidseye/unterricht`** auf — das Symbol wäre auf einer 404 gelandet | Kommen aus `PageController::manifest()` über `linkToRoute`, Route `/manifest.webmanifest` |
+| Sitzungsablauf | Wurde nur an `status === 401 \|\| 403` erkannt. Eine Umleitung auf die Anmeldeseite (HTML mit 200) galt als geglückte Übertragung von null Einträgen | Drei Merkmale in `istAbgemeldet()`, dazu `X-Requested-With` als Vorbeugung. Der Hinweis unterscheidet jetzt „nicht angemeldet" von „keine Verbindung" |
+
+Der zweite Befund ist der lehrreiche: Der bestehende Test prüfte
+`toContain('/apps/kidseye/unterricht')` — und der falsche Wert **enthält**
+diese Zeichenkette. Der Test war grün, während der Wert kaputt war.
+
+**Neu: `occ kidseye:pruefen`.** Ein Befehl, der nichts verändert und jede
+Betriebsvoraussetzung einzeln ausweist — Tabellen, Rahmen, Schuljahr,
+Gruppen, Lehraufträge, Ablage, Vollbild-Option, Symbol. Zu jedem offenen
+Punkt steht die Abhilfe daneben. Rückgabewert 0, wenn alles erfüllt ist,
+sonst 1. Das ist ab sofort der erste Schritt nach `occ app:enable kidseye`.
 
 Der Codestand ist seit dem 11. August vollständig auf `main`. Der frühere
 Hinweis „zwei Commits fehlen auf `main`" ist erledigt: der Zweig
@@ -47,8 +67,9 @@ Umgebung, siehe unten.
 In dieser Reihenfolge:
 
 1. **Auf der Nextcloud installieren** — Anleitung: [`docs/INSTALLATION.md`](docs/INSTALLATION.md).
-   Zehn Schritte, rund eine Stunde. Vorher Datenbank sichern, die App legt
-   21 Tabellen an.
+   Zwölf Schritte, rund eine Stunde. Vorher Datenbank sichern, die App legt
+   **25** Tabellen an (die frühere Angabe „21" war falsch).
+   Nach dem Aktivieren `occ kidseye:pruefen` — der Befehl sagt, was noch fehlt.
 2. **Geräteprüfung auf dem iPad** — [`tests/protokolle/geraetepruefung.md`](tests/protokolle/geraetepruefung.md).
    Rund 30 Minuten. Das ist der Test, der über den gesamten
    Erfassungs-Workflow entscheidet: startet das Symbol im Vollbild, übersteht
@@ -107,6 +128,14 @@ bis D17.
 - `npm ci` scheiterte früher an Peer-Dependencies. Seit die `package-lock.json`
   im Repo liegt und mit `package.json` abgeglichen ist, läuft es durch —
   `--legacy-peer-deps` ist nicht mehr nötig.
+- **Relative Pfade im Manifest lösen gegen den Ort des Manifests auf**, nicht
+  gegen die App-Wurzel. Deshalb kommen `start_url`, `scope` und die
+  Symbolpfade aus dem `PageController` und nicht aus der JSON-Datei. Was dort
+  noch steht — Name, Farben, Anzeigeart, Symbolliste — ist instanzunabhängig.
+- **Prüfungen mit `toContain` auf Pfaden sind zu schwach.** Der falsche Wert
+  `../apps/kidseye/unterricht` enthält `/apps/kidseye/unterricht`. Wo es auf
+  einen Pfad ankommt, gegen die aufgelöste Adresse prüfen, nicht gegen eine
+  Teilzeichenkette.
 - `max-version` in der `info.xml` lässt sich **nicht weglassen** — das
   offizielle Schema führt sie als `use="required"`. Aktuell steht sie auf 35,
   geprüft gegen die Critical Changes von 34 und 35.
@@ -116,9 +145,9 @@ bis D17.
 ## Was gebaut ist
 
 ```
-lib/          6.737 Zeilen PHP    21 Tabellen, 18 Dienste, 5 Controller, 3 occ-Befehle
-src/          2.667 Zeilen        Vue 2, eigenes Bundle, keine @nextcloud/vue-Komponenten
-tests/        1.453 Zeilen        65 JS-Tests, 28 PHP-Tests, Lasttest, 3 Protokolle
+lib/          7.256 Zeilen PHP    25 Tabellen, 21 Dienste, 5 Controller, 4 occ-Befehle
+src/          2.751 Zeilen        Vue 2, eigenes Bundle, keine @nextcloud/vue-Komponenten
+tests/        2.484 Zeilen        107 JS-Tests, 56 PHP-Tests, Lasttest, 3 Protokolle
 data/rahmen/  231 Knoten          Hessisches Kerncurriculum als JSON
 openspec/                         Entwurf, 9 Capabilities, 101 Aufgaben
 ```
@@ -133,9 +162,9 @@ Grund, warum der Rest funktioniert; wer daran etwas ändert, ändert alles.
 
 | | |
 |---|---|
-| JS-Tests | 65 grün (`npm test`) |
-| PHP-Tests | 28 grün, 172 Assertions (Docker, siehe oben) |
-| PHP-Syntax | 39 von 39 Dateien |
+| JS-Tests | 107 grün (`npm test`) |
+| PHP-Tests | 56 grün, 269 Assertions (Docker, siehe oben) |
+| PHP-Syntax | 45 von 45 Dateien |
 | Lasttest | 8 Abfrageformen, alle unter 8 ms beim Jahresbestand (`python3 tests/last/lasttest.py`) |
 | PDF | Erzeugt, von `pypdf` gegengelesen: 4 Seiten, Umlaute korrekt |
 | `info.xml` | Gegen das Schema von apps.nextcloud.com validiert |
@@ -147,8 +176,32 @@ läuft.
 
 ## Aufgabenstand
 
-93 von 101 erledigt, 1 teilweise, 6 offen — nachzulesen in
-`openspec/changes/add-beobachtungs-workflow/tasks.md`.
+**`installations-und-geraetehaertung`** — 40 von 42 erledigt. Offen sind nur
+8.5 und 8.6: der Durchgang auf einer echten Nextcloud und die Geräteprüfung
+auf dem iPad. Beide brauchen Hardware.
+
+**`formularelemente-vereinheitlichen`** — 30 von 34 erledigt. Die App liefert
+jetzt eine eigene Stildatei aus (`css/kidseye.css`, über `Util::addStyle` an
+beiden Einstiegspunkten); die neun verschiedenen Mindesthöhen sind auf 44 px
+zurückgeführt, mit einer namentlich geführten Ausnahme (`.kb-gruppe`, 28 px).
+Offen sind nur 6.3 bis 6.6 — Sichtprüfungen, Protokoll in
+[`tests/protokolle/formulardarstellung.md`](tests/protokolle/formulardarstellung.md).
+
+Zwei Befunde daraus gehören hierher, weil sie beide lautlos gewesen wären:
+
+- **Vue 2 ersetzt das Mount-Element.** Aus `<div id="kidseye-main">` in
+  `templates/` wird beim Einhängen das Wurzelelement der Komponente — ohne die
+  ID. Ein Selektor `#kidseye-main …` hätte zur Laufzeit auf nichts getroffen.
+  Die IDs stehen deshalb an den Wurzelelementen von `App.vue` und
+  `Unterricht.vue`.
+- **Spezifität ist hier eine Rechnung, keine Geschmacksfrage.** Alle Regeln
+  stehen unter `:where(#kidseye-main, #kidseye-unterricht)`, das null
+  Spezifität beiträgt. Ein Wurzelselektor mit ID (1,0,1) schlüge jeden scoped
+  Komponentenstil (0,2,0) — und damit ausgerechnet den durchgestalteten
+  Erfassungsbildschirm.
+
+**`add-beobachtungs-workflow`** — 93 von 101 erledigt, 1 teilweise, 6 offen —
+nachzulesen in `openspec/changes/add-beobachtungs-workflow/tasks.md`.
 
 Die verbleibenden sieben brauchen alle etwas, das außerhalb der Entwicklung
 liegt:

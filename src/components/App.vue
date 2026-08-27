@@ -3,7 +3,7 @@
 		Nextcloud-Oberfläche: Wochendurchgang, Auswertung, Verwaltung (D10).
 		Der Erfassungsbildschirm läuft getrennt davon im Vollbild.
 	-->
-	<div class="app">
+	<div id="kidseye-main" class="app">
 		<nav class="app-nav">
 			<button
 				v-for="reiter in reiter"
@@ -62,7 +62,7 @@ export default {
 }
 .app-nav button {
 	background: none; border: 0; border-radius: var(--border-radius);
-	padding: .4rem .7rem; min-height: 40px; cursor: pointer;
+	padding: .4rem .7rem; cursor: pointer;
 	color: inherit; font: inherit;
 }
 .app-nav--an {

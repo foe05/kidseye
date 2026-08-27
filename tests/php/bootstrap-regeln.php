@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/stubs/ocp.php';
+require_once __DIR__ . '/stubs/console.php';
 
 // Schlichter PSR-4-Autoloader für OCA\KidsEye — hier läuft kein Composer.
 spl_autoload_register(static function (string $klasse): void {

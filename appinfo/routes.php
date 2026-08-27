@@ -10,6 +10,9 @@ return [
 		// Erfassungsbildschirm im Vollbild. Startziel des Home-Bildschirm-
 		// Symbols, siehe img/manifest.json und D14.
 		['name' => 'page#unterricht', 'url' => '/unterricht', 'verb' => 'GET'],
+		// Manifest für „Zum Home-Bildschirm". Als Route statt als Datei, weil
+		// start_url, scope und Symbolpfade von der Instanz abhängen.
+		['name' => 'page#manifest', 'url' => '/manifest.webmanifest', 'verb' => 'GET'],
 
 		// --- Erfassung (Kapitel 4 und 5) ----------------------------------
 		['name' => 'erfassung#einstieg', 'url' => '/api/v1/einstieg', 'verb' => 'GET'],

@@ -7,6 +7,7 @@ namespace OCA\KidsEye\Controller;
 use OCA\KidsEye\Service\AblageService;
 use OCA\KidsEye\Service\AufbewahrungService;
 use OCA\KidsEye\Service\CsvImportService;
+use OCA\KidsEye\Service\DiagnoseService;
 use OCA\KidsEye\Service\KontextService;
 use OCA\KidsEye\Service\MarkerService;
 use OCA\KidsEye\Service\RahmenService;
@@ -16,7 +17,6 @@ use OCA\KidsEye\Service\StammdatenService;
 use OCA\KidsEye\Service\ZweckService;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IConfig;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
@@ -39,36 +39,35 @@ class VerwaltungController extends ApiController {
 		private SkalaService $skala,
 		private AufbewahrungService $aufbewahrung,
 		private AblageService $ablage,
-		private IConfig $config,
+		private DiagnoseService $diagnose,
 	) {
 		parent::__construct($request, $rollen, $logger);
 	}
 
-	/** Einrichtungsstand — was fehlt noch, damit kidseye benutzbar ist? */
+	/**
+	 * Einrichtungsstand — was fehlt noch, damit kidseye benutzbar ist?
+	 *
+	 * Die Prüfpunkte kommen aus dem DiagnoseService, aus dem auch
+	 * `occ kidseye:pruefen` liest. Nur so können Oberfläche und Befehl nicht
+	 * auseinanderlaufen: Wer einen Punkt ergänzt, ergänzt ihn an einer Stelle
+	 * (design.md E2).
+	 *
+	 * Daneben stehen die Werte, die die Oberfläche für anderes braucht — das
+	 * Schuljahr etwa auch in der Stammdatenverwaltung.
+	 */
 	#[NoAdminRequired]
 	public function einrichtung(): DataResponse {
 		return $this->fuehreAus(function (string $nutzerId) {
 			$versionId = $this->rahmen->aktiveVersionId();
-			$schuljahr = $this->stammdaten->aktivesSchuljahr();
-
-			// 5.22: ohne diese Serveroption startet das Home-Bildschirm-Symbol
-			// mit Browserleiste statt im Vollbild.
-			$standalone = $this->config->getSystemValueBool('theming.standalone_window.enabled', true);
 
 			return [
+				'punkte' => $this->diagnose->pruefen($nutzerId),
 				'rahmen' => ['vorhanden' => $versionId !== null, 'versionId' => $versionId],
-				'schuljahr' => $schuljahr,
+				'schuljahr' => $this->stammdaten->aktivesSchuljahr(),
 				'kontexte' => count($this->kontexte->alle()),
 				'zwecke' => count($this->zwecke->alle()),
 				'gruppen' => $this->rollen->gruppenVorhanden(),
 				'ablage' => $this->ablage->pruefeAblage($nutzerId),
-				'standaloneFenster' => [
-					'aktiv' => $standalone,
-					'hinweis' => $standalone ? null
-						: 'Die Serveroption „theming.standalone_window.enabled" steht auf false. '
-							. 'Das Symbol auf dem Home-Bildschirm startet dann mit Browserleiste '
-							. 'statt im Vollbild.',
-				],
 				'fristen' => $this->aufbewahrung->fristen(),
 				'skala' => $this->skala->aktiveSkala(),
 			];

@@ -1,5 +1,8 @@
 node_modules/
-js/
+# Nur das Build-Ergebnis im Wurzelverzeichnis, nicht jedes Verzeichnis namens
+# „js". Ohne den führenden Schrägstrich galt das Muster auch für tests/js/ —
+# die gesamte JS-Testsuite lag dadurch außerhalb des Repositoriums.
+/js/
 .phpunit.cache/
 vendor/
 *.log
