@@ -62,7 +62,20 @@
 - [x] 8.3 PHP-Tests über Docker (`php:8.3-cli` mit PHPUnit-Phar, siehe `WEITERMACHEN.md`) — alle grün, einschließlich der neuen aus 3.4–3.6, 4.4, 4.5 und 5.6
 - [x] 8.4 `appinfo/info.xml` gegen das Schema von apps.nextcloud.com validieren (XML-Kommentare enthalten kein `--`)
 - [ ] 8.5 Durchgang der Reihenfolge aus dem Migrationsplan auf einer echten Nextcloud; `occ kidseye:pruefen` muss am Ende mit 0 enden
+  > **Ein erster Durchgang hat am 28. August stattgefunden** — die App lief auf
+  > einer lokalen Nextcloud. Der Punkt bleibt offen, weil der Rückgabewert von
+  > `occ kidseye:pruefen` nicht festgehalten wurde und die Reihenfolge nicht
+  > protokolliert durchgegangen ist.
+  >
+  > Was der Durchgang zutage gefördert hat, steht als eigener Change:
+  > `erste-deployment-befunde` — sieben Befunde, keiner davon auf leerer
+  > Datenbank oder ohne laufende Instanz sichtbar, keiner hat einen Test rot
+  > gemacht. Vor dem nächsten Durchgang einspielen.
 - [ ] 8.6 Geräteprüfung auf dem iPad nach `tests/protokolle/geraetepruefung.md`, Ergebnis eintragen; damit sind die Altaufgaben 0.2, 0.2b und 9.5 aus `add-beobachtungs-workflow` abgedeckt
+  > Mitnehmen: Abschnitt D misst das Zeitbudget der Erfassung. Der
+  > Erfassungsbildschirm trägt seit `erste-deployment-befunde` 7 das Querformat
+  > mit ausgefahrener Tastatur — das ist die Lage, in der gemessen werden
+  > sollte, nicht das Hochformat ohne Eingabe.
 
 ## 9. Nachträge aus der Umsetzung
 
