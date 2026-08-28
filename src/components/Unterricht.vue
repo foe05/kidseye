@@ -1,5 +1,5 @@
 <template>
-	<div id="kidseye-unterricht" class="ke" :class="{ 'ke--breit': breit }">
+	<div id="kidseye-unterricht" class="ke" :class="{ 'ke--breit': breit, 'ke--flach': flach }">
 		<!-- Kopfleiste: laufende Stunde und Synchronisationszähler (5.13) -->
 		<header class="ke-kopf">
 			<button v-if="stunde" class="ke-kontext" @click="stundeBeenden">
@@ -94,7 +94,8 @@
 					class="ke-notiz"
 					rows="2"
 					placeholder="Notiz …"
-					@input="entwurfMerken" />
+					@input="entwurfMerken"
+					@focus="inSichtHolen" />
 
 				<!-- Verwendungszwecke: optional, nie vorausgewählt (5.23) -->
 				<div v-if="zwecke.length" class="ke-zwecke">
@@ -188,6 +189,8 @@ export default {
 			meldung: null,
 			offenZahl: 0,
 			breit: false,
+			// Wenig Höhe übrig — Querformat mit eingeblendeter Tastatur.
+			flach: false,
 			sucheOffen: false,
 			suchbegriff: '',
 			suchtreffer: [],
@@ -223,6 +226,7 @@ export default {
 
 	async mounted() {
 		this.breitPruefen()
+		this.sichtVerfolgen()
 		window.addEventListener('resize', this.breitPruefen)
 		// Entwurf überlebt eine Gerätesperre (5.14)
 		document.addEventListener('visibilitychange', this.entwurfMerken)
@@ -234,12 +238,62 @@ export default {
 	beforeDestroy() {
 		window.removeEventListener('resize', this.breitPruefen)
 		document.removeEventListener('visibilitychange', this.entwurfMerken)
+		this.sichtAbmelden?.()
 		clearInterval(this.syncTimer)
 	},
 
 	methods: {
 		breitPruefen() {
 			this.breit = window.innerWidth >= 700
+		},
+
+		/**
+		 * Führt die *sichtbare* Höhe nach — nicht die Fensterhöhe.
+		 *
+		 * Auf einem Tablet im Querformat verdeckt die eingeblendete Tastatur gut
+		 * die Hälfte des Bildschirms. `100dvh` hilft dagegen nicht: es folgt der
+		 * ein- und ausfahrenden Browserleiste, die Tastatur zählt nicht dazu.
+		 * Ohne das hier stünde der Erfassungsbereich zur Hälfte hinter der
+		 * Tastatur — und mit ihm der Knopf „Sichern".
+		 *
+		 * --ke-sicht ist die verbleibende Höhe, --ke-unten das, was unten
+		 * verdeckt ist; daran hängen die eingeblendeten Meldungen.
+		 */
+		sichtVerfolgen() {
+			const sicht = window.visualViewport
+			if (!sicht) {
+				return
+			}
+			const setzen = () => {
+				const wurzel = this.$el
+				if (!wurzel?.style) {
+					return
+				}
+				wurzel.style.setProperty('--ke-sicht', sicht.height + 'px')
+				wurzel.style.setProperty(
+					'--ke-unten',
+					Math.max(0, window.innerHeight - sicht.height - sicht.offsetTop) + 'px'
+				)
+				// Unter dieser Höhe passt die gewohnte Anordnung nicht mehr:
+				// ein iPad im Querformat lässt mit Tastatur rund 380 px übrig.
+				this.flach = sicht.height < 560
+			}
+			sicht.addEventListener('resize', setzen)
+			sicht.addEventListener('scroll', setzen)
+			this.sichtAbmelden = () => {
+				sicht.removeEventListener('resize', setzen)
+				sicht.removeEventListener('scroll', setzen)
+			}
+			setzen()
+		},
+
+		/** Das Notizfeld darf beim Tippen nicht hinter die Tastatur rutschen. */
+		inSichtHolen(ereignis) {
+			// Erst nachdem die Tastatur ausgefahren ist — vorher stimmt die
+			// sichtbare Höhe noch nicht.
+			setTimeout(() => {
+				ereignis.target?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+			}, 250)
 		},
 
 		async laden() {
@@ -532,9 +586,14 @@ export default {
 .ke {
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
-	min-height: 100dvh;
-	background: var(--color-main-background);
+	/* --ke-sicht ist die tatsächlich sichtbare Höhe und wird aus
+	   window.visualViewport nachgeführt (sichtVerfolgen). Der Rückfall auf
+	   100dvh greift nur, wo es die Schnittstelle nicht gibt. */
+	min-height: var(--ke-sicht, 100dvh);
+	max-height: var(--ke-sicht, 100dvh);
+	overflow: hidden;
+	background: var(--ke-grund);
+	color: var(--ke-schrift);
 	padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -545,7 +604,7 @@ export default {
 	gap: .5rem;
 	padding: .5rem .75rem;
 	padding-top: calc(.5rem + env(safe-area-inset-top));
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--ke-rand);
 	font-size: .85rem;
 }
 .ke-kontext {
@@ -556,7 +615,7 @@ export default {
 	padding: .25rem;
 	cursor: pointer;
 }
-.ke-kontext--leer { opacity: .6; cursor: default; }
+.ke-kontext--leer { color: var(--ke-leise); cursor: default; }
 .ke-punkt {
 	display: inline-block;
 	width: .5em; height: .5em;
@@ -564,21 +623,23 @@ export default {
 	background: var(--color-success, #2f6b4f);
 	margin-right: .4em;
 }
-.ke-if { opacity: .7; }
+.ke-if { color: var(--ke-leise); }
 .ke-rechts { display: flex; align-items: center; gap: .5rem; }
-.ke-sync { font-variant-numeric: tabular-nums; opacity: .7; }
+.ke-sync { font-variant-numeric: tabular-nums; color: var(--ke-leise); }
 .ke-knopf-klein {
-	background: none; border: 1px solid var(--color-border);
-	border-radius: var(--border-radius); padding: .2rem .5rem;
+	background: none; border: 1px solid var(--ke-rand);
+	border-radius: var(--ke-radius); padding: .2rem .5rem;
 	font-size: .8rem; cursor: pointer;
 }
 
 .ke-haupt { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .ke--breit .ke-haupt { flex-direction: row; }
-.ke--breit .ke-plan { flex: 1.35; overflow-y: auto; }
+/* Beide Spalten rollen in sich. Rollte stattdessen die Seite, schöbe die
+   Tastatur den Erfassungsbereich unter den Rand — genau dort steht „Sichern". */
+.ke-plan { flex: 1.35; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .ke--breit .ke-panel {
 	flex: 1;
-	border-left: 1px solid var(--color-border);
+	border-left: 1px solid var(--ke-rand);
 	border-top: 0;
 	position: static;
 	max-height: none;
@@ -591,7 +652,7 @@ export default {
 	font-size: .65rem;
 	letter-spacing: .12em;
 	text-transform: uppercase;
-	opacity: .55;
+	color: var(--ke-leise);
 }
 .ke-kacheln {
 	display: grid;
@@ -609,29 +670,33 @@ export default {
 	justify-content: center;
 	gap: .1rem;
 	padding: .4rem .2rem;
-	border: 1px solid var(--color-border);
-	border-radius: var(--border-radius);
-	background: var(--color-main-background);
-	color: var(--color-main-text);
+	border: 1px solid var(--ke-rand);
+	border-radius: var(--ke-radius);
+	background: var(--ke-grund);
+	color: var(--ke-schrift);
 	font-size: .75rem;
 	line-height: 1.2;
 	cursor: pointer;
 }
-.ke-kachel--heute { border-color: var(--color-primary-element); }
-/* Fällt ins Auge, ohne zu schreien (D12) */
+.ke-kachel--heute { border-color: var(--ke-betont); }
+/* Fällt ins Auge, ohne zu schreien (D12).
+   Den Namen trägt die Kachel trotzdem: bei .6 war er auf dem Tablet aus
+   Armlänge kaum noch zu lesen — ausgerechnet bei den Kindern, um die es
+   hier geht. Das Signal ist der gestrichelte Rahmen, nicht das Verblassen. */
 .ke-kachel--luecke {
 	border-style: dashed;
-	opacity: .6;
+	border-color: var(--ke-leise);
+	opacity: .85;
 }
 .ke-kachel--gewaehlt {
-	outline: 2px solid var(--color-primary-element);
+	outline: 2px solid var(--ke-betont);
 	outline-offset: 1px;
 }
 .ke-name { font-weight: 500; }
 .ke-punkte {
 	font-size: .6rem;
 	letter-spacing: .08em;
-	color: var(--color-primary-element);
+	color: var(--ke-betont);
 	min-height: .8em;
 }
 
@@ -645,24 +710,26 @@ export default {
 }
 
 .ke-panel {
-	border-top: 1px solid var(--color-border);
+	border-top: 1px solid var(--ke-rand);
 	padding: .75rem;
 	display: flex;
 	flex-direction: column;
 	gap: .5rem;
-	background: var(--color-main-background);
-	max-height: 62vh;
+	background: var(--ke-grund);
+	min-height: 0;
+	max-height: 62%;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 }
 .ke-panel-kopf {
 	display: flex;
 	align-items: baseline;
 	gap: .5rem;
 	padding-bottom: .4rem;
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--ke-rand);
 	font-size: .85rem;
 }
-.ke-panel-kopf span { opacity: .6; font-size: .75rem; }
+.ke-panel-kopf span { color: var(--ke-leise); font-size: .75rem; }
 .ke-schliessen {
 	margin-left: auto;
 	background: none; border: 0; cursor: pointer;
@@ -675,25 +742,25 @@ export default {
 	text-align: left;
 	padding: .55rem .6rem;
 	min-height: 44px;
-	border: 1px solid var(--color-primary-element);
-	border-radius: var(--border-radius);
-	background: var(--color-primary-element-light);
-	color: var(--color-primary-element-text-dark, inherit);
+	border: 1px solid var(--ke-betont);
+	border-radius: var(--ke-radius);
+	background: var(--color-primary-element-light, #e7eff8);
+	color: var(--ke-schrift);
 	font-size: .85rem;
 	cursor: pointer;
 }
 .ke-mark--zweck { border-style: dashed; }
-.ke-mark small { display: block; font-size: .65rem; opacity: .7; }
+.ke-mark small { display: block; font-size: .65rem; color: inherit; }
 
 .ke-notiz {
 	width: 100%;
 	resize: vertical;
 	font: inherit;
 	padding: .5rem;
-	border: 1px solid var(--color-border);
-	border-radius: var(--border-radius);
-	background: var(--color-main-background);
-	color: var(--color-main-text);
+	border: 1px solid var(--ke-rand);
+	border-radius: var(--ke-radius);
+	background: var(--ke-grund);
+	color: var(--ke-schrift);
 }
 
 .ke-zwecke { display: flex; flex-wrap: wrap; gap: .25rem; }
@@ -703,16 +770,19 @@ export default {
 	   dieses Bildschirms. Stand als einzige Regel hier auf 32 px. */
 	min-height: 44px;
 	font-size: .72rem;
-	border: 1px solid var(--color-border);
-	border-radius: var(--border-radius);
+	border: 1px solid var(--ke-rand);
+	border-radius: var(--ke-radius);
 	background: none;
 	color: inherit;
 	cursor: pointer;
 }
+/* Der eingeschaltete Zustand kam mit einem fest eingetragenen Dunkelbraun.
+   Auf hellem Grund ging das; im dunklen Thema stand es auf dunklem Grund. */
 .ke-zweck--an {
-	border-color: var(--color-warning, #966a16);
-	background: var(--color-warning-hover, #f7f0df);
-	color: #4a3a10;
+	border-color: var(--ke-warn-rand);
+	background: var(--ke-warn-grund);
+	color: var(--ke-schrift);
+	font-weight: 600;
 }
 
 .ke-aktionen { display: flex; gap: .5rem; align-items: center; }
@@ -722,18 +792,18 @@ export default {
 	align-items: center;
 	justify-content: center;
 	min-height: 44px;
-	border: 1px solid var(--color-border);
-	border-radius: var(--border-radius);
+	border: 1px solid var(--ke-rand);
+	border-radius: var(--ke-radius);
 	cursor: pointer;
 }
 .ke-foto input { display: none; }
 .ke-aktionen .primary { min-height: 44px; padding-inline: 1rem; }
 
 .ke-heute {
-	border-top: 1px solid var(--color-border);
+	border-top: 1px solid var(--ke-rand);
 	padding-top: .4rem;
 	font-size: .72rem;
-	opacity: .75;
+	color: var(--ke-leise);
 }
 .ke-heute-titel { margin: 0 0 .2rem; font-weight: 600; }
 .ke-heute-zeile { margin: 0; font-variant-numeric: tabular-nums; }
@@ -742,9 +812,11 @@ export default {
 	position: fixed;
 	left: 50%;
 	transform: translateX(-50%);
-	bottom: calc(1rem + env(safe-area-inset-bottom));
-	background: var(--color-main-text);
-	color: var(--color-main-background);
+	/* --ke-unten ist, was die Tastatur unten verdeckt. Ohne das läge die
+	   Rückgängig-Meldung hinter ihr — im einzigen Moment, in dem sie zählt. */
+	bottom: calc(var(--ke-unten, 0px) + 1rem + env(safe-area-inset-bottom));
+	background: var(--ke-schrift);
+	color: var(--ke-grund);
 	padding: .5rem .9rem;
 	border-radius: var(--border-radius-pill, 999px);
 	font-size: .8rem;
@@ -754,7 +826,10 @@ export default {
 	max-width: min(92vw, 30rem);
 	z-index: 20;
 }
-.ke-meldung { bottom: calc(4rem + env(safe-area-inset-bottom)); text-align: left; }
+.ke-meldung {
+	bottom: calc(var(--ke-unten, 0px) + 4rem + env(safe-area-inset-bottom));
+	text-align: left;
+}
 .ke-undo button {
 	background: none; border: 0; color: inherit;
 	text-decoration: underline; cursor: pointer; font: inherit;
@@ -768,7 +843,7 @@ export default {
 .ke-suche {
 	position: fixed;
 	inset: 0;
-	background: var(--color-main-background);
+	background: var(--ke-grund);
 	padding: 1rem;
 	padding-top: calc(1rem + env(safe-area-inset-top));
 	overflow-y: auto;
@@ -783,19 +858,75 @@ export default {
 	min-height: 44px;
 	padding: .5rem;
 	border: 0;
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--ke-rand);
 	background: none;
 	color: inherit;
 	font: inherit;
 	cursor: pointer;
 }
-.ke-suchtreffer small { opacity: .6; margin-left: .5rem; }
+.ke-suchtreffer small { color: var(--ke-leise); margin-left: .5rem; }
 
 .sr-only {
 	position: absolute; width: 1px; height: 1px;
 	padding: 0; margin: -1px; overflow: hidden;
 	clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+/* ---------------------------------------------------------------------------
+ * Flach: Querformat mit eingeblendeter Tastatur
+ *
+ * Ein iPad im Querformat lässt mit ausgefahrener Tastatur rund 380 px Höhe.
+ * Darin muss beides Platz haben — das Klassenbild, um das Kind zu wechseln,
+ * und der Erfassungsbereich mit den sechs Markern und „Sichern".
+ *
+ * Die Rechnung geht nur waagerecht auf: in der Breite ist reichlich Platz.
+ * Deshalb wird hier nichts verkleinert, sondern umgelegt — mehr Spalten,
+ * weniger Höhe je Zeile. Die 44 px Antippmaß bleiben unangetastet; sie sind
+ * der Grund, warum die Erfassung mit dem Daumen funktioniert (D10).
+ * ------------------------------------------------------------------------ */
+
+.ke--flach .ke-kopf {
+	padding: .25rem .75rem;
+	padding-top: calc(.25rem + env(safe-area-inset-top));
+	font-size: .8rem;
+}
+
+/* Zwei Spalten auch dann, wenn die Breitenschwelle allein nicht greift. */
+.ke--flach .ke-haupt { flex-direction: row; }
+.ke--flach .ke-plan { flex: 1.15; padding: .4rem .5rem; }
+.ke--flach .ke-panel {
+	flex: 1;
+	max-height: none;
+	border-top: 0;
+	border-left: 1px solid var(--ke-rand);
+	padding: .5rem .6rem;
+	gap: .35rem;
+}
+
+/* Mehr Kacheln je Zeile statt kleinerer Kacheln: die Fläche zum Antippen
+   bleibt über dem Mindestmaß, das Klassenbild wird flacher. */
+.ke--flach .ke-kacheln { grid-template-columns: repeat(6, 1fr); gap: .25rem; }
+.ke--flach .ke-kachel {
+	min-height: 44px;
+	padding: .25rem .15rem;
+	font-size: .7rem;
+}
+.ke--flach .ke-gruppe + .ke-gruppe { margin-top: .35rem; }
+.ke--flach .ke-gruppe-name { font-size: .6rem; margin-bottom: .15rem; }
+
+/* Die sechs Marker in zwei Spalten — so stehen alle gleichzeitig da und
+   der Ein-Tap-Pfad bleibt ein Tap, ohne vorheriges Rollen (D3). */
+.ke--flach .ke-marker { grid-template-columns: 1fr 1fr; }
+.ke--flach .ke-mark { padding: .4rem .5rem; font-size: .8rem; }
+.ke--flach .ke-mark small { font-size: .6rem; }
+
+/* Die Notiz ist einzeilig genug: was länger wird, rollt im Feld. */
+.ke--flach .ke-notiz { min-height: 44px; }
+.ke--flach .ke-panel-kopf { padding-bottom: .25rem; }
+
+/* „Heute" ist Nachschlagewerk, kein Erfassungsschritt — bei knapper Höhe
+   weicht es als Erstes. */
+.ke--flach .ke-heute { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
 	* { transition: none !important; animation: none !important; }

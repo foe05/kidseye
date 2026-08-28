@@ -122,7 +122,7 @@ class AuswertungService {
 
 		$versionId = $this->rahmen->aktiveVersionId();
 		if ($versionId === null) {
-			return ['spalten' => [], 'zeilen' => [], 'hinweis' => self::HINWEIS_BELEGE];
+			return $this->leereHeatmap($ebene, $fach);
 		}
 
 		$arten = $ebene === RahmenService::EBENE_UEBERFACHLICH
@@ -132,7 +132,9 @@ class AuswertungService {
 		$kinder = $this->stammdaten->kinderDerKlasse($klasseId);
 
 		if ($spalten === [] || $kinder === []) {
-			return ['spalten' => $spalten, 'zeilen' => [], 'hinweis' => self::HINWEIS_BELEGE];
+			// Dieselbe Form wie der gefüllte Fall — die Oberfläche soll für den
+			// leeren Fall keine eigene Behandlung brauchen.
+			return $this->leereHeatmap($ebene, $fach, $spalten);
 		}
 
 		$q = $this->db->getQueryBuilder();
@@ -175,18 +177,77 @@ class AuswertungService {
 				'anzeige' => $kind['anzeige'],
 				'werte' => $werte,
 				'summe' => array_sum(array_column($werte, 'anzahl')),
+				// In wie vielen Bereichen liegt überhaupt etwas vor? Das ist die
+				// Zahl, die zählt: nicht wie viel belegt ist, sondern wie breit.
+				'belegt' => count(array_filter($werte, static fn ($w) => $w['anzahl'] > 0)),
 			];
 		}
+
+		// Die Oberbegriffe zu den Spalten. Fünfzehn überfachliche Dimensionen
+		// nebeneinander sind ohne ihre vier Bereiche nicht zu überblicken —
+		// „Rücksichtnahme und Solidarität" sagt für sich wenig, unter
+		// „Sozialkompetenz" viel.
+		$bereiche = [];
+		foreach ($this->rahmen->knoten($versionId, $ebene, $fach, null, false) as $k) {
+			$bereiche[$k['id']] = $k['bezeichnung'];
+		}
+
+		// Spaltensummen: in wie vielen Dimensionen ist überhaupt jemand belegt?
+		// Eine leere Spalte heißt nicht, dass die Klasse dort nichts kann —
+		// sie heißt, dass dort nichts festgehalten wurde. Genau das ist die
+		// Auskunft, für die es diese Ansicht gibt.
+		$spaltenAus = [];
+		foreach ($spalten as $i => $sp) {
+			$werte = array_column(array_column($zeilen, 'werte'), $i);
+			$anzahlen = array_column($werte, 'anzahl');
+			$spaltenAus[] = [
+				'id' => $sp['id'],
+				'bezeichnung' => $sp['bezeichnung'],
+				'art' => $sp['art'],
+				'bereich' => $sp['elternId'] !== null ? ($bereiche[$sp['elternId']] ?? null) : null,
+				'beschreibung' => $sp['beschreibung'],
+				'summe' => array_sum($anzahlen),
+				'kinderMit' => count(array_filter($anzahlen, static fn ($a) => $a > 0)),
+			];
+		}
+
+		$alleWerte = array_merge(...array_map(
+			static fn ($z) => array_column($z['werte'], 'anzahl'),
+			$zeilen
+		)) ?: [0];
 
 		return [
 			'ebene' => $ebene,
 			'fach' => $fach,
-			'spalten' => array_map(
-				static fn ($s) => ['id' => $s['id'], 'bezeichnung' => $s['bezeichnung'], 'art' => $s['art']],
-				$spalten
-			),
+			'spalten' => $spaltenAus,
 			'zeilen' => $zeilen,
+			'kinder' => count($zeilen),
+			'hoechstwert' => max($alleWerte),
+			'gesamt' => array_sum($alleWerte),
 			// Auf überfachlicher Ebene gibt es ausdrücklich keine Einstufung
+			'bewertbar' => $ebene === RahmenService::EBENE_FACHLICH,
+			'hinweis' => self::HINWEIS_BELEGE,
+		];
+	}
+
+	/** Leere Übersicht in derselben Form wie eine gefüllte. */
+	private function leereHeatmap(string $ebene, ?string $fach, array $spalten = []): array {
+		return [
+			'ebene' => $ebene,
+			'fach' => $fach,
+			'spalten' => array_map(static fn ($s) => [
+				'id' => $s['id'],
+				'bezeichnung' => $s['bezeichnung'],
+				'art' => $s['art'],
+				'bereich' => null,
+				'beschreibung' => $s['beschreibung'] ?? null,
+				'summe' => 0,
+				'kinderMit' => 0,
+			], $spalten),
+			'zeilen' => [],
+			'kinder' => 0,
+			'hoechstwert' => 0,
+			'gesamt' => 0,
 			'bewertbar' => $ebene === RahmenService::EBENE_FACHLICH,
 			'hinweis' => self::HINWEIS_BELEGE,
 		];

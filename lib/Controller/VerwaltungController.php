@@ -18,6 +18,7 @@ use OCA\KidsEye\Service\ZweckService;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
+use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -40,6 +41,7 @@ class VerwaltungController extends ApiController {
 		private AufbewahrungService $aufbewahrung,
 		private AblageService $ablage,
 		private DiagnoseService $diagnose,
+		private IUserManager $nutzer,
 	) {
 		parent::__construct($request, $rollen, $logger);
 	}
@@ -61,6 +63,11 @@ class VerwaltungController extends ApiController {
 			$versionId = $this->rahmen->aktiveVersionId();
 
 			return [
+				// Die eigene Kennung: die Oberfläche belegt damit das Feld des
+				// Lehrauftrags vor. Sie von Hand abzutippen ist der Schritt, an
+				// dem der Startdialog später leer bleibt — ein Auftrag auf einer
+				// Kennung, die es nicht gibt, fällt nirgends auf.
+				'nutzerId' => $nutzerId,
 				'punkte' => $this->diagnose->pruefen($nutzerId),
 				'rahmen' => ['vorhanden' => $versionId !== null, 'versionId' => $versionId],
 				'schuljahr' => $this->stammdaten->aktivesSchuljahr(),
@@ -112,6 +119,18 @@ class VerwaltungController extends ApiController {
 		}, true);
 	}
 
+	/**
+	 * Klasse löschen. Die Regel steht im Dienst: eine Klasse mit Beobachtungen
+	 * wird abgewiesen, sonst fielen die Einträge aus jeder Auswertung heraus,
+	 * ohne gelöscht zu sein.
+	 */
+	public function klasseLoeschen(int $klasseId): DataResponse {
+		return $this->fuehreAus(function () use ($klasseId) {
+			$this->stammdaten->klasseLoeschen($klasseId);
+			return ['geloescht' => true];
+		}, true);
+	}
+
 	#[NoAdminRequired]
 	public function lehrauftraege(): DataResponse {
 		return $this->fuehreAus(function (string $nutzerId) {
@@ -128,13 +147,56 @@ class VerwaltungController extends ApiController {
 		}, true);
 	}
 
+	/**
+	 * Lehrauftrag anlegen.
+	 *
+	 * Die Kennung wird gegen Nextcloud geprüft, bevor irgendetwas geschrieben
+	 * wird. Ohne diese Prüfung nimmt die Tabelle jede Zeichenkette an — und ein
+	 * Auftrag auf „Frau Müller" statt auf `mueller` wirkt sich nirgends aus:
+	 * Der Auftrag steht in der Datenbank, taucht aber in keiner Ansicht auf,
+	 * weil jede Abfrage nach der eigenen Kennung filtert. Sichtbar wird das
+	 * erst im Unterrichtsmodus, wo der Startdialog dann leer bleibt — ohne
+	 * jeden Hinweis darauf, dass die Ursache ein Tippfehler war.
+	 */
 	public function lehrauftragAnlegen(string $nutzerId, int $klasseId, int $kontextId, bool $klassenlehrkraft = false): DataResponse {
 		return $this->fuehreAus(
-			fn () => ['id' => $this->stammdaten->lehrauftragAnlegen(
-				$nutzerId, $klasseId, $kontextId, $klassenlehrkraft
-			)],
+			function () use ($nutzerId, $klasseId, $kontextId, $klassenlehrkraft) {
+				if (!$this->nutzer->userExists($nutzerId)) {
+					throw new \InvalidArgumentException(
+						'Es gibt keine Nextcloud-Kennung „' . $nutzerId . '". Gemeint ist der '
+						. 'Anmeldename, nicht der angezeigte Name.'
+					);
+				}
+				return ['id' => $this->stammdaten->lehrauftragAnlegen(
+					$nutzerId, $klasseId, $kontextId, $klassenlehrkraft
+				)];
+			},
 			true
 		);
+	}
+
+	/**
+	 * Setzt den ganzen Satz an Kontexten, die jemand in einer Klasse
+	 * unterrichtet.
+	 *
+	 * Einzeln angelegt sind sieben Kontexte sieben Formulare mit siebenmal
+	 * derselben Kennung — und genau dort entstehen die Tippfehler, an denen
+	 * der Startdialog später leer bleibt.
+	 *
+	 * @param int[] $kontextIds leere Liste = alle Aufträge dieser Klasse lösen
+	 */
+	public function lehrauftraegeSetzen(string $nutzerId, int $klasseId, array $kontextIds, bool $klassenlehrkraft = false): DataResponse {
+		return $this->fuehreAus(function () use ($nutzerId, $klasseId, $kontextIds, $klassenlehrkraft) {
+			if (!$this->nutzer->userExists($nutzerId)) {
+				throw new \InvalidArgumentException(
+					'Es gibt keine Nextcloud-Kennung „' . $nutzerId . '". Gemeint ist der '
+					. 'Anmeldename, nicht der angezeigte Name.'
+				);
+			}
+			return $this->stammdaten->lehrauftraegeSetzen(
+				$nutzerId, $klasseId, $kontextIds, $klassenlehrkraft
+			);
+		}, true);
 	}
 
 	// ------------------------------------------------------------- Klassenbild

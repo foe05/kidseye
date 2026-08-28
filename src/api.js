@@ -43,8 +43,12 @@ export default {
 	lehrauftraege: () => holen('/lehrauftrag'),
 	schuljahrAnlegen: (nutzlast) => senden('/schuljahr', nutzlast),
 	klasseAnlegen: (name) => senden('/klassen', { name }),
+	klasseLoeschen: (klasseId) => senden(`/klassen/${klasseId}`, {}, 'delete'),
 	schuelerAnlegen: (nutzlast) => senden('/schueler', nutzlast),
 	lehrauftragAnlegen: (nutzlast) => senden('/lehrauftrag', nutzlast),
+	// Ganzer Satz statt einzelner Aufträge — der Regelfall ist „alle Fächer
+	// dieser Klasse", und der war einzeln sieben gleiche Formulare lang.
+	lehrauftraegeSetzen: (nutzlast) => senden('/lehrauftrag/satz', nutzlast, 'put'),
 	klassenbildSpeichern: (klasseId, eintraege) =>
 		senden(`/klassen/${klasseId}/bild`, { eintraege }, 'put'),
 	klassenbildZuruecksetzen: (klasseId) =>

@@ -60,13 +60,31 @@ function regeln(quelle) {
 }
 
 describe('Stildatei css/kidseye.css', () => {
+	/*
+	 * Die Zusicherung ist: keine Regel dieser Datei wirkt außerhalb der App.
+	 * Dafür muss der Wurzelselektor vorkommen — er muss aber nicht am Anfang
+	 * stehen. Die Stufen der Belegdichte hängen zusätzlich am Thema und
+	 * stehen deshalb unter
+	 * `:where(body[data-theme-dark], …) :where(#kidseye-main, …)`.
+	 * Ein vorangestellter Themenselektor engt weiter ein, statt zu öffnen;
+	 * die Zusicherung bleibt.
+	 */
+	const WURZEL = ':where(#kidseye-main, #kidseye-unterricht)'
+
 	it('steht mit jeder Regel unter einem der beiden Wurzelselektoren', () => {
 		for (const { selektor } of regeln(css)) {
 			for (const einzeln of teile(selektor)) {
 				expect(
-					einzeln,
+					einzeln.includes(WURZEL),
 					'Regel ohne Wurzelselektor: ' + einzeln
-				).toMatch(/^:where\(#kidseye-main, #kidseye-unterricht\)($|[\s.:[])/)
+				).toBe(true)
+				// Was hinter der Wurzel steht, muss an ihr hängen — nicht ein
+				// weiterer, eigenständiger Selektor daneben sein.
+				const rest = einzeln.slice(einzeln.indexOf(WURZEL) + WURZEL.length)
+				expect(
+					rest,
+					'Wurzelselektor greift nicht auf den Rest durch: ' + einzeln
+				).toMatch(/^($|[\s.:[])/)
 			}
 		}
 	})
@@ -165,7 +183,11 @@ describe('Stildatei css/kidseye.css', () => {
 		// Beschriftungsgröße wie zuvor in den Komponenten
 		const beschriftung = regeln(css).find((r) => r.selektor.endsWith('.ke-feld > span'))
 		expect(beschriftung.inhalt).toMatch(/font-size:\s*\.8rem/)
-		expect(beschriftung.inhalt).toMatch(/opacity:\s*\.8/)
+		// Die Beschriftung stand auf opacity: .8 und war damit blasser als der
+		// Wert, den sie benennt. Sie trägt jetzt die volle Schriftfarbe; das
+		// Abblenden ist dem Nebentext vorbehalten (--ke-leise).
+		expect(beschriftung.inhalt).toMatch(/color:\s*var\(--ke-schrift\)/)
+		expect(beschriftung.inhalt).not.toMatch(/opacity/)
 	})
 
 	it('gibt Filterfeldern eine Breitenspanne und schneidet langen Text ab', () => {
@@ -185,13 +207,57 @@ describe('Stildatei css/kidseye.css', () => {
 			expect(treffer[2], treffer[1] + ' steht ohne Rückfallwert').toBe(',')
 		}
 
-		// Keine nackte Farbe außerhalb eines Rückfallwerts oder eines data:-URI
+		/*
+		 * Eine benannte Ausnahme: die Stufen der Belegdichte
+		 * (`--ke-heat-*`) tragen feste Werte.
+		 *
+		 * Eine Skala muss über ihre ganze Länge geprüft sein.
+		 * `--color-primary-element` ist pro Instanz frei einstellbar — mit
+		 * einer hellgelben Instanzfarbe wären die oberen Stufen unlesbar,
+		 * und der Kontrast wäre nicht mehr nachrechenbar. Die fünf Stufen
+		 * sind einzeln gegen ihre Schriftfarbe gerechnet und stehen mit dem
+		 * Ergebnis in `css/kidseye.css` kommentiert.
+		 *
+		 * Die Ausnahme gilt genau für diese Zeilen, nicht für die Datei.
+		 */
 		const nurEigenes = css
 			.replace(/\/\*[\s\S]*?\*\//g, '')
 			.replace(/url\("data:[^"]*"\)/g, 'url(…)')
 			.replace(/var\(--[\w-]+\s*,[^()]*\)/g, 'var(…)')
+			.replace(/^\s*--ke-heat-[\w-]+:\s*#[0-9a-fA-F]{3,8};\s*$/gm, '')
 		expect(nurEigenes, 'Farbwert ohne Nextcloud-Variable').not.toMatch(/#[0-9a-fA-F]{3,8}\b/)
 		expect(nurEigenes).not.toMatch(/\b(rgb|rgba|hsl|hsla)\(/)
+	})
+
+	/*
+	 * Die Skala selbst: eine Hue, hell nach dunkel, fünf Stufen plus die
+	 * Nullstufe — und für beide Themen definiert.
+	 *
+	 * Keine Ampel: die Zahlen sind Belegzahlen. Eine Rot-nach-Grün-Skala
+	 * läse sich als Urteil über das Kind, ausgerechnet auf den überfachlichen
+	 * Kompetenzen, die nach dem Kerncurriculum keine Skala tragen.
+	 */
+	it('führt die Belegdichte als einhuige Skala in beiden Themen', () => {
+		for (const stufe of ['0', '1', '2', '3', '4', '5']) {
+			expect(css, 'Stufe ' + stufe + ' fehlt').toMatch(
+				new RegExp('--ke-heat-' + stufe + ':\\s*#[0-9a-fA-F]{6}')
+			)
+		}
+		// Eigene Stufen fürs dunkle Thema, nicht die hellen umgedreht
+		expect(css).toMatch(/prefers-color-scheme:\s*dark/)
+		expect(css).toContain('body[data-theme-dark]')
+
+		// Keine Ampel: Grün- und Rottöne haben in der Skala nichts zu suchen
+		const skala = [...css.matchAll(/--ke-heat-[\d]+:\s*(#[0-9a-fA-F]{6})/g)].map((t) => t[1])
+		expect(skala.length).toBeGreaterThanOrEqual(12)
+		for (const wert of skala) {
+			const r = parseInt(wert.slice(1, 3), 16)
+			const b = parseInt(wert.slice(5, 7), 16)
+			// Blau führt durchgehend — außer bei der neutralen Nullstufe,
+			// die sich zur Arbeitsfläche zurücknimmt.
+			const neutral = Math.abs(r - b) < 12
+			expect(neutral || b > r, 'Stufe ' + wert + ' ist keine Blaustufe').toBe(true)
+		}
 	})
 })
 
@@ -283,5 +349,71 @@ describe('Einbindung der Stildatei', () => {
 	it('trägt die Wurzel-IDs an den Wurzelelementen der Komponenten', () => {
 		expect(lies('src/components/App.vue')).toContain('id="kidseye-main"')
 		expect(lies('src/components/Unterricht.vue')).toContain('id="kidseye-unterricht"')
+	})
+})
+
+/**
+ * Nebentext wird eingefärbt, nicht abgeblendet.
+ *
+ * Der Befund, der dazu geführt hat: 34 Regeln nahmen Text über `opacity`
+ * zurück, mehrere davon auf .55 bis .65. Auf weißem Grund landet #222 bei .6
+ * auf rund #8e8e8e — 3,0:1 statt der nötigen 4,5:1. Die Werte stapelten sich
+ * obendrein: ein Hinweisblock auf .8 mit einem <small> auf .7 darin stand
+ * effektiv auf .56, und beim Schreiben rechnet das niemand nach.
+ *
+ * Erlaubt bleibt Deckkraft dort, wo sie ein ganzes Bedienelement zurücknimmt
+ * und ein zweites Merkmal die Aussage trägt — ein gestrichelter Rahmen etwa.
+ * Diese Fälle stehen namentlich unten; wer einen weiteren braucht, trägt ihn
+ * mit Begründung ein, statt die Prüfung zu lockern.
+ */
+describe('Nebentext trägt Farbe, keine Deckkraft', () => {
+	const AUSNAHMEN = [
+		// Gesperrtes Bedienelement — zusätzlich gestrichelter Rahmen und
+		// not-allowed-Zeiger; die Deckkraft ist nicht das einzige Merkmal.
+		{ datei: 'css/kidseye.css', wert: '.55' },
+		// Kachel eines lange nicht beobachteten Kindes (D12). Das Signal ist
+		// der gestrichelte Rahmen; .85 hält den Namen lesbar.
+		{ datei: 'src/components/Unterricht.vue', wert: '.85' },
+	]
+
+	const dateien = [
+		'css/kidseye.css',
+		...['App', 'Auswertung', 'Einrichtung', 'Inbox', 'Klassenbild',
+			'MarkerVerwaltung', 'Stammdaten', 'StundeStart', 'Unterricht']
+			.map((n) => `src/components/${n}.vue`),
+	]
+
+	it('blendet nirgends Text über opacity ab', () => {
+		const gefunden = []
+		for (const datei of dateien) {
+			const treffer = lies(datei).match(/opacity:\s*([\d.]+)/g) || []
+			for (const roh of treffer) {
+				const wert = roh.replace(/opacity:\s*/, '')
+				const erlaubt = AUSNAHMEN.some(
+					(a) => a.datei === datei && a.wert === wert
+				)
+				if (!erlaubt) {
+					gefunden.push(`${datei}: opacity: ${wert}`)
+				}
+			}
+		}
+		expect(gefunden, 'Deckkraft statt Farbe').toEqual([])
+	})
+
+	it('führt den Nebentext als eigene Farbe mit geprüftem Rückfall', () => {
+		const css = lies('css/kidseye.css')
+		// Nextclouds eigener Wert für Nebentext, in beiden Themen gegen den
+		// Arbeitsgrund geprüft. Der Rückfall greift im Basis-Layout des
+		// Erfassungsbildschirms, wo weniger Nextcloud-CSS geladen ist.
+		expect(css).toMatch(/--ke-leise:\s*var\(--color-text-maxcontrast,\s*#6b6b6b\)/)
+	})
+
+	it('setzt im Erfassungsbildschirm keine Themenfarbe ohne Rückfall', () => {
+		// RENDER_AS_BASE bringt die Nextcloud-Variablen nicht zwingend mit.
+		// `color: var(--color-main-text)` fiele dort auf die geerbte Farbe
+		// zurück — im Zweifel auf die des Browsers.
+		const ohneRueckfall = (lies('src/components/Unterricht.vue')
+			.match(/var\(--color-[a-z-]+\)/g) || [])
+		expect(ohneRueckfall, 'Themenfarbe ohne Rückfall').toEqual([])
 	})
 })

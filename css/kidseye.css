@@ -47,11 +47,107 @@
 	--ke-schrift: var(--color-main-text, #222222);
 	--ke-betont: var(--color-primary-element, #0b5cad);
 
+	/* Nebentext — Hinweise, Zeitangaben, Beschriftungen zweiter Ordnung.
+	 *
+	 * Der Grund für eine eigene Farbe statt `opacity`: Abblenden über Deckkraft
+	 * mischt die Textfarbe gegen den *Elternhintergrund*, nicht gegen eine
+	 * bekannte Fläche. Bei .6 landet #222 auf Weiß bei rund #8e8e8e — 3,0:1
+	 * und damit unter den 4,5:1, die Fließtext braucht. Schlimmer: die Werte
+	 * stapeln sich. Ein Hinweisblock auf .8 mit einem <small> auf .7 darin
+	 * steht effektiv auf .56, und niemand rechnet das beim Schreiben nach.
+	 * Deckkraft nimmt zudem Rahmen und Hintergrund desselben Elements mit.
+	 *
+	 * --color-text-maxcontrast ist Nextclouds eigener Wert dafür und in
+	 * beiden Themen gegen den Arbeitsgrund geprüft. Der Rückfall #6b6b6b hält
+	 * auf Weiß 5,0:1 — er greift im Basis-Layout des Erfassungsbildschirms,
+	 * das weniger Nextcloud-CSS mitbringt als die Verwaltungsoberfläche.
+	 */
+	--ke-leise: var(--color-text-maxcontrast, #6b6b6b);
+
+	/* Warnfarben mit eigenem Textwert. Ein fest eingetragenes Dunkelbraun auf
+	   einem Themenhintergrund kippt, sobald das Thema wechselt. */
+	--ke-warn-rand: var(--color-warning, #966a16);
+	--ke-warn-grund: var(--color-warning-hover, #f7f0df);
+	--ke-fehler: var(--color-error, #8b2a2a);
+
+	/* ---------------------------------------------------------------------
+	 * Belegdichte der Kompetenz-Übersicht — fünf Stufen einer Hue, hell nach
+	 * dunkel.
+	 *
+	 * Warum feste Werte statt Themenfarben: eine Skala muss über ihre ganze
+	 * Länge geprüft sein. `--color-primary-element` ist frei einstellbar; mit
+	 * einer hellgelben Instanzfarbe wären die oberen Stufen unlesbar, und
+	 * geprüft wäre nichts mehr.
+	 *
+	 * Warum eine Hue und nicht Rot-nach-Grün: die Zahl ist eine Belegzahl,
+	 * keine Bewertung. Eine Ampel läse sich als Urteil über das Kind —
+	 * ausgerechnet auf den überfachlichen Kompetenzen, die nach dem
+	 * Kerncurriculum ausdrücklich keine Skala tragen. Viel Farbe heißt hier
+	 * „viel festgehalten", nicht „gut".
+	 *
+	 * Die Schriftfarbe je Stufe steht daneben und ist ausgerechnet, nicht
+	 * geschätzt: jede Paarung hält mindestens 4,5:1. Die Stufe #2a78d6 fehlt
+	 * bewusst in der Reihe — sie ist die einzige, bei der weder helle noch
+	 * dunkle Schrift den Wert erreicht.
+	 */
+	--ke-heat-0: #f4f4f1;   /* keine Beobachtung */
+	--ke-heat-1: #cde2fb;   /* dunkle Schrift, 14,9:1 */
+	--ke-heat-2: #9ec5f4;   /* dunkle Schrift, 11,0:1 */
+	--ke-heat-3: #6da7ec;   /* dunkle Schrift,  7,9:1 */
+	--ke-heat-4: #256abf;   /* helle Schrift,   5,4:1 */
+	--ke-heat-5: #104281;   /* helle Schrift,   9,9:1 */
+	--ke-heat-tinte-hell: #0b0b0b;
+	--ke-heat-tinte-dunkel: #ffffff;
+	--ke-heat-tinte-0: var(--ke-leise);
+
 	/* Damit das native Auswahlmenü — die aufklappende Liste, die sich nicht
 	   gestalten lässt — im dunklen Thema dunkel aufklappt. Es folgt damit dem
 	   Betriebssystem; ein Signal für „Nextcloud steht auf dunkel" gibt es im
 	   CSS nicht. Das Feld selbst folgt über die Variablen oben dem Thema. */
 	color-scheme: light dark;
+
+	/* Grundfarbe setzen, statt sie zu erben. Im Basis-Layout des
+	   Erfassungsbildschirms steht über der App kein Nextcloud-Stil, der sie
+	   vorgäbe — geerbt wurde dort im Zweifel die Farbe des Browsers. */
+	color: var(--ke-schrift);
+}
+
+/* Im dunklen Thema läuft dieselbe Hue von dunkel nach hell — die schwächste
+   Stufe muss sich zur dunklen Fläche zurücknehmen, nicht zur weißen. Ein
+   Umdrehen der hellen Reihe ergäbe das nicht; die Stufen sind für diese Fläche
+   ausgesucht und einzeln gegen ihre Schriftfarbe gerechnet.
+
+   Beide Schreibweisen, weil Nextcloud sein Thema über eine Klasse am
+   Wurzelelement führt und das Betriebssystem über prefers-color-scheme. */
+@media (prefers-color-scheme: dark) {
+	:where(#kidseye-main, #kidseye-unterricht) {
+		--ke-heat-0: #242422;
+		--ke-heat-1: #0d366b;   /* helle Schrift, 12,0:1 */
+		--ke-heat-2: #184f95;   /* helle Schrift,  8,1:1 */
+		--ke-heat-3: #256abf;   /* helle Schrift,  5,4:1 */
+		--ke-heat-4: #5598e7;   /* dunkle Schrift, 6,6:1 */
+		--ke-heat-5: #9ec5f4;   /* dunkle Schrift, 11,0:1 */
+		--ke-heat-tinte-hell: #ffffff;
+		--ke-heat-tinte-dunkel: #0b0b0b;
+	}
+}
+
+:where(body[data-theme-dark], body[data-theme-dark-highcontrast]) :where(#kidseye-main, #kidseye-unterricht) {
+	--ke-heat-0: #242422;
+	--ke-heat-1: #0d366b;
+	--ke-heat-2: #184f95;
+	--ke-heat-3: #256abf;
+	--ke-heat-4: #5598e7;
+	--ke-heat-5: #9ec5f4;
+	--ke-heat-tinte-hell: #ffffff;
+	--ke-heat-tinte-dunkel: #0b0b0b;
+}
+
+/* Nebentext als Klasse, für die Stellen, an denen kein eigener Selektor
+   lohnt. Deckkraft bleibt dem vorbehalten, was wirklich ganze Elemente
+   zurücknimmt — eine ausgegraute Kachel etwa, nicht ein Satz. */
+:where(#kidseye-main, #kidseye-unterricht) .ke-leise {
+	color: var(--ke-leise);
 }
 
 /* ---------------------------------------------------------------------------
@@ -177,20 +273,23 @@
 	gap: .3rem;
 }
 
+/* Die Beschriftung eines Feldes ist kein Nebentext: sie sagt, was in das
+   Feld gehört. Sie stand auf .8 Deckkraft und war damit blasser als der
+   Wert, den sie benennt. */
 :where(#kidseye-main, #kidseye-unterricht) .ke-feld > span {
 	font-size: .8rem;
-	opacity: .8;
+	color: var(--ke-schrift);
 }
 
 /* „optional" neben der Beschriftung: leiser, aber nicht kursiv */
 :where(#kidseye-main, #kidseye-unterricht) .ke-feld em {
 	font-style: normal;
-	opacity: .6;
+	color: var(--ke-leise);
 }
 
 :where(#kidseye-main, #kidseye-unterricht) .ke-feld small {
 	font-size: .72rem;
-	opacity: .65;
+	color: var(--ke-leise);
 	line-height: 1.4;
 }
 

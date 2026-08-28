@@ -47,8 +47,14 @@ class BeobachtungService {
 	 *   clientUuid:  ?string   Dublettenschutz der Offline-Warteschlange
 	 *   erfasstAm:   ?string   echter Erfassungszeitpunkt vom Gerät
 	 * }
+	 * @param array|null $stunde Ausdrücklich gesetzter Stundenkontext statt der
+	 *        laufenden Stunde. Gebraucht wird das für rückwirkend erzeugte
+	 *        Einträge (Beispieldaten): `laufende()` schließt jede Stunde nach
+	 *        90 Minuten, eine drei Wochen alte gäbe es also nicht mehr — die
+	 *        Beobachtung verlöre Klasse, Kontext und damit die fachliche Achse.
+	 *        Im Normalbetrieb bleibt der Parameter null.
 	 */
-	public function erfassen(string $nutzerId, array $eingabe): array {
+	public function erfassen(string $nutzerId, array $eingabe, ?array $stunde = null): array {
 		$schuelerId = (int)$eingabe['schuelerId'];
 		$clientUuid = $eingabe['clientUuid'] ?? null;
 
@@ -67,7 +73,7 @@ class BeobachtungService {
 			}
 		}
 
-		$stunde = $this->stunden->laufende($nutzerId);
+		$stunde ??= $this->stunden->laufende($nutzerId);
 		$markerId = isset($eingabe['markerId']) ? (int)$eingabe['markerId'] : null;
 		$marker = $markerId !== null ? $this->marker->nachId($markerId) : null;
 		$text = trim((string)($eingabe['text'] ?? ''));

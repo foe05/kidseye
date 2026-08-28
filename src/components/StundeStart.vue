@@ -44,9 +44,19 @@
 			überfachlichen Kompetenzen zugeordnet, nicht einem Fach.
 		</p>
 
+		<!--
+			Der Startdialog steht und fällt mit dem Lehrauftrag: die beiden
+			Auswahlfelder darüber werden ausschließlich aus ihm gefüllt. Fehlt er,
+			sind sie leer — und das sieht aus wie ein kaputter Bildschirm, nicht wie
+			ein fehlender Eintrag. Deshalb steht hier, wohin es geht, und nicht nur,
+			was fehlt.
+		-->
 		<p v-if="klassen.length === 0" class="hinweis">
-			Für dich ist noch kein Lehrauftrag hinterlegt. Ohne Lehrauftrag lässt sich
-			keine Stunde starten — bitte in der Verwaltung anlegen lassen.
+			Für <strong>{{ kennung || 'diese Kennung' }}</strong> ist noch kein
+			Lehrauftrag hinterlegt. Klasse und Kontext oben kommen ausschließlich
+			daher — ohne Auftrag bleiben sie leer.
+			<a :href="verwaltungUrl">In der Verwaltung unter „Klassen &amp; Kinder →
+				Lehraufträge"</a> je Klasse und Unterrichtskontext einen Auftrag anlegen.
 		</p>
 
 		<button class="primary" type="submit" :disabled="!kontextId">Loslegen</button>
@@ -54,6 +64,8 @@
 </template>
 
 <script>
+import { generateUrl } from '@nextcloud/router'
+
 export default {
 	name: 'StundeStart',
 
@@ -69,12 +81,17 @@ export default {
 			klasseId: null,
 			kontextId: null,
 			inhaltsfeldId: null,
+			verwaltungUrl: generateUrl('/apps/kidseye/'),
 		}
 	},
 
 	computed: {
 		klassen() {
 			return this.auswahl?.klassen || []
+		},
+		/** Für die Meldung: auf welche Kennung wurde vergeblich gesucht? */
+		kennung() {
+			return this.auswahl?.nutzerId || ''
 		},
 		gewaehlteKlasse() {
 			return this.klassen.find((k) => k.id === this.klasseId) || null
@@ -150,7 +167,7 @@ h2 { margin: 0; }
 .hinweis {
 	margin: 0;
 	font-size: .8rem;
-	opacity: .75;
+	color: var(--ke-leise);
 	line-height: 1.5;
 	border-left: 2px solid var(--color-border);
 	padding-left: .6rem;
