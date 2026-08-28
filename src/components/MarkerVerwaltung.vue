@@ -98,7 +98,11 @@ export default {
 			this.hoechstzahl = daten.hoechstzahl
 			this.dimensionen = daten.dimensionen
 			this.zwecke = daten.zwecke
+			// Die Kennung wird mitgeführt und beim Speichern zurückgesendet.
+			// Ohne sie legte der Server den Satz neu an, und eine auf einem
+			// Gerät wartende Beobachtung verlöre ihren Marker (D9).
 			this.marker = daten.marker.map((m) => ({
+				id: m.id,
 				text: m.text,
 				knoten: [...m.knoten],
 				zwecke: m.zwecke.map((z) => z.kennung),
@@ -107,7 +111,7 @@ export default {
 		},
 
 		hinzufuegen() {
-			this.marker.push({ text: '', knoten: [], zwecke: [], sichtbar: true })
+			this.marker.push({ id: null, text: '', knoten: [], zwecke: [], sichtbar: true })
 		},
 
 		async speichern() {
