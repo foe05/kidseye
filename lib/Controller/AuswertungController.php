@@ -16,6 +16,7 @@ use OCA\KidsEye\Service\SkalaService;
 use OCA\KidsEye\Service\ZweckService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCA\KidsEye\Service\PdfService;
 use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\AppFramework\Http\DataResponse;
@@ -189,8 +190,21 @@ class AuswertungController extends ApiController {
 		});
 	}
 
-	/** Bericht als PDF (8.5). */
+	/**
+	 * Bericht als PDF (8.5).
+	 *
+	 * NoCSRFRequired ist hier Voraussetzung, nicht Bequemlichkeit: das PDF
+	 * wird über einen gewöhnlichen Verweis geöffnet, und eine Seitennavigation
+	 * führt kein requesttoken mit. Ohne das Attribut weist die
+	 * SecurityMiddleware die Anfrage ab, bevor der Dienst überhaupt läuft —
+	 * der Verweis endete auf einer Fehlerseite statt auf einem PDF.
+	 *
+	 * Unbedenklich, weil nichts geschrieben wird und die Berechtigung
+	 * weiterhin an `verlangeLehrkraft()` und der Sichtbarkeitsprüfung im
+	 * BerichtService hängt.
+	 */
 	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function berichtDruck(int $schuelerId, ?string $von = null, ?string $bis = null,
 		array $kontextIds = [], array $stufen = [], ?string $zweck = null,
 		bool $mitArbeitsproben = false) {
@@ -219,7 +233,9 @@ class AuswertungController extends ApiController {
 		return $this->fuehreAus(fn (string $n) => $this->berichte->auskunft($n, $schuelerId));
 	}
 
+	/** Wie berichtDruck() über einen Verweis geöffnet — siehe dort. */
 	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function auskunftDruck(int $schuelerId) {
 		try {
 			$nutzerId = $this->rollen->verlangeLehrkraft();

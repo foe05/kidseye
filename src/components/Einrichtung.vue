@@ -149,8 +149,11 @@ export default {
 
 <style scoped>
 .ein { padding: 1rem; max-width: 46rem; }
-.ein-abhilfe { display: block; font-family: monospace; opacity: .75; }
-.ein-offen { opacity: .75; }
+.ein-abhilfe { display: block; font-family: monospace; color: var(--ke-leise); }
+/* „nicht prüfbar" — kein Mangel, aber auch kein Haken. Als eigenes Zeichen
+   statt als abgeblendete Zeile: Deckkraft hätte das <small> darin ein
+   zweites Mal gedämpft, obwohl dort die Begründung steht. */
+.ein-offen::before { content: '?'; color: var(--ke-leise); font-weight: 700; }
 .ein h2 { margin-top: 0; }
 .ein h3 { font-size: 1rem; margin: 0 0 .5rem; }
 .ein-liste { list-style: none; padding: 0; margin: 0 0 1.5rem; }
@@ -161,7 +164,7 @@ export default {
 .ein-liste li::before { position: absolute; left: 0; }
 .ein-ja::before { content: '✓'; color: var(--color-success, #2f6b4f); }
 .ein-nein::before { content: '!'; color: var(--color-error, #8b2a2a); font-weight: 700; }
-.ein-liste small { display: block; opacity: .7; font-size: .78rem; line-height: 1.5; }
+.ein-liste small { display: block; color: var(--ke-leise); font-size: .78rem; line-height: 1.5; }
 .ein-block {
 	margin-top: 1.5rem; padding-top: 1rem;
 	border-top: 1px solid var(--color-border);
@@ -175,12 +178,12 @@ export default {
 }
 .ein-frist { margin: .2rem 0; font-size: .85rem; }
 .ein-frist strong { display: inline-block; min-width: 8rem; }
-.ein-klein { font-size: .78rem; opacity: .7; line-height: 1.5; }
+.ein-klein { font-size: .78rem; color: var(--ke-leise); line-height: 1.5; }
 .ein-csv { width: 100%; font-family: monospace; font-size: .8rem; margin: .5rem 0; }
 .ein-aktionen { display: flex; gap: .5rem; }
 .ein-tabelle { width: 100%; border-collapse: collapse; font-size: .78rem; margin-top: .75rem; }
 .ein-tabelle td { border-bottom: 1px solid var(--color-border); padding: .25rem .4rem; }
-.ein-dublette { opacity: .6; }
+.ein-dublette { color: var(--ke-leise); }
 .ein-fehler { color: var(--color-error, #8b2a2a); }
 .ein-ok { color: var(--color-success, #2f6b4f); font-size: .85rem; }
 </style>

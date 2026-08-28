@@ -113,7 +113,7 @@ export default {
 /* .ke-feld ordnet Beschriftung und Feld an; hier bleibt nur die Breite. */
 .kb-feld { max-width: 16rem; }
 .kb-hinweis {
-	margin: 1rem 0; font-size: .82rem; line-height: 1.6; opacity: .8;
+	margin: 1rem 0; font-size: .82rem; line-height: 1.6; color: var(--ke-leise);
 	border-left: 2px solid var(--color-border); padding-left: .75rem;
 }
 .kb-raster {

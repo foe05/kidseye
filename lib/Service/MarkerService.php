@@ -171,8 +171,16 @@ class MarkerService {
 	 * Bereits erfasste Beobachtungen behalten ihren ursprünglichen Markertext
 	 * und ihre Kompetenzzuordnung — beides steht an der Beobachtung selbst.
 	 *
+	 * Ein Marker mit bekannter `id` behält sie. Das ist keine Kosmetik: die
+	 * Warteschlange auf dem Gerät führt Beobachtungen mit `markerId`, und eine
+	 * offline erfasste Beobachtung wird oft erst Stunden später übertragen
+	 * (D9). Würde das Speichern die Sätze neu anlegen, verlöre jede
+	 * zwischenzeitlich wartende Beobachtung ihren Marker und käme beim
+	 * Übertragen als „braucht mindestens einen Marker oder einen Text" zurück
+	 * — sie bliebe für immer in der Warteschlange stehen.
+	 *
 	 * @param array $marker Liste aus
-	 *        ['text'=>string,'knoten'=>string[],'zwecke'=>string[],'sichtbar'=>bool]
+	 *        ['id'=>?int,'text'=>string,'knoten'=>string[],'zwecke'=>string[],'sichtbar'=>bool]
 	 * @throws \InvalidArgumentException bei mehr als sechs sichtbaren Markern
 	 */
 	public function satzSpeichern(int $kontextId, array $marker): void {
@@ -192,23 +200,24 @@ class MarkerService {
 			$q->select('id')->from('kidseye_marker')
 				->where($q->expr()->eq('kontext_id', $q->createNamedParameter($kontextId, IQueryBuilder::PARAM_INT)));
 			$treffer = $q->executeQuery();
-			$alt = array_column($treffer->fetchAll(), 'id');
+			$alt = array_map('intval', array_column($treffer->fetchAll(), 'id'));
 			$treffer->closeCursor();
 
-			if ($alt !== []) {
-				foreach (['kidseye_marker_knoten', 'kidseye_marker_zweck'] as $tabelle) {
-					$q = $this->db->getQueryBuilder();
-					$q->delete($tabelle)
-						->where($q->expr()->in('marker_id', $q->createNamedParameter($alt, IQueryBuilder::PARAM_INT_ARRAY)))
-						->executeStatement();
-				}
-				$q = $this->db->getQueryBuilder();
-				$q->delete('kidseye_marker')
-					->where($q->expr()->eq('kontext_id', $q->createNamedParameter($kontextId, IQueryBuilder::PARAM_INT)))
-					->executeStatement();
-			}
-
+			$behalten = [];
 			foreach (array_values($marker) as $i => $m) {
+				$id = isset($m['id']) ? (int)$m['id'] : null;
+				if ($id !== null && in_array($id, $alt, true)) {
+					$this->aendern(
+						$id,
+						$m['text'],
+						$m['knoten'] ?? [],
+						$m['zwecke'] ?? [],
+						($m['sichtbar'] ?? true) === true,
+						$i * 10
+					);
+					$behalten[] = $id;
+					continue;
+				}
 				$this->anlegen(
 					$kontextId,
 					$m['text'],
@@ -218,11 +227,80 @@ class MarkerService {
 					$i * 10
 				);
 			}
+
+			foreach (array_diff($alt, $behalten) as $entfallen) {
+				$this->entfernenOderVerbergen((int)$entfallen);
+			}
 			$this->db->commit();
 		} catch (\Throwable $e) {
 			$this->db->rollBack();
 			throw $e;
 		}
+	}
+
+	/**
+	 * Ändert einen bestehenden Marker, ohne seine Kennung anzutasten.
+	 * Zuordnungen werden ersetzt — sie hängen an der Definition, nicht an
+	 * bereits erfassten Beobachtungen.
+	 */
+	private function aendern(
+		int $markerId,
+		string $text,
+		array $knotenKennungen,
+		array $zweckKennungen,
+		bool $sichtbar,
+		int $sortierung,
+	): void {
+		$q = $this->db->getQueryBuilder();
+		$q->update('kidseye_marker')
+			->set('text', $q->createNamedParameter($text))
+			->set('sichtbar', $q->createNamedParameter($sichtbar, IQueryBuilder::PARAM_BOOL))
+			->set('sortierung', $q->createNamedParameter($sortierung, IQueryBuilder::PARAM_INT))
+			->where($q->expr()->eq('id', $q->createNamedParameter($markerId, IQueryBuilder::PARAM_INT)))
+			->executeStatement();
+
+		foreach (['kidseye_marker_knoten', 'kidseye_marker_zweck'] as $tabelle) {
+			$q = $this->db->getQueryBuilder();
+			$q->delete($tabelle)
+				->where($q->expr()->eq('marker_id', $q->createNamedParameter($markerId, IQueryBuilder::PARAM_INT)))
+				->executeStatement();
+		}
+		$this->verknuepfungenSetzen($markerId, $knotenKennungen, $zweckKennungen);
+	}
+
+	/**
+	 * Ein aus dem Satz genommener Marker wird nur dann gelöscht, wenn keine
+	 * Beobachtung mehr auf ihn zeigt. Sonst wird er unsichtbar geschaltet:
+	 * er verschwindet vom Erfassungsbildschirm, aber die Auswertung kann
+	 * weiterhin nachschlagen, worauf ein alter Eintrag sich bezog.
+	 */
+	private function entfernenOderVerbergen(int $markerId): void {
+		$q = $this->db->getQueryBuilder();
+		$q->select($q->func()->count('*', 'zahl'))->from('kidseye_beobachtung')
+			->where($q->expr()->eq('marker_id', $q->createNamedParameter($markerId, IQueryBuilder::PARAM_INT)));
+		$treffer = $q->executeQuery();
+		$benutzt = (int)$treffer->fetchOne() > 0;
+		$treffer->closeCursor();
+
+		if ($benutzt) {
+			$q = $this->db->getQueryBuilder();
+			$q->update('kidseye_marker')
+				->set('sichtbar', $q->createNamedParameter(false, IQueryBuilder::PARAM_BOOL))
+				->where($q->expr()->eq('id', $q->createNamedParameter($markerId, IQueryBuilder::PARAM_INT)))
+				->executeStatement();
+			return;
+		}
+
+		foreach (['kidseye_marker_knoten', 'kidseye_marker_zweck'] as $tabelle) {
+			$q = $this->db->getQueryBuilder();
+			$q->delete($tabelle)
+				->where($q->expr()->eq('marker_id', $q->createNamedParameter($markerId, IQueryBuilder::PARAM_INT)))
+				->executeStatement();
+		}
+		$q = $this->db->getQueryBuilder();
+		$q->delete('kidseye_marker')
+			->where($q->expr()->eq('id', $q->createNamedParameter($markerId, IQueryBuilder::PARAM_INT)))
+			->executeStatement();
 	}
 
 	public function anlegen(
@@ -242,6 +320,17 @@ class MarkerService {
 		])->executeStatement();
 		$markerId = $q->getLastInsertId();
 
+		$this->verknuepfungenSetzen($markerId, $knotenKennungen, $zweckKennungen);
+
+		return $markerId;
+	}
+
+	/** Legt die Knoten- und Zweckzuordnungen eines Markers an. */
+	private function verknuepfungenSetzen(
+		int $markerId,
+		array $knotenKennungen,
+		array $zweckKennungen,
+	): void {
 		foreach (array_unique($knotenKennungen) as $kennung) {
 			$q = $this->db->getQueryBuilder();
 			$q->insert('kidseye_marker_knoten')->values([
@@ -261,8 +350,6 @@ class MarkerService {
 				'zweck_id' => $q->createNamedParameter($zweckId, IQueryBuilder::PARAM_INT),
 			])->executeStatement();
 		}
-
-		return $markerId;
 	}
 
 	/** Legt die Vorschlagssätze an, wo noch keine Marker existieren. */

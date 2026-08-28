@@ -58,7 +58,24 @@ class StammdatenService {
 
 	// ------------------------------------------------------------------- Klasse
 
+	/**
+	 * Eine Klasse braucht einen Namen. Die Prüfung steht hier und nicht in der
+	 * Oberfläche: der Klassenname ist keine Beschriftung, sondern trägt durch
+	 * die halbe Anwendung — er steht in der Kopfzeile der laufenden Stunde, im
+	 * Startdialog, im Ablagepfad der Arbeitsproben und auf jedem Bericht. Eine
+	 * namenlose Klasse ist danach nirgends mehr auseinanderzuhalten, und im
+	 * Startdialog steht ein leerer Eintrag, den niemand zuordnen kann.
+	 *
+	 * @throws \InvalidArgumentException bei leerem Namen
+	 */
 	public function klasseAnlegen(int $schuljahrId, string $name, ?int $vorgaengerId = null): int {
+		$name = trim($name);
+		if ($name === '') {
+			throw new \InvalidArgumentException(
+				'Eine Klasse braucht einen Namen, etwa „3a".'
+			);
+		}
+
 		$q = $this->db->getQueryBuilder();
 		$q->insert('kidseye_klasse')->values([
 			'schuljahr_id' => $q->createNamedParameter($schuljahrId, IQueryBuilder::PARAM_INT),
@@ -85,6 +102,77 @@ class StammdatenService {
 		}
 		$treffer->closeCursor();
 		return $zeilen;
+	}
+
+	/**
+	 * Löscht eine Klasse — aber nur, solange nichts daran hängt.
+	 *
+	 * Beobachtungen hängen am Kind, nicht an der Klasse (D13); die Klasse steht
+	 * an ihnen trotzdem als Kontext, und Berichte und Auswertung verbinden über
+	 * sie. Verschwände die Zeile unter einer bestehenden Beobachtung, fiele
+	 * diese aus jeder Auswertung heraus, ohne gelöscht zu sein — ein stiller
+	 * Datenverlust, den niemand bemerkt. Deshalb wird hier abgewiesen statt
+	 * fortgeschrieben.
+	 *
+	 * Die Kinder selbst überleben: sie sind eigene Datensätze und können in
+	 * einer anderen Klasse weitergeführt werden. Gelöscht werden nur die
+	 * Zuordnungen, das Klassenbild und die Lehraufträge dieser Klasse.
+	 *
+	 * @throws \InvalidArgumentException wenn Beobachtungen oder Stunden daran hängen
+	 */
+	public function klasseLoeschen(int $klasseId): void {
+		foreach ([
+			'kidseye_beobachtung' => 'Es hängen noch Beobachtungen an dieser Klasse.',
+			'kidseye_stunde' => 'Es sind noch Unterrichtsstunden zu dieser Klasse erfasst.',
+		] as $tabelle => $meldung) {
+			$q = $this->db->getQueryBuilder();
+			$q->select('id')->from($tabelle)
+				->where($q->expr()->eq('klasse_id', $q->createNamedParameter($klasseId, IQueryBuilder::PARAM_INT)))
+				->setMaxResults(1);
+			$treffer = $q->executeQuery();
+			$da = $treffer->fetchOne();
+			$treffer->closeCursor();
+			if ($da !== false) {
+				throw new \InvalidArgumentException(
+					$meldung . ' Eine Klasse mit Beobachtungen lässt sich nicht löschen — '
+					. 'sonst fielen die Einträge aus jeder Auswertung, ohne gelöscht zu sein.'
+				);
+			}
+		}
+
+		$this->db->beginTransaction();
+		try {
+			foreach (['kidseye_klassenbild', 'kidseye_klassen_zug', 'kidseye_lehrauftrag'] as $tabelle) {
+				$q = $this->db->getQueryBuilder();
+				$q->delete($tabelle)
+					->where($q->expr()->eq('klasse_id', $q->createNamedParameter($klasseId, IQueryBuilder::PARAM_INT)))
+					->executeStatement();
+			}
+			$q = $this->db->getQueryBuilder();
+			$q->delete('kidseye_klasse')
+				->where($q->expr()->eq('id', $q->createNamedParameter($klasseId, IQueryBuilder::PARAM_INT)))
+				->executeStatement();
+			$this->db->commit();
+		} catch (\Throwable $e) {
+			$this->db->rollBack();
+			throw $e;
+		}
+	}
+
+	/** Hängt an dieser Klasse etwas, das dem Löschen entgegensteht? */
+	public function klasseLoeschbar(int $klasseId): bool {
+		try {
+			$q = $this->db->getQueryBuilder();
+			$q->select('id')->from('kidseye_beobachtung')
+				->where($q->expr()->eq('klasse_id', $q->createNamedParameter($klasseId, IQueryBuilder::PARAM_INT)))
+				->setMaxResults(1);
+			$treffer = $q->executeQuery();
+			$da = $treffer->fetchOne();
+			$treffer->closeCursor();
+			return $da === false;
+		} catch (\Throwable $e) {
+			return false;
+		}
 	}
 
 	public function klasseNachId(int $id): ?array {
@@ -255,6 +343,79 @@ class StammdatenService {
 			'klassenlehrkraft' => $q->createNamedParameter($klassenlehrkraft, IQueryBuilder::PARAM_BOOL),
 		])->executeStatement();
 		return $q->getLastInsertId();
+	}
+
+	/**
+	 * Setzt den Satz der Kontexte, die eine Lehrkraft in einer Klasse
+	 * unterrichtet — was fehlt, kommt dazu, was nicht mehr genannt ist, geht.
+	 *
+	 * Der übliche Fall ist die Lehrkraft, die in ihrer Klasse alles beobachtet.
+	 * Einzeln angelegt sind das sieben Formulare mit siebenmal derselben
+	 * Kennung; als Satz ist es ein Haken bei „alle".
+	 *
+	 * Ein Kontext, in dem bereits Stunden gehalten wurden, wird nicht entfernt:
+	 * ohne Lehrauftrag käme die Lehrkraft an die eigenen Beobachtungen nicht
+	 * mehr heran (ZugriffService).
+	 *
+	 * @param int[] $kontextIds
+	 * @return array{angelegt:int,entfernt:int,behalten:int[]}
+	 */
+	public function lehrauftraegeSetzen(string $nutzerId, int $klasseId, array $kontextIds, bool $klassenlehrkraft = false): array {
+		$soll = array_values(array_unique(array_map('intval', $kontextIds)));
+
+		$ist = [];
+		foreach ($this->lehrauftraege($nutzerId) as $l) {
+			if ($l['klasseId'] === $klasseId) {
+				$ist[$l['kontextId']] = $l['id'];
+			}
+		}
+
+		$angelegt = 0;
+		$entfernt = 0;
+		$behalten = [];
+
+		$this->db->beginTransaction();
+		try {
+			foreach ($soll as $kontextId) {
+				if (!isset($ist[$kontextId])) {
+					$this->lehrauftragAnlegen($nutzerId, $klasseId, $kontextId, $klassenlehrkraft);
+					$angelegt++;
+				}
+			}
+			foreach ($ist as $kontextId => $auftragId) {
+				if (in_array($kontextId, $soll, true)) {
+					continue;
+				}
+				if ($this->stundenGehalten($nutzerId, $klasseId, $kontextId)) {
+					$behalten[] = $kontextId;
+					continue;
+				}
+				$q = $this->db->getQueryBuilder();
+				$q->delete('kidseye_lehrauftrag')
+					->where($q->expr()->eq('id', $q->createNamedParameter($auftragId, IQueryBuilder::PARAM_INT)))
+					->executeStatement();
+				$entfernt++;
+			}
+			$this->db->commit();
+		} catch (\Throwable $e) {
+			$this->db->rollBack();
+			throw $e;
+		}
+
+		return ['angelegt' => $angelegt, 'entfernt' => $entfernt, 'behalten' => $behalten];
+	}
+
+	private function stundenGehalten(string $nutzerId, int $klasseId, int $kontextId): bool {
+		$q = $this->db->getQueryBuilder();
+		$q->select('id')->from('kidseye_stunde')
+			->where($q->expr()->eq('nutzer_id', $q->createNamedParameter($nutzerId)))
+			->andWhere($q->expr()->eq('klasse_id', $q->createNamedParameter($klasseId, IQueryBuilder::PARAM_INT)))
+			->andWhere($q->expr()->eq('kontext_id', $q->createNamedParameter($kontextId, IQueryBuilder::PARAM_INT)))
+			->setMaxResults(1);
+		$treffer = $q->executeQuery();
+		$da = $treffer->fetchOne();
+		$treffer->closeCursor();
+		return $da !== false;
 	}
 
 	/** Alle Kombinationen aus Klasse und Kontext, die diese Lehrkraft hat. */

@@ -40,8 +40,17 @@ class StundeService {
 	 *
 	 * @throws ZugriffVerweigert          ohne Lehrauftrag
 	 * @throws \InvalidArgumentException  bei Inhaltsfeld an fachneutralem Kontext
+	 *
+	 * @param \DateTimeInterface|null $begonnenAm Rückwirkender Beginn. Nur für
+	 *        erzeugte Beispieldaten; im Normalbetrieb null.
 	 */
-	public function starten(string $nutzerId, int $klasseId, int $kontextId, ?int $inhaltsfeldId = null): array {
+	public function starten(
+		string $nutzerId,
+		int $klasseId,
+		int $kontextId,
+		?int $inhaltsfeldId = null,
+		?\DateTimeInterface $begonnenAm = null,
+	): array {
 		$this->zugriff->verlangeLehrauftrag($nutzerId, $klasseId, $kontextId);
 
 		$kontext = $this->kontexte->nachId($kontextId);
@@ -66,7 +75,10 @@ class StundeService {
 
 		$this->laufendeBeenden($nutzerId);
 
-		$jetzt = new \DateTime();
+		// $begonnenAm setzt nur, wer rückwirkend erzeugt (Beispieldaten).
+		$jetzt = $begonnenAm !== null
+			? \DateTime::createFromInterface($begonnenAm)
+			: new \DateTime();
 		$q = $this->db->getQueryBuilder();
 		$q->insert('kidseye_stunde')->values([
 			'nutzer_id' => $q->createNamedParameter($nutzerId),
@@ -239,6 +251,10 @@ class StundeService {
 		}
 
 		return [
+			// Auf welche Kennung wurde gesucht? Bleibt die Liste leer, ist genau
+			// das die Auskunft, die weiterhilft: ein Lehrauftrag auf einer anderen
+			// Kennung sieht von hier aus wie gar kein Lehrauftrag.
+			'nutzerId' => $nutzerId,
 			'klassen' => array_values($klassen),
 			'letzte' => $this->letzteKombination($nutzerId),
 		];

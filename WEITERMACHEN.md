@@ -1,6 +1,6 @@
 # Weitermachen
 
-Übergabe für die nächste Sitzung. Stand: **21. August 2026**.
+Übergabe für die nächste Sitzung. Stand: **28. August 2026**.
 
 Wenn du hier neu einsteigst, lies zuerst die drei Abschnitte
 [Wo es klemmt](#wo-es-klemmt), [Was als Nächstes dran ist](#was-als-nächstes-dran-ist)
@@ -12,53 +12,56 @@ Alles Weitere ist Nachschlagewerk.
 ## In einem Satz
 
 kidseye ist eine Nextcloud-App zur Schülerbeobachtung in der Grundschule.
-Der Code ist vollständig, getestet und gepusht — aber **noch nie auf einer
-laufenden Nextcloud installiert worden.** Das ist der nächste Schritt.
+Sie hat am 28. August zum ersten Mal auf einer laufenden Nextcloud gestanden.
+Was dabei sichtbar wurde, ist behoben — **geprüft ist die Behebung noch nicht.**
 
 ---
 
 ## Wo es klemmt
 
-**Die App ist noch nie auf einer laufenden Nextcloud installiert worden.**
-Das ist die einzige verbliebene offene Flanke — und die wichtigste
-Information dieses Dokuments.
+**Die Befunde des ersten Durchgangs sind umgesetzt, aber nicht gegengeprüft.**
+Der Code ist geändert, die Tests sind grün, das Bündel ist gebaut. Ob es auf
+der Instanz tut, was es soll, hat noch niemand gesehen. Das ist der nächste
+Schritt und die einzige verbliebene offene Flanke.
 
-Am 21. August ist der Change `installations-und-geraetehaertung` umgesetzt
-worden. Er hat drei Fehler behoben, die im Repo nachweisbar waren und die
-Erstinstallation gekostet hätten:
+Der Durchgang hat sieben Befunde gebracht — nachzulesen mit Begründung in
+`openspec/changes/erste-deployment-befunde/`:
 
-| Befund | War | Ist |
-|---|---|---|
-| Symbol für den Home-Bildschirm | `img/manifest.json` verlangte `favicon-touch.png`, die Datei fehlte. iOS hätte einen Bildschirmabzug als Symbol vergeben | Symbol liegt bei, erzeugt mit `tools/symbol-erzeugen.mjs` |
-| `start_url` und `scope` | Standen als `../apps/kidseye/…` im Manifest und lösten gegen dessen Ort zu **`/apps/kidseye/apps/kidseye/unterricht`** auf — das Symbol wäre auf einer 404 gelandet | Kommen aus `PageController::manifest()` über `linkToRoute`, Route `/manifest.webmanifest` |
-| Sitzungsablauf | Wurde nur an `status === 401 \|\| 403` erkannt. Eine Umleitung auf die Anmeldeseite (HTML mit 200) galt als geglückte Übertragung von null Einträgen | Drei Merkmale in `istAbgemeldet()`, dazu `X-Requested-With` als Vorbeugung. Der Hinweis unterscheidet jetzt „nicht angemeldet" von „keine Verbindung" |
-
-Der zweite Befund ist der lehrreiche: Der bestehende Test prüfte
-`toContain('/apps/kidseye/unterricht')` — und der falsche Wert **enthält**
-diese Zeichenkette. Der Test war grün, während der Wert kaputt war.
-
-**Neu: `occ kidseye:pruefen`.** Ein Befehl, der nichts verändert und jede
-Betriebsvoraussetzung einzeln ausweist — Tabellen, Rahmen, Schuljahr,
-Gruppen, Lehraufträge, Ablage, Vollbild-Option, Symbol. Zu jedem offenen
-Punkt steht die Abhilfe daneben. Rückgabewert 0, wenn alles erfüllt ist,
-sonst 1. Das ist ab sofort der erste Schritt nach `occ app:enable kidseye`.
-
-Der Codestand ist seit dem 11. August vollständig auf `main`. Der frühere
-Hinweis „zwei Commits fehlen auf `main`" ist erledigt: der Zweig
-`add-beobachtungs-workflow` wurde auf `main` rebasiert und gemerged.
-
-Dabei war eine Doppelarbeit aufzulösen — auf zwei Rechnern war unabhängig
-derselbe Fehler repariert worden:
-
-| | |
+| Befund | Ursache |
 |---|---|
-| `\OC_App::getAppPath()` | Behalten wurde die Variante über **Dependency Injection** (`IAppManager` im Konstruktor, `mitgelieferterPfad()` als Instanzmethode), nicht die über `\OCP\Server::get()`. Die beiden Aufrufer in `lib/Command/` sind entsprechend umgestellt. |
-| `package-lock.json` | Kam mit dem Build-Setup und listete noch `@nextcloud/vue` und `vue-router`, die zwischenzeitlich aus `package.json` geflogen waren. Neu erzeugt; beide stehen jetzt korrekt als Peer-Abhängigkeit von `@nextcloud/dialogs` im Baum. |
+| Unterrichtsmodus: Startdialog blieb leer | Das Lehrauftrags-Formular nahm **jede Zeichenkette** als Nextcloud-Kennung. Ein Auftrag auf „Frau Müller" statt `mueller` steht in der Datenbank, taucht aber in keiner Ansicht auf — jede Abfrage filtert nach der eigenen Kennung |
+| Verwaltung: kein Arbeitsgrund, keine Rollbalken | `templates/index.php` hängte die App frei in `#content` statt in `#app-content`. Erst diese Hülle trägt hellen Grund und `overflow-y: auto`; `#content` steht auf `overflow: hidden` |
+| Kein PDF ließ sich laden | Beide Druckendpunkte werden über einen Verweis geöffnet, trugen aber kein `NoCSRFRequired`. Eine Seitennavigation führt kein `requesttoken` mit — abgewiesen, bevor `PdfService` überhaupt lief |
+| Helle Schrift auf hellem Grund | 34 Regeln blendeten Text über `opacity` ab. Dazu bezog der Erfassungsbildschirm Themenfarben **ohne Rückfallwert**, läuft aber über `RENDER_AS_BASE` |
+| Schnellmarker unbedienbar | Zuordnungen als `select multiple` — auf dem iPad braucht Mehrfachauswahl gedrückte Zusatztasten |
+| Lehraufträge im Regelfall am teuersten | Die Klassenlehrkraft beobachtet in allen Fächern; einzeln waren das sieben Formulare mit siebenmal derselben Kennung |
+| Klassen: namenlos anlegbar, nicht löschbar | Keine Prüfung, kein Löschweg |
 
-Verifiziert nach dem Zusammenführen: `npm ci` (Exit 0), `npm test`
-(65 grün), `npm run build` (erzeugt `kidseye-main.js` und
-`kidseye-unterricht.js`). PHP-Tests nicht erneut gelaufen — kein PHP in der
-Umgebung, siehe unten.
+**Der lehrreiche Teil: keiner dieser Befunde hat einen Test rot gemacht.**
+Alle 132 Prüfungen waren grün, während der Unterrichtsmodus leer blieb, kein
+PDF ankam und Nebentext unter dem Kontrastminimum stand. Dasselbe Muster wie
+beim Manifest-Befund vom 21. August, bei dem `toContain` grün blieb, während
+der Wert kaputt war. **Die Prüfungen dieses Projekts lesen Quelltext; was sie
+nicht ausdrücklich behaupten, prüfen sie nicht.** Drei neue Prüfungen decken
+jetzt die Fehlerklassen ab, die sich wiederholen können — Kontrast, fehlende
+Rückfallwerte, Deckkraft auf Text.
+
+**Neu: `occ kidseye:beispieldaten`.** Der zweite Befund war kein Fehler,
+sondern ein blinder Fleck: Lücken-Radar und Kompetenz-Übersicht ließen sich auf
+leerer Datenbank nicht beurteilen — dort steht bei jedem Kind „noch nie
+beobachtet" und in jeder Zelle „·".
+
+```bash
+occ kidseye:beispieldaten --nutzer <kennung>   # Klasse „3d (Beispiel)"
+occ kidseye:beispieldaten --entfernen          # räumt restlos weg
+```
+
+22 Kinder, acht Wochen Stunden, Lehraufträge für alle Kontexte. Geschrieben
+wird über `BeobachtungService::erfassen()` — denselben Pfad wie ein Tap auf dem
+Gerät, nicht per Direkteinfügung. Die Verteilung ist **absichtlich schief**:
+zwei Kinder ohne jede Beobachtung, drei mit sehr wenigen, Marker ungleich über
+die Dimensionen, ein Fünftel mit Freitext. Eine Gleichverteilung wäre so
+nutzlos wie eine leere Datenbank.
 
 ---
 
@@ -66,29 +69,32 @@ Umgebung, siehe unten.
 
 In dieser Reihenfolge:
 
-1. **Auf der Nextcloud installieren** — Anleitung: [`docs/INSTALLATION.md`](docs/INSTALLATION.md).
-   Zwölf Schritte, rund eine Stunde. Vorher Datenbank sichern, die App legt
-   **25** Tabellen an (die frühere Angabe „21" war falsch).
-   Nach dem Aktivieren `occ kidseye:pruefen` — der Befehl sagt, was noch fehlt.
-2. **Geräteprüfung auf dem iPad** — [`tests/protokolle/geraetepruefung.md`](tests/protokolle/geraetepruefung.md).
-   Rund 30 Minuten. Das ist der Test, der über den gesamten
-   Erfassungs-Workflow entscheidet: startet das Symbol im Vollbild, übersteht
-   die Warteschlange einen Sitzungsablauf, bleibt die Erfassung unter zehn
-   Sekunden?
-3. **Marker-Wortlisten von der Lehrkraft holen** — die 42 mitgelieferten sind
+1. **Die Behebungen gegenprüfen** — `openspec/changes/erste-deployment-befunde/tasks.md`,
+   Abschnitt 9.6 bis 9.12. Sieben Punkte, rund 45 Minuten. Vorher die
+   Beispieldaten erzeugen, sonst ist die Hälfte davon nicht zu sehen.
+2. **Entscheiden, ob Lücken-Radar und Kompetenz-Übersicht taugen** (9.12).
+   Das ist der einzige Punkt ohne erwartetes Ergebnis — er stand bisher nur
+   deshalb offen, weil er ohne Daten nicht zu entscheiden war. Jetzt ist er es.
+3. **Die vier Sichtprüfungen aus `formularelemente-vereinheitlichen`** (6.3–6.6).
+   Sie brauchten dieselbe gefüllte Datenbank und sind damit fällig.
+4. **Geräteprüfung auf dem iPad** — `tests/protokolle/geraetepruefung.md`,
+   rund 30 Minuten. Abschnitt D misst das Zeitbudget: **im Querformat mit
+   ausgefahrener Tastatur messen**, das ist die Lage, für die der Bildschirm
+   jetzt gebaut ist.
+5. **Marker-Wortlisten von der Lehrkraft holen** — die 42 mitgelieferten sind
    ausdrücklich nur Vorschläge. Erfassungsbogen in
    [`tests/protokolle/praxistest.md`](tests/protokolle/praxistest.md).
-4. **Datenschutz klären** — ausfüllfertige Vorlage in
-   [`tests/protokolle/datenschutz-vorlage.md`](tests/protokolle/datenschutz-vorlage.md),
-   fünf Entscheidungsfragen mit Ankreuzfeldern.
+6. **Datenschutz klären** — ausfüllfertige Vorlage in
+   [`tests/protokolle/datenschutz-vorlage.md`](tests/protokolle/datenschutz-vorlage.md).
 
-Schritt 1 und 2 sind der eigentliche Lackmustest. Alles davor ist Theorie.
+Schritt 1 und 2 sind der eigentliche Lackmustest.
 
 ---
 
 ## Was du wissen musst, bevor du etwas änderst
 
-**Kein PHP in der Entwicklungsumgebung.** Die PHP-Tests laufen über Docker:
+**Kein PHPUnit lokal.** PHP 8.3 ist inzwischen da, aber ohne `dom` und
+`xmlwriter` — PHPUnit läuft nicht damit. Der Docker-Weg bleibt:
 
 ```bash
 docker run --rm -v "$PWD":/app -w /app php:8.3-cli sh -c '
@@ -96,60 +102,67 @@ docker run --rm -v "$PWD":/app -w /app php:8.3-cli sh -c '
   php /tmp/p.phar --configuration phpunit-regeln.xml'
 ```
 
-Das war anfangs übersehen worden; ein Teil der Arbeit galt zunächst als
-„nicht prüfbar", war es aber.
+Für einen schnellen Zwischenstand reicht `php -l` lokal.
 
 **Die Regeln stehen in den Diensten, nicht in der Oberfläche.** Wer eine
 Prüfung umgeht, indem er sie im Frontend ändert, hat sie nicht umgangen —
-`RahmenService::verlangeBewertbar()` und `ZugriffService` werfen weiterhin.
+`RahmenService::verlangeBewertbar()`, `ZugriffService`,
+`StammdatenService::klasseAnlegen()` und `klasseLoeschen()` werfen weiterhin.
+Ein gesperrter Knopf ist ein Hinweis, keine Prüfung.
 
 **Drei Dinge sind bewusst so und keine Nachlässigkeit:**
 
 - Überfachliche Kompetenzen tragen **keine Skala**. Das Kerncurriculum sagt
   selbst, dass sie sich „weitgehend einer Normierung und empirischen
-  Überprüfung" entziehen. Wer dort eine Bewertung einbaut, widerspricht der
-  fachlichen Grundlage.
+  Überprüfung" entziehen.
 - Beobachtung ↔ Kompetenzknoten ist **n:m**, und Bildungsstandards und
-  Inhaltsfelder sind **zwei gekreuzte Achsen**, keine Hierarchie. Auch das
-  steht wörtlich im Kerncurriculum.
+  Inhaltsfelder sind **zwei gekreuzte Achsen**, keine Hierarchie.
 - Die Stufe `klassenteam` ist im Datenmodell vorhanden, in der Oberfläche
-  aber **nicht erreichbar**. Einzelbetrieb war ausdrücklich gewünscht; das
-  Modell bleibt dreistufig, damit v2 keine Migration über zehntausende
-  Datensätze braucht.
+  aber **nicht erreichbar**. Einzelbetrieb war ausdrücklich gewünscht.
 
-Die Begründungen im Volltext:
-`openspec/changes/add-beobachtungs-workflow/design.md`, Entscheidungen D1
-bis D17.
+Die Begründungen im Volltext: `add-beobachtungs-workflow/design.md`, D1 bis
+D17; die neuen D18 bis D24 in `erste-deployment-befunde/design.md`.
 
 **Stolperfallen, die schon einmal Zeit gekostet haben:**
 
-- XML-Kommentare dürfen kein `--` enthalten. Ein `occ app:enable --force` im
-  Kommentar der `info.xml` macht die Datei ungültig.
-- `npm ci` scheiterte früher an Peer-Dependencies. Seit die `package-lock.json`
-  im Repo liegt und mit `package.json` abgeglichen ist, läuft es durch —
-  `--legacy-peer-deps` ist nicht mehr nötig.
+- **Deckkraft ist kein Werkzeug, um Text abzublenden** (D18). `opacity` mischt
+  gegen den Elternhintergrund: `#222` auf Weiß bei `.6` ergibt rund `#8e8e8e`
+  — 3,0:1 statt 4,5:1, und der Wert ist am Geschriebenen nicht abzulesen.
+  Schlimmer: die Werte stapeln sich über Schachtelungsebenen hinweg. Nebentext
+  trägt `var(--ke-leise)`. Eine Prüfung schlägt an, wenn wieder eine
+  Deckkraftregel auftaucht; die zwei erlaubten Fälle stehen dort namentlich.
+- **Im Erfassungsbildschirm jede Farbe mit Rückfall** (D19). Er läuft über
+  `RENDER_AS_BASE`; dort ist `--color-main-text` nicht verlässlich definiert,
+  und eine Farbangabe ohne Rückfall fällt still auf die geerbte Farbe zurück.
+  Alle Farben laufen über die `--ke-*`-Token aus `css/kidseye.css`.
+- **`100dvh` deckt die Bildschirmtastatur nicht ab** (D23). Es folgt der
+  Browserleiste, nicht der Tastatur. Die sichtbare Höhe kommt aus
+  `window.visualViewport` und steht als `--ke-sicht`; `--ke-unten` ist, was
+  unten verdeckt ist.
+- **XML-Kommentare dürfen kein `--` enthalten.** Ein `occ app:enable --force`
+  im Kommentar der `info.xml` macht die Datei ungültig.
 - **Relative Pfade im Manifest lösen gegen den Ort des Manifests auf**, nicht
   gegen die App-Wurzel. Deshalb kommen `start_url`, `scope` und die
-  Symbolpfade aus dem `PageController` und nicht aus der JSON-Datei. Was dort
-  noch steht — Name, Farben, Anzeigeart, Symbolliste — ist instanzunabhängig.
+  Symbolpfade aus dem `PageController`.
 - **Prüfungen mit `toContain` auf Pfaden sind zu schwach.** Der falsche Wert
-  `../apps/kidseye/unterricht` enthält `/apps/kidseye/unterricht`. Wo es auf
-  einen Pfad ankommt, gegen die aufgelöste Adresse prüfen, nicht gegen eine
-  Teilzeichenkette.
-- `max-version` in der `info.xml` lässt sich **nicht weglassen** — das
-  offizielle Schema führt sie als `use="required"`. Aktuell steht sie auf 35,
-  geprüft gegen die Critical Changes von 34 und 35.
+  `../apps/kidseye/unterricht` enthält `/apps/kidseye/unterricht`.
+- **`max-version` in der `info.xml` lässt sich nicht weglassen** — das
+  offizielle Schema führt sie als `use="required"`. Steht auf 35.
+- **Ein Endpunkt, der über einen Verweis geöffnet wird, braucht
+  `NoCSRFRequired`.** Eine Seitennavigation führt kein `requesttoken` mit.
+  Betrifft die beiden Druckendpunkte; wer einen dritten anlegt, denkt daran.
 
 ---
 
 ## Was gebaut ist
 
 ```
-lib/          7.256 Zeilen PHP    25 Tabellen, 21 Dienste, 5 Controller, 4 occ-Befehle
-src/          2.751 Zeilen        Vue 2, eigenes Bundle, keine @nextcloud/vue-Komponenten
-tests/        2.484 Zeilen        107 JS-Tests, 56 PHP-Tests, Lasttest, 3 Protokolle
+lib/          ~8.100 Zeilen PHP   25 Tabellen, 22 Dienste, 5 Controller, 5 occ-Befehle
+src/          ~3.200 Zeilen       Vue 2, eigenes Bundle, keine @nextcloud/vue-Komponenten
+css/          ~270 Zeilen         ausgelieferte Stildatei, beide Einstiegspunkte
+tests/        ~2.400 Zeilen       135 JS-Tests, 56 PHP-Tests, Lasttest, 3 Protokolle
 data/rahmen/  231 Knoten          Hessisches Kerncurriculum als JSON
-openspec/                         Entwurf, 9 Capabilities, 101 Aufgaben
+openspec/                         4 Changes, 16 Capabilities
 ```
 
 **Der tragende Mechanismus:** Ein Schnellmarker trägt seine
@@ -158,53 +171,39 @@ ein einziger Fingertipp eine auf beiden Achsen zugeordnete, fertige
 Beobachtung — rund 70 Prozent brauchen deshalb keine Nacharbeit. Das ist der
 Grund, warum der Rest funktioniert; wer daran etwas ändert, ändert alles.
 
-**Verifiziert:**
+**Verifiziert (28. August):**
 
 | | |
 |---|---|
-| JS-Tests | 107 grün (`npm test`) |
-| PHP-Tests | 56 grün, 269 Assertions (Docker, siehe oben) |
-| PHP-Syntax | 45 von 45 Dateien |
-| Lasttest | 8 Abfrageformen, alle unter 8 ms beim Jahresbestand (`python3 tests/last/lasttest.py`) |
-| PDF | Erzeugt, von `pypdf` gegengelesen: 4 Seiten, Umlaute korrekt |
-| `info.xml` | Gegen das Schema von apps.nextcloud.com validiert |
+| JS-Tests | 135 grün (`npm test`) |
+| PHP-Tests | 56 grün, 269 Assertions (Docker) |
+| PHP-Syntax | 38 von 38 Dateien in `lib/` |
+| Build | beide Bündel, keine Fehler |
+| `info.xml` | wohlgeformt, Schema am 21. August validiert |
+| Lasttest | 8 Abfrageformen, alle unter 8 ms beim Jahresbestand |
 
-**Nicht verifiziert:** dass irgendetwas davon auf einer echten Nextcloud
-läuft.
+**Nicht verifiziert:** dass die Behebungen auf der Instanz tun, was sie sollen.
 
 ---
 
 ## Aufgabenstand
 
-**`installations-und-geraetehaertung`** — 40 von 42 erledigt. Offen sind nur
-8.5 und 8.6: der Durchgang auf einer echten Nextcloud und die Geräteprüfung
-auf dem iPad. Beide brauchen Hardware.
+**`erste-deployment-befunde`** — 59 von 66 erledigt. Offen sind 9.6 bis 9.12:
+die Gegenprüfung auf der Instanz und dem iPad. Alles davon braucht die
+laufende Nextcloud und die erzeugten Beispieldaten.
 
-**`formularelemente-vereinheitlichen`** — 30 von 34 erledigt. Die App liefert
-jetzt eine eigene Stildatei aus (`css/kidseye.css`, über `Util::addStyle` an
-beiden Einstiegspunkten); die neun verschiedenen Mindesthöhen sind auf 44 px
-zurückgeführt, mit einer namentlich geführten Ausnahme (`.kb-gruppe`, 28 px).
-Offen sind nur 6.3 bis 6.6 — Sichtprüfungen, Protokoll in
-[`tests/protokolle/formulardarstellung.md`](tests/protokolle/formulardarstellung.md).
+**`installations-und-geraetehaertung`** — 43 von 45. Offen 8.5 und 8.6. Der
+erste Durchgang hat stattgefunden, ist aber nicht protokolliert und der
+Rückgabewert von `occ kidseye:pruefen` nicht festgehalten.
 
-Zwei Befunde daraus gehören hierher, weil sie beide lautlos gewesen wären:
+**`formularelemente-vereinheitlichen`** — 30 von 34. Offen 6.3 bis 6.6, alles
+Sichtprüfungen. Zwei Aufgaben dieses Changes sind inzwischen überholt und im
+Dokument mit Verweis vermerkt: die Beschriftung steht nicht mehr auf
+`opacity: .8` (3.1), und die beiden Mehrfachauswahlen sind doch ersetzt (2.7 —
+der Vorbehalt „gehört in einen eigenen Change" ist eingelöst).
 
-- **Vue 2 ersetzt das Mount-Element.** Aus `<div id="kidseye-main">` in
-  `templates/` wird beim Einhängen das Wurzelelement der Komponente — ohne die
-  ID. Ein Selektor `#kidseye-main …` hätte zur Laufzeit auf nichts getroffen.
-  Die IDs stehen deshalb an den Wurzelelementen von `App.vue` und
-  `Unterricht.vue`.
-- **Spezifität ist hier eine Rechnung, keine Geschmacksfrage.** Alle Regeln
-  stehen unter `:where(#kidseye-main, #kidseye-unterricht)`, das null
-  Spezifität beiträgt. Ein Wurzelselektor mit ID (1,0,1) schlüge jeden scoped
-  Komponentenstil (0,2,0) — und damit ausgerechnet den durchgestalteten
-  Erfassungsbildschirm.
-
-**`add-beobachtungs-workflow`** — 93 von 101 erledigt, 1 teilweise, 6 offen —
-nachzulesen in `openspec/changes/add-beobachtungs-workflow/tasks.md`.
-
-Die verbleibenden sieben brauchen alle etwas, das außerhalb der Entwicklung
-liegt:
+**`add-beobachtungs-workflow`** — 93 von 100, 1 teilweise (0.4), 6 offen. Alle
+verbleibenden brauchen etwas außerhalb der Entwicklung:
 
 | | braucht |
 |---|---|
@@ -213,14 +212,10 @@ liegt:
 | 0.5, 0.6 | die Wortlisten der Lehrkraft |
 | 0.4 | Unterschrift der Datenschutzbeauftragung |
 
-Für jedes davon liegt ein Protokoll unter `tests/protokolle/`. Sie sind
-Ausführung, keine Entwicklung.
-
-Ein weiterer Punkt gehört zu v2 und steht deshalb nicht in der Aufgabenliste:
-Die **Heatmap kippt bei rund 70.000 Beobachtungen** über 150 ms. Im
-Einzelbetrieb (~3.800 im Jahr) unkritisch, aber bevor `klassenteam` und damit
-der Mehrbenutzerbetrieb freigeschaltet wird, braucht sie eine vorberechnete
-Zwischentabelle. Begründung und Messwerte: D17 in `design.md`.
+Ein Punkt gehört zu v2 und steht deshalb nicht in der Aufgabenliste: Die
+**Heatmap kippt bei rund 70.000 Beobachtungen** über 150 ms. Im Einzelbetrieb
+(~3.800 im Jahr) unkritisch, aber bevor `klassenteam` freigeschaltet wird,
+braucht sie eine vorberechnete Zwischentabelle. Begründung und Messwerte: D17.
 
 ---
 
@@ -230,17 +225,14 @@ Nichts davon ist geraten. Die Quellen liegen im Netz und sind im Code zitiert:
 
 - **Kerncurricula Primarstufe**, Hessisches Kultusministerium 2011 — für
   Deutsch, Mathematik, Sachunterricht, Kunst und Ethik aus den PDFs
-  extrahiert. Der Extraktor liegt nicht im Repo; die Ergebnisse in
-  `data/rahmen/hessen-primarstufe-2011.json`, geprüft durch
-  `tests/js/rahmen.spec.js`.
+  extrahiert. Ergebnisse in `data/rahmen/hessen-primarstufe-2011.json`,
+  geprüft durch `tests/js/rahmen.spec.js`.
 - **SchDSV** — Verordnung über die Verarbeitung personenbezogener Daten in
   Schulen, 4. Februar 2009. § 10 Abs. 1/3/4 und § 3 Abs. 2 sind im
-  `AufbewahrungService` wörtlich zitiert und begründen die Voreinstellungen.
+  `AufbewahrungService` wörtlich zitiert.
 - **Rückmeldung einer Grundschullehrkraft**, Juli 2026. Zehn Annahmen
-  abgefragt, sechs bestätigt, vier korrigiert — die Korrekturen stehen in der
-  Tabelle „Rückmeldung aus der Praxis" ganz oben in `design.md`. Freiarbeit
-  als eigener Kontext, das Klassenbild und der Einzelbetrieb kommen alle
-  daher.
+  abgefragt, sechs bestätigt, vier korrigiert — Freiarbeit als eigener
+  Kontext, das Klassenbild und der Einzelbetrieb kommen alle daher.
 
 ---
 
@@ -252,7 +244,8 @@ Erste Anlaufstelle ist die Fehlertabelle am Ende von
 | Symptom | Ursache |
 |---|---|
 | Weiße Seite | `js/` fehlt → `npm run build` |
-| „kein Lehrauftrag" | Der Schritt, den man am ehesten vergisst — Anleitung Schritt 7 |
+| Startdialog leer, „kein Lehrauftrag" | Der Schritt, den man am ehesten vergisst. Seit dem 28. August nennt die Meldung die gesuchte Kennung — stimmt sie nicht mit deinem Anmeldenamen überein, liegt der Auftrag auf einer anderen |
+| Änderungen sind nicht zu sehen | Wird die App **kopiert** statt symgelinkt, müssen `lib/`, `templates/`, `css/` und `js/` neu rüber. Danach im Browser hart neu laden |
 | Kein Foto-Knopf | Gruppenordner fehlt → Reiter „Einrichtung" in der App |
 | Zähler `⟳` geht nicht auf 0 | Kein Netz oder Sitzung abgelaufen. Die Beobachtungen sind **nicht verloren** |
 

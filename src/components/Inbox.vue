@@ -207,9 +207,9 @@ export default {
 .inbox { padding: 1rem; max-width: 48rem; }
 .inbox-kopf { display: flex; align-items: baseline; gap: 1rem; }
 .inbox-kopf h2 { margin: 0; }
-.inbox-zahl { opacity: .7; font-size: .85rem; margin: 0; }
+.inbox-zahl { color: var(--ke-leise); font-size: .85rem; margin: 0; }
 .inbox-leer {
-	margin-top: 1rem; opacity: .75; line-height: 1.6;
+	margin-top: 1rem; color: var(--ke-leise); line-height: 1.6;
 	border-left: 2px solid var(--color-border); padding-left: .75rem;
 }
 .inbox-leiste {
@@ -223,7 +223,7 @@ export default {
 .inbox-woche { margin-top: 1.5rem; }
 .inbox-woche h3 {
 	font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
-	opacity: .55; margin: 0 0 .4rem;
+	color: var(--ke-leise); margin: 0 0 .4rem;
 }
 .inbox-eintrag {
 	display: grid;
@@ -234,7 +234,7 @@ export default {
 }
 .inbox-eintrag--offen { background: var(--color-background-hover); }
 .inbox-inhalt { cursor: pointer; }
-.inbox-meta { margin: 0; font-size: .72rem; opacity: .65; }
+.inbox-meta { margin: 0; font-size: .72rem; color: var(--ke-leise); }
 .inbox-marke {
 	margin-left: .4rem; padding: 0 .3rem;
 	border: 1px solid var(--color-border); border-radius: 3px;
@@ -244,7 +244,7 @@ export default {
 .inbox-zuordnung { grid-column: 1 / -1; padding: .5rem 0 .25rem; }
 .inbox-titel {
 	margin: .6rem 0 .3rem; font-size: .7rem;
-	letter-spacing: .08em; text-transform: uppercase; opacity: .6;
+	letter-spacing: .08em; text-transform: uppercase; color: var(--ke-leise);
 }
 /* Vorschlagsknopf zum Zuordnen. Stand auf 34 px; die Höhe kommt jetzt aus
    css/kidseye.css, inline-flex zentriert den Text darin senkrecht. */
@@ -259,9 +259,9 @@ export default {
 	border-color: var(--color-primary-element);
 	background: var(--color-primary-element-light);
 }
-.inbox-knopf small { display: block; font-size: .62rem; opacity: .6; }
+.inbox-knopf small { display: block; font-size: .62rem; color: var(--ke-leise); }
 .inbox-hinweis {
-	margin: .4rem 0; font-size: .8rem; opacity: .75; line-height: 1.5;
+	margin: .4rem 0; font-size: .8rem; color: var(--ke-leise); line-height: 1.5;
 	border-left: 2px solid var(--color-border); padding-left: .6rem;
 }
 .inbox-aktionen { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }

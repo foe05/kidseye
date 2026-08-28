@@ -34,8 +34,12 @@ return [
 		['name' => 'verwaltung#kinder', 'url' => '/api/v1/klassen/{klasseId}/kinder', 'verb' => 'GET'],
 		['name' => 'verwaltung#schuljahrAnlegen', 'url' => '/api/v1/schuljahr', 'verb' => 'POST'],
 		['name' => 'verwaltung#klasseAnlegen', 'url' => '/api/v1/klassen', 'verb' => 'POST'],
+		['name' => 'verwaltung#klasseLoeschen', 'url' => '/api/v1/klassen/{klasseId}', 'verb' => 'DELETE'],
 		['name' => 'verwaltung#lehrauftraege', 'url' => '/api/v1/lehrauftrag', 'verb' => 'GET'],
 		['name' => 'verwaltung#lehrauftragAnlegen', 'url' => '/api/v1/lehrauftrag', 'verb' => 'POST'],
+		// Ganzer Satz auf einmal: der Regelfall ist die Lehrkraft, die in
+		// ihrer Klasse alle Kontexte beobachtet.
+		['name' => 'verwaltung#lehrauftraegeSetzen', 'url' => '/api/v1/lehrauftrag/satz', 'verb' => 'PUT'],
 		['name' => 'verwaltung#schuelerAnlegen', 'url' => '/api/v1/schueler', 'verb' => 'POST'],
 		['name' => 'verwaltung#klassenbildSpeichern', 'url' => '/api/v1/klassen/{klasseId}/bild', 'verb' => 'PUT'],
 		['name' => 'verwaltung#klassenbildZuruecksetzen', 'url' => '/api/v1/klassen/{klasseId}/bild', 'verb' => 'DELETE'],
